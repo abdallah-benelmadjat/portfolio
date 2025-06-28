@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdallah Benelmadjat | Digital Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a192f;
+            color: #ccd6f6;
+        }
+
+        .glass-effect {
+            background: rgba(10, 25, 47, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        .project-card-item {
+            border: 1px solid rgba(0, 163, 255, 0.2);
+            transition: all 0.3s ease-in-out;
+            background-color: rgba(10, 25, 47, 0.5);
+        }
+
+        .project-card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 163, 255, 0.1);
+            border-color: rgba(0, 163, 255, 0.4);
+        }
+        
+        #email-hint {
+            color: #94a3b8;
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-effect">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-white">A.B.</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-300 hover:text-cyan-400 transition">Home</a>
+                <a href="#projects" class="text-cyan-400 font-bold transition">Projects</a>
+                <a href="#contact" class="text-gray-300 hover:text-cyan-400 transition">Contact</a>
+            </nav>
+             <a href="https://github.com/abdallah-benelmadjat" target="_blank" class="hidden md:block bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                <i class="fab fa-github mr-2"></i>GitHub
+            </a>
+            <button id="mobile-menu-button" class="md:hidden text-white">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+        </div>
+         <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4">
+             <a href="index.html" class="block py-2 text-gray-300 hover:text-cyan-400">Home</a>
+             <a href="#projects" class="block py-2 text-cyan-400 font-bold">Projects</a>
+             <a href="#contact" class="block py-2 text-gray-300 hover:text-cyan-400">Contact</a>
+             <a href="https://github.com/abdallah-benelmadjat" target="_blank" class="block mt-2 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg text-center transition">
+                <i class="fab fa-github mr-2"></i>GitHub
+            </a>
+        </div>
+    </header>
+
+    <main class="flex flex-col items-center justify-center min-h-screen pt-24 pb-12 px-4 bg-[radial-gradient(100%_50%_at_50%_0%,rgba(0,163,255,0.13)_0,rgba(0,163,255,0)_50%,rgba(0,163,255,0)_100%)]">
+
+        <!-- Projects Section -->
+        <section id="projects" class="w-full max-w-4xl">
+            <h1 class="text-4xl md:text-5xl font-bold mb-12 text-center text-white">Digital & AI Projects</h1>
+
+            <div class="space-y-8">
+                <!-- Project 1: EU4 Nation Selector -->
+                <a href="https://abe-ben.dev/nationselector/" target="_blank" rel="noopener noreferrer" class="project-card-item flex flex-col md:flex-row items-center rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/600x400/0a192f/00bfff?text=EU4+Selector"
+                         alt="EU4 Nation Selector screenshot"
+                         class="w-full md:w-56 h-48 md:h-auto object-cover"
+                         loading="lazy">
+                    <div class="flex-1 p-6 text-white">
+                        <h2 class="text-2xl font-bold mb-2 text-cyan-400">EU4 Nation Selector</h2>
+                        <p class="text-gray-300">A web application designed for Europa Universalis IV players that helps you discover and choose your next nation to play based on custom criteria.</p>
+                    </div>
+                </a>
+                
+                <!-- Project 2: Utility Bill Analyzer -->
+                 <a href="#" rel="noopener noreferrer" class="project-card-item flex flex-col md:flex-row items-center rounded-lg shadow-lg overflow-hidden">
+                     <img src="https://placehold.co/600x400/0a192f/00bfff?text=Utility+AI"
+                         alt="Utility Bill Analyzer"
+                         class="w-full md:w-56 h-48 md:h-auto object-cover"
+                         loading="lazy">
+                    <div class="flex-1 p-6 text-white">
+                        <h2 class="text-2xl font-bold mb-2 text-cyan-400">AI-Powered Utility Bill Analyzer</h2>
+                        <p class="text-gray-300">An intelligent system that uses Optical Character Recognition (OCR) and machine learning to scan, analyze, and extract data from utility bills to identify savings.</p>
+                    </div>
+                </a>
+
+                <!-- Project 3: Industry 4.0 Readiness -->
+                 <a href="#" rel="noopener noreferrer" class="project-card-item flex flex-col md:flex-row items-center rounded-lg shadow-lg overflow-hidden">
+                     <img src="https://placehold.co/600x400/0a192f/00bfff?text=Industry+4.0"
+                         alt="Industry 4.0 Readiness Platform"
+                         class="w-full md:w-56 h-48 md:h-auto object-cover"
+                         loading="lazy">
+                    <div class="flex-1 p-6 text-white">
+                        <h2 class="text-2xl font-bold mb-2 text-cyan-400">Industry 4.0 Readiness Platform</h2>
+                        <p class="text-gray-300">Data-readiness software and strategic roadmaps to guide manufacturers in their transition towards digital transformation and Industry 4.0 solutions.</p>
+                    </div>
+                </a>
+                
+                <!-- Project 4: Wind Turbine Optimization -->
+                 <a href="#" rel="noopener noreferrer" class="project-card-item flex flex-col md:flex-row items-center rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/600x400/0a192f/00bfff?text=Wind+Turbine"
+                         alt="Wind Turbine Optimization AI"
+                         class="w-full md:w-56 h-48 md:h-auto object-cover"
+                         loading="lazy">
+                    <div class="flex-1 p-6 text-white">
+                        <h2 class="text-2xl font-bold mb-2 text-cyan-400">AI-Optimized Wind Turbine Design</h2>
+                        <p class="text-gray-300">A research-driven project using genetic algorithms and DNNs to optimize wind turbine 3D designs, aiming to reduce noise pollution and improve efficiency.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="w-full max-w-2xl mt-24 text-center">
+            <h2 class="text-4xl font-bold mb-8 text-white">Contact</h2>
+            <div class="flex justify-center items-center space-x-6">
+                <a href="https://github.com/abdallah-benelmadjat" target="_blank" class="text-gray-400 hover:text-cyan-400 transition" aria-label="GitHub">
+                    <i class="fab fa-github fa-3x"></i>
+                </a>
+                <div class="flex flex-col items-center">
+                    <button id="email-button" class="text-gray-400 hover:text-cyan-400 transition" aria-label="Show Email">
+                         <i class="fas fa-envelope fa-3x"></i>
+                    </button>
+                    <div id="email-hint" class="hidden mt-2 text-lg">
+                        <span>benelma2@</span><span>uwm.edu</span>
+                    </div>
+                </div>
+                 <a href="https://www.linkedin.com/in/benelmadjat/" target="_blank" class="text-gray-400 hover:text-cyan-400 transition" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin fa-3x"></i>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+             // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                     // Close mobile menu after click
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Email hint toggle
+            document.getElementById('email-button').addEventListener('click', () => {
+                const emailHint = document.getElementById('email-hint');
+                emailHint.classList.toggle('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
