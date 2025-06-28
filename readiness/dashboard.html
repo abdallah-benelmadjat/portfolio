@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Data Connectivity Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="module" src="./datamap.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* slate-900 */
+            color: #d1d5db; /* gray-300 */
+        }
+        .chart-container {
+            width: 100%;
+            height: 100%;
+            background-color: #1e293b; /* slate-800 */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid #334155; /* slate-700 */
+            /* Make sure it fills parent absolutely */
+            box-sizing: border-box;
+        }
+        .metric-card {
+            background-color: #1e293b; /* slate-800 */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid #334155; /* slate-700 */
+        }
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #94a3b8; /* slate-400 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .tab {
+            padding: 0.5rem 1.5rem;
+            border: 1px solid #4b5563;
+            background-color: transparent;
+            color: #d1d5db;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .tab-active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        .view {
+            display: none;
+        }
+        .view-active {
+            display: grid; /* Use grid for layout */
+        }
+        /* Make the graph explorer area fill more space */
+        #view-graph {
+            width: 100%;
+            max-width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            padding: 0;
+        }
+        .graph-area-large {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 60vh;
+            min-height: 350px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+        @media (max-width: 1024px) {
+            .graph-area-large {
+                height: 40vh;
+                min-height: 220px;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl font-extrabold text-white tracking-tight">Data Maturity & Connectivity Dashboard</h1>
+            <p class="mt-2 text-lg text-slate-400">Actionable intelligence on your digital landscape.</p>
+            <div class="mt-2">
+                <a href="questionnaire.html" class="text-sky-400 underline hover:text-sky-300 text-base">← Back to Questionnaire</a>
+            </div>
+        </header>
+
+        <div id="no-data-message" class="text-center text-slate-400 text-lg my-12 hidden">
+            No responses found. Please complete the <a href="questionnaire.html" class="text-sky-400 underline">questionnaire</a> first.
+        </div>
+
+        <!-- Main View Tabs -->
+        <div class="flex justify-center space-x-2 mb-6">
+            <button id="tab-dashboard" class="tab tab-active">Metrics Dashboard</button>
+            <button id="tab-graph" class="tab">Graph Explorer</button>
+        </div>
+
+        <!-- Dashboard View -->
+        <main id="view-dashboard" class="view view-active grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Dashboard content from previous version -->
+            <div class="lg:col-span-1 xl:col-span-1 flex flex-col gap-6">
+                <div class="metric-card">
+                    <h2 class="card-title">Correctness Score</h2>
+                    <div id="gauge-chart" style="width: 100%; height: 250px;"></div>
+                </div>
+                <div class="metric-card flex-grow">
+                    <h2 class="card-title">Top 5 Actionable Opportunities</h2>
+                    <ul id="opportunities-list" class="space-y-3"></ul>
+                </div>
+            </div>
+            <div class="lg:col-span-2 xl:col-span-3 flex flex-col gap-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="metric-card xl:col-span-1">
+                        <h2 class="card-title">Overall Data State</h2>
+                        <div id="pie-chart" class="chart-container" style="height: 300px;"></div>
+                    </div>
+                    <div class="metric-card xl:col-span-2">
+                        <h2 class="card-title">Departmental Digitalization</h2>
+                         <div id="radar-chart" class="chart-container" style="height: 300px;"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <h2 class="card-title">System Workload (Collected Data Points)</h2>
+                    <div id="bar-chart" class="chart-container" style="height: 300px;"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Graph Explorer View -->
+        <main id="view-graph" class="view grid-cols-1 gap-6">
+            <div class="flex justify-center space-x-2 mb-4">
+                <button id="graph-tab-current" class="tab tab-active">Current State Graph</button>
+                <button id="graph-tab-ideal" class="tab">Ideal State Graph</button>
+            </div>
+            <div class="graph-area-large">
+                <div id="currentGraph" class="chart-container absolute inset-0"></div>
+                <div id="idealGraph" class="chart-container absolute inset-0" style="display: none;"></div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { computeDataMap } from './datamap.js';
+
+        let dashboardData = {
+            correctnessScore: 0,
+            fourStateData: [],
+            departmentalScoresData: [],
+            systemWorkloadData: [],
+            topOpportunitiesData: [],
+            allNodes: [],
+            systemNodes: [],
+            currentEdges: [],
+            idealEdges: []
+        };
+
+        function hasResponses() {
+            try {
+                const responses = JSON.parse(localStorage.getItem('responses'));
+                return responses && typeof responses === 'object';
+            } catch {
+                return false;
+            }
+        }
+
+        function loadDashboardData() {
+            try {
+                const responses = JSON.parse(localStorage.getItem('responses'));
+                if (!responses) return false;
+                dashboardData = computeDataMap(responses);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // --- CHART RENDERING FUNCTIONS ---
+        function renderDashboardCharts() {
+            const gaugeChart = echarts.init(document.getElementById('gauge-chart'));
+            gaugeChart.setOption({ series: [{ type: 'gauge', startAngle: 180, endAngle: 0, min: 0, max: 100, splitNumber: 5, axisLine: { lineStyle: { width: 20, color: [[0.25, '#dc2626'], [0.5, '#f97316'],[0.75, '#facc15'],[1, '#4ade80']] }}, pointer: { length: '60%', width: 6, offsetCenter: [0, '-15%'] }, axisTick: { distance: -30, length: 8, lineStyle: { color: '#fff', width: 2 } }, splitLine: { distance: -35, length: 15, lineStyle: { color: '#fff', width: 4 } }, axisLabel: { color: 'auto', distance: 5, fontSize: 14 }, detail: { valueAnimation: true, formatter: '{value}%', color: 'auto', fontSize: 30, offsetCenter: [0, '20%'] }, data: [{ value: dashboardData.correctnessScore, name: 'Correctness' }] }] });
+            const pieChart = echarts.init(document.getElementById('pie-chart'));
+            pieChart.setOption({ tooltip: { trigger: 'item', formatter: '{b}<br/>{c} points ({d}%)' }, legend: { top: 'bottom', textStyle: { color: '#d1d5db' }}, series: [{ name: 'Data State', type: 'pie', radius: ['40%', '70%'], avoidLabelOverlap: false, itemStyle: { borderRadius: 10, borderColor: '#1e293b', borderWidth: 2 }, label: { show: false, position: 'center' }, emphasis: { label: { show: true, fontSize: '20', fontWeight: 'bold' } }, labelLine: { show: false }, data: dashboardData.fourStateData, color: ['#4ade80', '#f97316', '#94a3b8', '#dc2626']}] });
+            const radarChart = echarts.init(document.getElementById('radar-chart'));
+            radarChart.setOption({ radar: { indicator: dashboardData.departmentalScoresData.map(d => ({name: d.name, max: 100})), axisName: { color: '#d1d5db' }, }, tooltip: { trigger: 'item' }, series: [{ name: 'Departmental Digitalization', type: 'radar', data: [{ value: dashboardData.departmentalScoresData.map(d => d.value.toFixed(1)), name: 'Digitalization %' }], areaStyle: { color: 'rgba(59, 130, 246, 0.4)'}, lineStyle: { color: '#3b82f6'}, itemStyle: { color: '#3b82f6' } }] });
+            const barChart = echarts.init(document.getElementById('bar-chart'));
+            barChart.setOption({ tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }}, grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }, xAxis: { type: 'value', boundaryGap: [0, 0.01], axisLabel: {color: '#d1d5db'}}, yAxis: { type: 'category', data: dashboardData.systemWorkloadData.map(d => d.name).reverse(), axisLabel: {color: '#d1d5db'}}, series: [{ name: 'Data Points', type: 'bar', data: dashboardData.systemWorkloadData.map(d => d.value).reverse(), itemStyle: { color: '#3b82f6' } }] });
+        }
+
+        // --- Graph Explorer Logic ---
+        let currentChart = null;
+        let idealChart = null;
+        let graphChartsInitialized = false;
+        function renderGraphCharts() {
+            // Convert systemNodes to Set for fast lookup
+            const systemNodesSet = new Set(dashboardData.systemNodes);
+
+            const departmentColors = [
+                "#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#8b5cf6", "#f472b6", "#14b8a6", "#facc15"
+            ];
+            const departmentNames = dashboardData.departmentalScoresData.map(d => d.name);
+            const departmentColorMap = {};
+            departmentNames.forEach((name, i) => { departmentColorMap[name] = departmentColors[i % departmentColors.length]; });
+
+            function getDepartment(nodeName) {
+                for (const dep of departmentNames) {
+                    if (nodeName.toLowerCase().includes(dep.split(' ')[0].toLowerCase())) return dep;
+                }
+                return null;
+            }
+
+            function renderForceGraph(containerEl, title, graphNodes, graphLinks) {
+                const categories = [
+                    { name: 'System', itemStyle: { color: '#0ea5e9' } },
+                    ...departmentNames.map(dep => ({
+                        name: dep,
+                        itemStyle: { color: departmentColorMap[dep] }
+                    }))
+                ];
+                const formattedNodes = graphNodes.map(nodeName => {
+                    const isSystem = systemNodesSet.has(nodeName);
+                    let category = 0;
+                    if (!isSystem) {
+                        const dep = getDepartment(nodeName);
+                        if (dep) category = 1 + departmentNames.indexOf(dep);
+                    }
+                    return {
+                        id: nodeName,
+                        name: nodeName,
+                        symbolSize: isSystem ? 35 : 18,
+                        category,
+                        label: { show: isSystem }
+                    };
+                });
+                const option = {
+                    backgroundColor: 'transparent',
+                    tooltip: { formatter: '{b}' },
+                    legend: [{ data: categories.map(a => a.name), textStyle: { color: '#d1d5db' }, bottom: 10, type: 'scroll' }],
+                    series: [{
+                        name: title,
+                        type: 'graph',
+                        layout: 'force',
+                        data: formattedNodes,
+                        links: graphLinks,
+                        categories: categories,
+                        roam: true,
+                        draggable: true,
+                        label: { position: 'right', color: '#d1d5db', fontSize: 10 },
+                        force: { repulsion: 200, edgeLength: [80, 120], gravity: 0.1, layoutAnimation: true },
+                        lineStyle: { color: '#4b5563', opacity: 0.7, width: 1.5, curveness: 0 },
+                        emphasis: { focus: 'adjacency', label: { show: true }, lineStyle: { width: 4 } }
+                    }]
+                };
+                const myChart = echarts.init(containerEl);
+                myChart.setOption(option);
+                return myChart;
+            }
+
+            const graphTabCurrent = document.getElementById('graph-tab-current');
+            const graphTabIdeal = document.getElementById('graph-tab-ideal');
+            const currentGraphEl = document.getElementById('currentGraph');
+            const idealGraphEl = document.getElementById('idealGraph');
+
+            // Only render charts once
+            if (!graphChartsInitialized) {
+                currentChart = renderForceGraph(
+                    currentGraphEl,
+                    'Current State',
+                    dashboardData.allNodes,
+                    dashboardData.currentEdges
+                );
+                idealChart = renderForceGraph(
+                    idealGraphEl,
+                    'Ideal State',
+                    dashboardData.allNodes,
+                    dashboardData.idealEdges
+                );
+                graphChartsInitialized = true;
+            }
+
+            // Show only the selected graph, hide the other, and resize only the visible one
+            function showCurrentGraph() {
+                currentGraphEl.style.display = 'block';
+                idealGraphEl.style.display = 'none';
+                graphTabCurrent.classList.add('tab-active');
+                graphTabIdeal.classList.remove('tab-active');
+                setTimeout(() => { currentChart && currentChart.resize(); }, 10);
+            }
+            function showIdealGraph() {
+                idealGraphEl.style.display = 'block';
+                currentGraphEl.style.display = 'none';
+                graphTabIdeal.classList.add('tab-active');
+                graphTabCurrent.classList.remove('tab-active');
+                setTimeout(() => { idealChart && idealChart.resize(); }, 10);
+            }
+
+            // Attach event listeners only once
+            if (!graphTabCurrent._listenerAdded) {
+                graphTabCurrent.addEventListener('click', showCurrentGraph);
+                graphTabCurrent._listenerAdded = true;
+            }
+            if (!graphTabIdeal._listenerAdded) {
+                graphTabIdeal.addEventListener('click', showIdealGraph);
+                graphTabIdeal._listenerAdded = true;
+            }
+
+            // Show current graph by default
+            showCurrentGraph();
+        }
+
+        // Populate Opportunities List
+        function updateOpportunitiesList() {
+            const listEl = document.getElementById('opportunities-list');
+            listEl.innerHTML = '';
+            if (dashboardData.topOpportunitiesData.length > 0) {
+                dashboardData.topOpportunitiesData.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'p-3 bg-slate-700/50 rounded-md';
+                    li.innerHTML = `<p class="font-semibold text-white">${item.name}</p><p class="text-sm text-slate-400">Reason: ${item.reason} → Target: <span class="font-bold text-sky-400">${item.target}</span></p>`;
+                    listEl.appendChild(li);
+                });
+            } else {
+                listEl.innerHTML = `<p class="text-center text-green-400 font-semibold">No major gaps found. Great work!</p>`;
+            }
+        }
+
+        function renderAllCharts() {
+            renderDashboardCharts();
+            renderGraphCharts();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const noDataMsg = document.getElementById('no-data-message');
+            if (!hasResponses() || !loadDashboardData()) {
+                noDataMsg.classList.remove('hidden');
+                document.getElementById('view-dashboard').style.display = 'none';
+                document.getElementById('view-graph').style.display = 'none';
+                return;
+            }
+
+            // --- MAIN VIEW TAB LOGIC ---
+            const tabDashboard = document.getElementById('tab-dashboard');
+            const tabGraph = document.getElementById('tab-graph');
+            const viewDashboard = document.getElementById('view-dashboard');
+            const viewGraph = document.getElementById('view-graph');
+
+            tabDashboard.addEventListener('click', () => {
+                viewDashboard.classList.add('view-active');
+                viewGraph.classList.remove('view-active');
+                tabDashboard.classList.add('tab-active');
+                tabGraph.classList.remove('tab-active');
+            });
+            tabGraph.addEventListener('click', () => {
+                viewGraph.classList.add('view-active');
+                viewDashboard.classList.remove('view-active');
+                tabGraph.classList.add('tab-active');
+                tabDashboard.classList.remove('tab-active');
+                renderGraphCharts();
+            });
+
+            // Initial render (with loaded data)
+            renderAllCharts();
+            updateOpportunitiesList();
+
+            // Resize charts on window resize
+            window.addEventListener('resize', () => {
+                setTimeout(() => {
+                    const allCharts = [
+                        'gauge-chart', 'pie-chart', 'radar-chart', 'bar-chart',
+                        'currentGraph', 'idealGraph'
+                    ].map(id => echarts.getInstanceByDom(document.getElementById(id))).filter(Boolean);
+                    allCharts.forEach(chart => chart.resize());
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Connectivity Questionnaire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #64748b;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* Style for the progress bar */
+        .progress-bar-fill {
+            transition: width 0.3s ease-in-out;
+        }
+        /* Add a subtle transition for section appearance */
+        .question-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-slate-900">Data & Systems Connectivity Audit</h1>
+            <p class="mt-2 text-lg text-slate-600">Map your current data landscape to uncover opportunities for integration.</p>
+        </header>
+        
+        <!-- Progress Bar -->
+        <div class="fixed top-0 left-0 w-full h-2 bg-slate-200 z-50">
+            <div id="progressBar" class="h-2 bg-indigo-600 progress-bar-fill" style="width: 0%;"></div>
+        </div>
+
+        <form id="connectivityForm" class="space-y-12">
+
+            <!-- Form Sections will be injected here by JavaScript -->
+            <div id="form-container"></div>
+
+            <!-- Submission Button -->
+            <div class="mt-12 text-center">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                    Generate Connectivity Report
+                </button>
+            </div>
+        </form>
+
+        <!-- Add link to dashboard -->
+        <div class="mt-8 text-center">
+            <a href="dashboard.html" class="text-sky-600 underline hover:text-sky-800 text-lg font-semibold">View Data Connectivity Dashboard →</a>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const questions = {
+                "Production & Operations": {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M2 7v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M20 7v10"></path><path d="M16 7v10"></path><path d="M12 7v10"></path><path d="M8 7v10"></path></svg>`,
+                    systems: ["MES", "ERP", "SCADA", "Spreadsheet", "Paper", "Whiteboard", "Legacy / Other"],
+                    items: {
+                        "production_schedule": "Production Schedule", "dispatch_list": "Dispatch List", "line_speed_setpoint": "Line Speed Setpoint",
+                        "piece_counts": "Piece Counts", "scrap_reasons": "Scrap Reasons", "cycle_time": "Cycle Time", "downtime_events": "Downtime Events",
+                        "change_overs": "Change-overs", "first_pass_yield": "First Pass Yield", "batch_step": "Batch Step Data", "operator_logbook": "Operator Logbook"
+                    }
+                },
+                "Maintenance & Equipment Health": {
+                     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
+                    systems: ["CMMS", "ERP", "SCADA", "Spreadsheet", "Paper", "Legacy / Other"],
+                    items: {
+                        "run_hours": "Run Hours", "vibration_trend": "Vibration Trend", "temperature_trend": "Temperature Trend", "lubrication_usage": "Lubrication Usage",
+                        "maintenance_work_orders": "Maintenance Work Orders", "failure_modes": "Failure Modes", "parts_usage": "Parts Usage", "calibration_schedule": "Calibration Schedule",
+                        "warranty_claims_asset": "Asset Warranty Claims", "service_contracts": "Service Contracts"
+                    }
+                },
+                "Quality": {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
+                    systems: ["QMS", "MES", "ERP", "SCADA", "Spreadsheet", "Paper", "Legacy / Other"],
+                    items: {
+                        "spc_charts": "SPC Charts", "inspection_results": "Inspection Results", "vision_inspection": "Vision Inspection Data", "deviation_tickets": "Deviation Tickets",
+                        "rework_logs": "Rework Logs", "audit_compliance": "Audit & Compliance", "gauge_rr": "Gauge R&R Studies", "customer_return_quality": "Customer Returns (Quality)",
+                        "emissions": "Emissions Data", "safety_incidents": "Safety Incidents"
+                    }
+                },
+                "Inventory & Flow": {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>`,
+                    systems: ["WMS", "ERP", "MES", "Spreadsheet", "Paper", "Legacy / Other"],
+                    items: {
+                        "item_master": "Item Master", "wip_balance": "WIP Balance", "finished_goods_location": "Finished Goods Location", "cycle_counts": "Cycle Counts",
+                        "shelf_life": "Shelf Life Data", "inbound_asn": "Inbound ASNs", "outbound_shipments": "Outbound Shipments", "reorder_points": "Reorder Points"
+                    }
+                },
+                "Energy & Utilities": {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>`,
+                    systems: ["SCADA", "MES", "Spreadsheet", "Paper", "Legacy / Other"],
+                    items: {
+                        "energy_meter": "Main Energy Meter", "sub_meter": "Sub-meter Data", "compressed_air": "Compressed Air Usage", "steam_flow": "Steam Flow", "hvac_runtime": "HVAC Runtime"
+                    }
+                },
+                "People / Labour": {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
+                    systems: ["ERP", "Spreadsheet", "Paper", "Legacy / Other"],
+                    items: { "time_clock": "Time Clock Data", "overtime_hours": "Overtime Hours", "skill_matrix": "Skill Matrix" }
+                },
+                "Customer & Service": {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><line x1="8" x2="8" y1="2" y2="4"></line><line x1="16" x2="16" y1="2" y2="4"></line></svg>`,
+                    systems: ["CRM", "ERP", "Spreadsheet", "Paper", "Legacy / Other"],
+                    items: {
+                        "customer_orders": "Customer Orders", "customer_forecasts": "Customer Forecasts", "warranty_claims_field": "Field Warranty Claims",
+                        "customer_feedback": "Customer Feedback", "service_tickets": "Service Tickets"
+                    }
+                },
+                "IT / OT Reliability": {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`,
+                    systems: ["SCADA", "MES", "Legacy / Other"],
+                    items: { "scada_alarms": "SCADA Alarms", "opc_heartbeats": "OPC Heartbeats" }
+                },
+                "Finance / Cost Linkers": {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`,
+                    systems: ["ERP", "Spreadsheet", "Legacy / Other"],
+                    items: { "cost_variances": "Cost Variances", "energy_ledger": "Energy Ledger" }
+                }
+            };
+
+            const formContainer = document.getElementById('form-container');
+            let totalQuestions = 0;
+            
+            Object.keys(questions).forEach(category => {
+                totalQuestions += Object.keys(questions[category].items).length;
+            });
+
+            // Generate form sections
+            Object.entries(questions).forEach(([category, data], index) => {
+                const section = document.createElement('div');
+                section.className = 'question-section bg-white p-6 sm:p-8 rounded-xl shadow-md';
+                section.style.animationDelay = `${index * 100}ms`;
+
+                let sectionHtml = `<h2 class="text-2xl font-bold text-slate-800 border-b border-slate-200 pb-4 mb-6 flex items-center">${data.icon} ${category}</h2>`;
+                sectionHtml += '<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">';
+
+                Object.entries(data.items).forEach(([qid, label]) => {
+                    sectionHtml += `
+                        <div class="flex flex-col">
+                            <label for="${qid}" class="mb-2 font-medium text-slate-700">${label}</label>
+                            <select id="${qid}" name="${qid}" class="w-full bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="" selected disabled>Select system...</option>
+                                <option value="Not Collected">Not Collected</option>
+                                <option value="" disabled class="text-slate-400">────────────────</option>`;
+                    data.systems.forEach(system => {
+                        sectionHtml += `<option value="${system}">${system}</option>`;
+                    });
+                    sectionHtml += `</select>
+                        </div>`;
+                });
+
+                sectionHtml += '</div>';
+                section.innerHTML = sectionHtml;
+                formContainer.appendChild(section);
+            });
+
+            const form = document.getElementById('connectivityForm');
+            const progressBar = document.getElementById('progressBar');
+
+            function updateProgress() {
+                const selects = form.querySelectorAll('select');
+                let answeredCount = 0;
+                selects.forEach(select => {
+                    if (select.value) {
+                        answeredCount++;
+                    }
+                });
+                const percentage = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
+                progressBar.style.width = `${percentage}%`;
+            }
+
+            form.addEventListener('change', updateProgress);
+            
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const responses = {};
+                let hasError = false;
+                // Highlight unfilled selects in red
+                form.querySelectorAll('select').forEach(select => {
+                    if (!select.value) {
+                        select.classList.add('border-red-500', 'bg-red-100');
+                        hasError = true;
+                    } else {
+                        select.classList.remove('border-red-500', 'bg-red-100');
+                    }
+                });
+                for (let [key, value] of formData.entries()) {
+                    responses[key] = value;
+                }
+                if (Object.keys(responses).length < totalQuestions || hasError) {
+                    alert('Please answer all questions before generating the report.');
+                    return;
+                }
+                // Save to localStorage and redirect
+                localStorage.setItem('responses', JSON.stringify(responses));
+                window.location.href = 'dashboard.html';
+            });
+            
+            // Initial progress update
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
