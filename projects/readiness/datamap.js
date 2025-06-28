@@ -1,4 +1,3 @@
-
 // DataMap.js - Client-side version of Datamap.py logic for browser use
 
 // --- CONFIGURATION ---

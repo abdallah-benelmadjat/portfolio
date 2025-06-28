@@ -86,8 +86,21 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-6">
-
+<body class="p-4 sm:p-6 bg-slate-900 text-slate-100 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-100">
+    <!-- Navigation Bar -->
+    <nav class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm mb-8">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="text-xl font-extrabold text-slate-900 dark:text-white">Industry 4.0</a>
+                <a href="questionnaire.html" class="text-slate-700 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-400 font-medium">Questionnaire</a>
+                <a href="dashboard.html" class="text-slate-700 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-400 font-medium">Dashboard</a>
+            </div>
+            <button id="theme-toggle" class="rounded-full p-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition" aria-label="Toggle theme">
+                <svg id="theme-icon-sun" class="w-6 h-6 text-yellow-400 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg id="theme-icon-moon" class="w-6 h-6 text-slate-800 dark:text-slate-200 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+            </button>
+        </div>
+    </nav>
     <div class="max-w-7xl mx-auto">
         <header class="text-center mb-6">
             <h1 class="text-4xl font-extrabold text-white tracking-tight">Data Maturity & Connectivity Dashboard</h1>
@@ -384,6 +397,36 @@
                 }, 100);
             });
         });
+
+        // Theme toggle logic
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.body.classList.remove('bg-slate-50', 'text-slate-800');
+                document.body.classList.add('bg-slate-900', 'text-slate-100');
+                document.getElementById('theme-icon-sun').style.display = 'inline';
+                document.getElementById('theme-icon-moon').style.display = 'none';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('bg-slate-900', 'text-slate-100');
+                document.body.classList.add('bg-slate-50', 'text-slate-800');
+                document.getElementById('theme-icon-sun').style.display = 'none';
+                document.getElementById('theme-icon-moon').style.display = 'inline';
+            }
+            localStorage.setItem('theme', theme);
+        }
+        function toggleTheme() {
+            const theme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            setTheme(theme);
+        }
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        // On load, set theme from localStorage or system preference
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) setTheme(saved);
+            else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+            else setTheme('light');
+        })();
     </script>
 </body>
 </html>

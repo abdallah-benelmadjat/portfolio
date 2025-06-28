@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industry 4.0 Readiness Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .progress-bar-bg { background: #e5e7eb; }
+        .progress-bar-fill { transition: width 0.4s; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 py-10">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Industry 4.0 Readiness Platform</h1>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                Data-readiness software and strategic roadmaps to guide manufacturers in their transition towards digital transformation and Industry 4.0 solutions.
+            </p>
+            <div class="mt-6 flex justify-center gap-4">
+                <a href="questionnaire.html" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition">Start Questionnaire</a>
+                <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-6 py-3 rounded-lg shadow transition">View Dashboard</a>
+            </div>
+        </header>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">Project Progress</h2>
+            <div class="space-y-8">
+                <!-- PLANNING & QUESTIONNAIRE -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-slate-700">Planning & Questionnaire</span>
+                        <span class="text-sm text-slate-500">80%</span>
+                    </div>
+                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
+                        <div class="h-3 rounded bg-indigo-600 progress-bar-fill" style="width:80%"></div>
+                    </div>
+                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
+                        <li class="line-through">Define audit scope + master list of data objects</li>
+                        <li class="line-through">Write JSON schema for categories / items / system options</li>
+                        <li class="line-through">Code questionnaire UI (HTML + Tailwind) from schema</li>
+                        <li class="line-through">Add progress bar & “all questions answered” validation</li>
+                        <li>Add weight dropdown (1-5) to every select</li>
+                    </ul>
+                </div>
+                <!-- RAW DATA CAPTURE -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-slate-700">Raw Data Capture</span>
+                        <span class="text-sm text-slate-500">33%</span>
+                    </div>
+                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
+                        <div class="h-3 rounded bg-sky-400 progress-bar-fill" style="width:33%"></div>
+                    </div>
+                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
+                        <li>Implement download of responses.json</li>
+                        <li>Create /data_txt/ folder convention + sample txt files</li>
+                        <li>Build text-file harvester → merges into responses dict</li>
+                    </ul>
+                </div>
+                <!-- PARSER / CORE LOGIC -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-slate-700">Parser / Core Logic</span>
+                        <span class="text-sm text-slate-500">50%</span>
+                    </div>
+                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
+                        <div class="h-3 rounded bg-amber-400 progress-bar-fill" style="width:50%"></div>
+                    </div>
+                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
+                        <li class="line-through">Draft datamap.py skeleton</li>
+                        <li class="line-through">Parse responses.json → current-state nodes & edges</li>
+                        <li>Build ideal_mapping & categories dictionary</li>
+                        <li>Extend parser to use weights for edge value & scores</li>
+                        <li>Add “Disconnected vs Legacy vs Misaligned” weighting rules</li>
+                        <li>Compute new metrics: Productivity & Operability formulas</li>
+                    </ul>
+                </div>
+                <!-- TEMPLATE & DASHBOARD -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-slate-700">Template & Dashboard</span>
+                        <span class="text-sm text-slate-500">50%</span>
+                    </div>
+                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
+                        <div class="h-3 rounded bg-green-400 progress-bar-fill" style="width:50%"></div>
+                    </div>
+                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
+                        <li class="line-through">Create template.html with Tailwind + ECharts stubs</li>
+                        <li class="line-through">Inject current vs. ideal graph data into template</li>
+                        <li>Render basic charts (gauge, pie, radar, bar)</li>
+                        <li>Visualise edge weight (thickness / opacity) in Graph Explorer</li>
+                        <li>Add tooltips: show data object, system, weight, gap reason</li>
+                        <li>Insert new gauges for Productivity & Operability</li>
+                    </ul>
+                </div>
+                <!-- POLISH & UX -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-slate-700">Polish & UX</span>
+                        <span class="text-sm text-slate-500">0%</span>
+                    </div>
+                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
+                        <div class="h-3 rounded bg-slate-300 progress-bar-fill" style="width:0%"></div>
+                    </div>
+                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
+                        <li>Dark-mode friendly selects / inputs</li>
+                        <li>Sticky sidebar to jump between questionnaire sections</li>
+                        <li>Keyboard-only form navigation QA</li>
+                        <li>Copy-to-clipboard button for top opportunities list</li>
+                    </ul>
+                </div>
+                <!-- DEV-OPS / PACKAGING -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-slate-700">Dev-Ops / Packaging</span>
+                        <span class="text-sm text-slate-500">0%</span>
+                    </div>
+                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
+                        <div class="h-3 rounded bg-slate-300 progress-bar-fill" style="width:0%"></div>
+                    </div>
+                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
+                        <li>Wrap code as CLI: python -m datamap &lt;responses.json&gt;</li>
+                        <li>Bundle static assets to /dist with hash versioning</li>
+                        <li>GitHub Actions: lint → pytest → build → artefact upload</li>
+                        <li>Write README quick-start + animated GIF demo</li>
+                    </ul>
+                </div>
+                <!-- STRETCH GOALS -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-slate-700">Stretch Goals</span>
+                        <span class="text-sm text-slate-500">0%</span>
+                    </div>
+                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
+                        <div class="h-3 rounded bg-slate-300 progress-bar-fill" style="width:0%"></div>
+                    </div>
+                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
+                        <li>Multi-facility overlay comparison</li>
+                        <li>Time-series audits (track maturity over months)</li>
+                        <li>Export graph to Neo4j for advanced queries</li>
+                        <li>Optional login & SQLite storage of past questionnaires</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-16 text-center text-slate-400 text-xs">
+            &copy; 2025 Industry 4.0 Readiness Platform. Internship-CSI.
+        </footer>
+    </div>
+</body>
+</html>
