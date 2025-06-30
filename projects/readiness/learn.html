@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning About Digitalization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #007BFF;
+            --accent-color: #FFC107;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --light-gray: #e9ecef;
+            --white: #fff;
+            --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --border-radius: 8px;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+        header h1 {
+            font-size: 2.8rem;
+            margin: 0;
+        }
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 2rem;
+        }
+        .section {
+            background: var(--white);
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .interactive-definitions .term {
+            cursor: pointer;
+            background-color: var(--light-gray);
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .interactive-definitions .term:hover {
+            background-color: #dde8f5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .interactive-definitions .term.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border-left-color: var(--accent-color);
+        }
+        .interactive-definitions .definition {
+            display: none;
+            padding: 15px;
+            margin-left: 20px;
+            border-left: 2px solid var(--accent-color);
+            background-color: #fff9e6;
+            border-radius: 5px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .data-table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+        .data-table tr {
+            transition: background-color 0.3s;
+        }
+        .data-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .oee-journey {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .oee-step {
+            width: 22%;
+            min-width: 180px;
+            background: var(--light-gray);
+            padding: 20px;
+            margin: 10px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border-top: 5px solid;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .oee-step:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+        .oee-step h4 { margin-top: 0; }
+        .oee-step:nth-child(1) { border-color: #dc3545; }
+        .oee-step:nth-child(2) { border-color: #fd7e14; }
+        .oee-step:nth-child(3) { border-color: #28a745; }
+        .oee-step:nth-child(4) { border-color: var(--secondary-color); }
+        .oee-step .oee-value { font-size: 2.5rem; font-weight: bold; margin: 10px 0; }
+        .architecture-diagram {
+            font-family: 'Courier New', Courier, monospace;
+            background: #2b2b2b;
+            color: #f1f1f1;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            position: relative;
+        }
+        .arch-layer {
+            border: 1px solid #666;
+            padding: 10px;
+            margin: 5px auto;
+            text-align: center;
+            width: 80%;
+            transition: background-color 0.3s, color 0.3s;
+            cursor: default;
+            position: relative;
+        }
+        .arch-layer:hover {
+            background-color: var(--accent-color);
+            color: #000;
+        }
+        .arch-layer .tooltip {
+            visibility: hidden;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .arch-layer:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .arch-layer:first-child { border-top-left-radius: 5px; border-top-right-radius: 5px; }
+        .arch-layer:last-child { border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            height: 100%;
+            width: 4px;
+            background: var(--light-gray);
+        }
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 100%;
+            padding-left: 60px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: auto;
+            left: 8px;
+            top: 22px;
+            background-color: white;
+            border: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            z-index: 1;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .timeline-item:hover::before {
+            background-color: var(--accent-color);
+        }
+        .timeline-content {
+            padding: 20px;
+            background-color: var(--white);
+            position: relative;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+        }
+        .timeline-content h4 { margin-top: 0; }
+        .takeaway-section .collapsible {
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            border-radius: var(--border-radius);
+        }
+        .takeaway-section .active, .takeaway-section .collapsible:hover {
+            background-color: var(--secondary-color);
+        }
+        .takeaway-section .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: var(--light-gray);
+        }
+        .takeaway-section .content ul {
+            list-style-type: '✅ ';
+            padding-left: 20px;
+        }
+        .takeaway-section .content li {
+            padding: 8px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background: var(--primary-color);
+            color: var(--white);
+        }
+        @media (max-width: 768px) {
+            .oee-journey {
+                flex-direction: column;
+                align-items: center;
+            }
+            .oee-step {
+                width: 80%;
+            }
+            .timeline::before {
+                left: 10px;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 40px;
+                padding-right: 15px;
+            }
+            .timeline-item::before {
+                left: -2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar (same as index.html) -->
+    <nav class="mb-10 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link">Industry 4.0 Platform</a>
+            <a href="questionnaire.html" class="nav-link">Questionnaire</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="learn.html" class="nav-link font-semibold text-sky-700">Learn about Digitilization</a>
+            <a href="case-studies.html" class="nav-link">Case Studies</a>
+        </div>
+    </nav>
+    <header>
+        <h1>Learning about Digitalization</h1>
+        <p>An Interactive Journey from Bits to Business Value</p>
+    </header>
+    <div class="container">
+        <section id="definitions" class="section">
+            <h2>From “Digitization” to “Industry 5.0” in One Breath</h2>
+            <p>Think of the four terms as rungs on the same ladder—skipping any rung leaves the climb unstable. Click each term to learn more.</p>
+            <div class="interactive-definitions">
+                <div class="term"><strong>Digitization (lower-case d)</strong></div>
+                <div class="definition">
+                    <p>The technical act of converting an analog signal, paper record, or manual measurement into binary code. A barcode that replaces a handwritten SKU, a vibration sensor that streams millivolt signals into OPC UA packets, or a scanned PDF that becomes structured text are all digitization events. The moment the UPC was first scanned in 1974 the supply-chain stopped relying on “tribal knowledge” and pivoted to electronic inventory lists—an archetypal act of digitization.</p>
+                </div>
+                <div class="term"><strong>Digitalization (the tricky middle word)</strong></div>
+                <div class="definition">
+                    <p>The organizational adoption of those digital signals across a workflow. When a manufacturer strings together ERP ➜ WMS ➜ SCADA so that sales orders, stock levels, and machine states flow automatically, it is digitalizing its value chain, vertically and horizontally.</p>
+                </div>
+                <div class="term"><strong>Digital Transformation / Industry 4.0</strong></div>
+                <div class="definition">
+                    <p>The strategic exploitation of that continuously flowing data with cyber-physical systems, IIoT connectivity, cloud analytics, and AI so decisions move from descriptive (“What happened?”) to prescriptive (“Do X now”).</p>
+                </div>
+                <div class="term"><strong>Industry 5.0</strong></div>
+                <div class="definition">
+                    <p>Layers a human-centric, sustainable, and resilient philosophy on top: hyper-personalised products, closed-loop energy/material use, and AI working with people rather than replacing them.</p>
+                </div>
+            </div>
+        </section>
+        <section id="data-fuel" class="section">
+            <h2>Why Data is the Fuel (and the Filter) for AI Readiness</h2>
+            <p>AI cannot learn from a vacuum. High-quality, accessible data is the non-negotiable prerequisite. Hover over the rows to see why.</p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>AI-Readiness Pillar</th>
+                        <th>Why Data is Indispensable</th>
+                        <th>Action Signals from the Transcripts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Volume & Context</strong></td>
+                        <td>ML models need dense and contextualised histories. Every tag, cycle count, downtime reason, or supplier lot number is a potential feature. Walker Reynolds’ “all data matters” mantra—“every datapoint is an event and a timestamp”—is a refusal to throw information away.</td>
+                        <td>Instrument aggressively at the edge; publish everything to a Unified Namespace rather than siloed point-to-point links.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quality & Governance</strong></td>
+                        <td>Static master data (part numbers, asset IDs) must be clean or dynamic data becomes meaningless. GS1 registries and data pools show how industries synchronise truth at scale.</td>
+                        <td>Stand up a cross-functional data-governance board; automate schema validation and versioning.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Accessibility & Latency</strong></td>
+                        <td>AI cannot learn from what it cannot reach. MQTT’s report-by-exception model moves millions of sensor updates efficiently while keeping plant networks deterministic.</td>
+                        <td>Collapse OT/IT firewalls with secure outbound-only brokers; edge-cache before cloud push for millisecond decisions.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Iterative Discovery</strong></td>
+                        <td>Nobody can predict every future use-case; therefore transformation must be “small quick iterations” of ≤ 12 weeks that stand on each other’s shoulders.</td>
+                        <td>Treat every proof-of-concept as a data-generation exercise for the next model.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section id="oee" class="section">
+            <h2>Digitization → Visibility → OEE → Productivity</h2>
+            <p>The journey from basic data capture to world-class efficiency is a powerful demonstration of value.</p>
+            <div class="oee-journey">
+                <div class="oee-step">
+                    <h4>1. Raw Visibility</h4>
+                    <p>First time an MES calculates OEE, plants discover their real performance.</p>
+                    <div class="oee-value">~30%</div>
+                </div>
+                <div class="oee-step">
+                    <h4>2. Behavioral Shock</h4>
+                    <p>Exposing the number drives crews to fix low-hanging fruit without capital spend.</p>
+                    <div class="oee-value">~80%</div>
+                    <small>in 60-90 days</small>
+                </div>
+                <div class="oee-step">
+                    <h4>3. Sustained Gains</h4>
+                    <p>Predictive analytics attack downtime and micro-stoppages for further improvement.</p>
+                    <div class="oee-value">~90%</div>
+                    <small>"World-Class"</small>
+                </div>
+                <div class="oee-step">
+                    <h4>4. Enterprise Impact</h4>
+                    <p>Data-driven levers unlock double-digit improvements in EBIT and time-to-market.</p>
+                    <div class="oee-value">🚀</div>
+                </div>
+            </div>
+        </section>
+        <section id="architecture" class="section">
+            <h2>Architecture in One Diagram</h2>
+            <p>A Unified Namespace architecture eliminates brittle point-to-point connectors. Hover over each layer for details.</p>
+            <div class="architecture-diagram">
+                <div class="arch-layer">
+                    ┌──────────────┐<br>
+                    │ Unified      │<br>
+                    │ Namespace    │<br>
+                    └──────────────┘
+                    <span class="tooltip">The central hub. A Pub/Sub namespace (MQTT, Sparkplug B, OPC UA PubSub) where all applications publish and subscribe to a single source of truth.</span>
+                </div>
+                <div class="arch-layer">
+                    Business Apps
+                    <span class="tooltip">CRM • PLM • Advanced Planning • AI/ML. These applications consume contextualized data and provide strategic insights.</span>
+                </div>
+                <div class="arch-layer">
+                    ERP / WMS
+                    <span class="tooltip">Master records, finance, promises. The system of record for business-level information like orders and inventory.</span>
+                </div>
+                <div class="arch-layer">
+                    MES / MOM
+                    <span class="tooltip">Orders → Stations, OEE, traceability. Manages, monitors and synchronizes the execution of real-time physical processes.</span>
+                </div>
+                <div class="arch-layer">
+                    SCADA / HMI
+                    <span class="tooltip">Real-time supervision & alarms. Allows for human supervision and control of industrial processes.</span>
+                </div>
+                <div class="arch-layer">
+                    PLC / Edge
+                    <span class="tooltip">Deterministic control + sensor gateways. The lowest level, where sensors collect data and controllers execute commands. Edge computing processes data locally.</span>
+                </div>
+            </div>
+        </section>
+        <section id="industry5" class="section">
+            <h2>Industry 5.0: What Changes Once the Data Foundation is Solid</h2>
+            <p>With a robust data ecosystem, the focus shifts to a more human-centric, sustainable, and resilient model.</p>
+            <ul>
+                <li><strong>Human Centricity:</strong> Operators shift from button-pushers to operations analysts maintaining the digital infrastructure and interpreting AI output.</li>
+                <li><strong>Hyper-personalisation at Scale:</strong> Real-time configuration data lets factories produce “batch size 1” shoes or pharmaceuticals; customer experience becomes a live feedback loop, not a quarterly survey.</li>
+                <li><strong>Sustainability and Resilience:</strong> Holistic data across energy, emissions, and supply-chain provenance enables closed-loop material flows and rapid risk detection (e.g., epidemic shutdowns, raw-material shocks).</li>
+            </ul>
+        </section>
+        <section id="roadmap" class="section">
+            <h2>A Pragmatic Roadmap</h2>
+            <p>This journey is a marathon, not a sprint. Each phase builds upon the last, compounding data value over time.</p>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 1: Baseline</h4>
+                        <strong>Typical duration:</strong> 0-3 months<br>
+                        <strong>Key deliverables:</strong> Digital Transformation Maturity Assessment; choose open messaging standard; inventory data sources & master data gaps.
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 2: Sensor & Connect</h4>
+                        <strong>Typical duration:</strong> 3-12 months<br>
+                        <strong>Key deliverables:</strong> Edge gateways on bottleneck assets; MQTT/SPB broker; initial MES modules for OEE & eLogbooks.
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 3: Model & Optimise</h4>
+                        <strong>Typical duration:</strong> 12-24 months<br>
+                        <strong>Key deliverables:</strong> Predictive maintenance on critical lines; closed-loop quality analytics; automated scheduling tied to ERP promises.
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 4: Scale & Empower</h4>
+                        <strong>Typical duration:</strong> 24-36 months<br>
+                        <strong>Key deliverables:</strong> Unified Namespace extended enterprise-wide; self-service BI; citizen-data-scientist training; governance operating model.
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 5: Industry 5.0 Pivot</h4>
+                        <strong>Typical duration:</strong> 36 months +<br>
+                        <strong>Key deliverables:</strong> Human-in-the-loop AI, mass-customisation, carbon-aware scheduling, collaborative robots.
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="takeaway" class="section takeaway-section">
+            <h2>The Takeaway</h2>
+            <p>Every rung depends on the one below—just as high OEE and breakthrough productivity depend on the unglamorous first step of capturing clean, ubiquitous data. Click below to review the core concepts.</p>
+            <button class="collapsible">Learn More</button>
+            <div class="content">
+                <ul>
+                    <li><strong>Digitization</strong> turns facts into bits.</li>
+                    <li><strong>Digitalization</strong> lets those bits flow.</li>
+                    <li><strong>Industry 4.0</strong> turns flowing bits into insight and autonomous action.</li>
+                    <li><strong>Industry 5.0</strong> ensures those autonomous actions serve people and the planet.</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>Interactive Learning Page created by Gemini</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Interactive Definitions
+            const terms = document.querySelectorAll('.interactive-definitions .term');
+            terms.forEach(term => {
+                term.addEventListener('click', () => {
+                    const definition = term.nextElementSibling;
+                    const isActive = term.classList.contains('active');
+                    // Close all others
+                    document.querySelectorAll('.interactive-definitions .term').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.interactive-definitions .definition').forEach(d => d.style.display = 'none');
+                    if (!isActive) {
+                        term.classList.add('active');
+                        definition.style.display = 'block';
+                    }
+                });
+            });
+            // Scroll Animations for sections
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                rootMargin: '0px',
+                threshold: 0.1
+            });
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            // Collapsible Takeaway
+            const coll = document.querySelector(".collapsible");
+            coll.addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

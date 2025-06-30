@@ -13,37 +13,36 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* slate-900 */
-            color: #d1d5db; /* gray-300 */
+            background-color: #f8fafc; /* slate-50 */
+            color: #1e293b; /* slate-800 */
         }
         .chart-container {
             width: 100%;
             height: 100%;
-            background-color: #1e293b; /* slate-800 */
+            background-color: #fff; /* white */
             border-radius: 0.75rem;
             padding: 1rem;
-            border: 1px solid #334155; /* slate-700 */
-            /* Make sure it fills parent absolutely */
+            border: 1px solid #e5e7eb; /* slate-200 */
             box-sizing: border-box;
         }
         .metric-card {
-            background-color: #1e293b; /* slate-800 */
+            background-color: #fff; /* white */
             border-radius: 0.75rem;
             padding: 1.5rem;
-            border: 1px solid #334155; /* slate-700 */
+            border: 1px solid #e5e7eb; /* slate-200 */
         }
         .card-title {
             font-size: 1.125rem;
             font-weight: 600;
-            color: #94a3b8; /* slate-400 */
+            color: #334155; /* slate-700 */
             margin-bottom: 1rem;
             text-align: center;
         }
         .tab {
             padding: 0.5rem 1.5rem;
-            border: 1px solid #4b5563;
+            border: 1px solid #cbd5e1;
             background-color: transparent;
-            color: #d1d5db;
+            color: #334155;
             cursor: pointer;
             border-radius: 6px;
             font-size: 0.875rem;
@@ -59,7 +58,7 @@
             display: none;
         }
         .view-active {
-            display: grid; /* Use grid for layout */
+            display: grid;
         }
         /* Make the graph explorer area fill more space */
         #view-graph {
@@ -86,40 +85,33 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-6 bg-slate-900 text-slate-100 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-100">
+<body class="p-4 sm:p-6 bg-slate-50 text-slate-800">
     <!-- Navigation Bar -->
-    <nav class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm mb-8">
-        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-            <div class="flex items-center gap-6">
-                <a href="index.html" class="text-xl font-extrabold text-slate-900 dark:text-white">Industry 4.0</a>
-                <a href="questionnaire.html" class="text-slate-700 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-400 font-medium">Questionnaire</a>
-                <a href="dashboard.html" class="text-slate-700 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-400 font-medium">Dashboard</a>
-            </div>
-            <button id="theme-toggle" class="rounded-full p-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition" aria-label="Toggle theme">
-                <svg id="theme-icon-sun" class="w-6 h-6 text-yellow-400 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-                <svg id="theme-icon-moon" class="w-6 h-6 text-slate-800 dark:text-slate-200 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
-            </button>
+    <nav class="mb-10 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link">Industry 4.0 Platform</a>
+            <a href="questionnaire.html" class="nav-link">Questionnaire</a>
+            <a href="dashboard.html" class="nav-link font-semibold text-sky-700">Dashboard</a>
+            <a href="learn.html" class="nav-link">Learn about Digitilization</a>
+            <a href="case-studies.html" class="nav-link">Case Studies</a>
         </div>
     </nav>
     <div class="max-w-7xl mx-auto">
         <header class="text-center mb-6">
-            <h1 class="text-4xl font-extrabold text-white tracking-tight">Data Maturity & Connectivity Dashboard</h1>
-            <p class="mt-2 text-lg text-slate-400">Actionable intelligence on your digital landscape.</p>
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Data Maturity & Connectivity Dashboard</h1>
+            <p class="mt-2 text-lg text-slate-600">Actionable intelligence on your digital landscape.</p>
             <div class="mt-2">
-                <a href="questionnaire.html" class="text-sky-400 underline hover:text-sky-300 text-base">← Back to Questionnaire</a>
+                <a href="questionnaire.html" class="text-sky-600 underline hover:text-sky-800 text-base">← Back to Questionnaire</a>
             </div>
         </header>
-
         <div id="no-data-message" class="text-center text-slate-400 text-lg my-12 hidden">
-            No responses found. Please complete the <a href="questionnaire.html" class="text-sky-400 underline">questionnaire</a> first.
+            No responses found. Please complete the <a href="questionnaire.html" class="text-sky-600 underline">questionnaire</a> first.
         </div>
-
         <!-- Main View Tabs -->
         <div class="flex justify-center space-x-2 mb-6">
             <button id="tab-dashboard" class="tab tab-active">Metrics Dashboard</button>
             <button id="tab-graph" class="tab">Graph Explorer</button>
         </div>
-
         <!-- Dashboard View -->
         <main id="view-dashboard" class="view view-active grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <!-- Dashboard content from previous version -->
@@ -137,7 +129,7 @@
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="metric-card xl:col-span-1">
                         <h2 class="card-title">Overall Data State</h2>
-                        <div id="pie-chart" class="chart-container" style="height: 300px;"></div>
+                        <div id="pie-chart" class="chart-container flex items-start" style="height: 370px; align-items: flex-start; padding-top: 12px;"></div>
                     </div>
                     <div class="metric-card xl:col-span-2">
                         <h2 class="card-title">Departmental Digitalization</h2>
@@ -150,7 +142,6 @@
                 </div>
             </div>
         </main>
-
         <!-- Graph Explorer View -->
         <main id="view-graph" class="view grid-cols-1 gap-6">
             <div class="flex justify-center space-x-2 mb-4">
@@ -163,7 +154,6 @@
             </div>
         </main>
     </div>
-
     <script type="module">
         import { computeDataMap } from './datamap.js';
 
@@ -202,13 +192,101 @@
         // --- CHART RENDERING FUNCTIONS ---
         function renderDashboardCharts() {
             const gaugeChart = echarts.init(document.getElementById('gauge-chart'));
-            gaugeChart.setOption({ series: [{ type: 'gauge', startAngle: 180, endAngle: 0, min: 0, max: 100, splitNumber: 5, axisLine: { lineStyle: { width: 20, color: [[0.25, '#dc2626'], [0.5, '#f97316'],[0.75, '#facc15'],[1, '#4ade80']] }}, pointer: { length: '60%', width: 6, offsetCenter: [0, '-15%'] }, axisTick: { distance: -30, length: 8, lineStyle: { color: '#fff', width: 2 } }, splitLine: { distance: -35, length: 15, lineStyle: { color: '#fff', width: 4 } }, axisLabel: { color: 'auto', distance: 5, fontSize: 14 }, detail: { valueAnimation: true, formatter: '{value}%', color: 'auto', fontSize: 30, offsetCenter: [0, '20%'] }, data: [{ value: dashboardData.correctnessScore, name: 'Correctness' }] }] });
+            gaugeChart.setOption({
+                series: [{
+                    type: 'gauge',
+                    startAngle: 180,
+                    endAngle: 0,
+                    min: 0,
+                    max: 100,
+                    splitNumber: 5,
+                    axisLine: {
+                        lineStyle: {
+                            width: 20,
+                            color: [
+                                [0.25, '#dc2626'],
+                                [0.5, '#f97316'],
+                                [0.75, '#facc15'],
+                                [1, '#22c55e']
+                            ]
+                        }
+                    },
+                    pointer: { length: '60%', width: 6, offsetCenter: [0, '-10%'] },
+                    axisTick: { distance: -30, length: 8, lineStyle: { color: '#334155', width: 2 } }, // push ticks outward
+                    splitLine: { distance: -30, length: 15, lineStyle: { color: '#334155', width: 4 } }, // push split lines outward
+                    axisLabel: {
+                        color: '#334155',
+                        distance: -18, // push labels outward
+                        fontSize: 16,
+                        formatter: function(val) {
+                            // Show only 20,40,60,80,100
+                            if ([20,40,60,80,100].includes(val)) return val;
+                            return '';
+                        }
+                    },
+                    detail: {
+                        valueAnimation: true,
+                        formatter: '{value}%',
+                        color: '#0f172a',
+                        fontSize: 30,
+                        offsetCenter: [0, '45%']
+                    },
+                    data: [{ value: dashboardData.correctnessScore, name: 'Correctness' }]
+                }]
+            });
             const pieChart = echarts.init(document.getElementById('pie-chart'));
-            pieChart.setOption({ tooltip: { trigger: 'item', formatter: '{b}<br/>{c} points ({d}%)' }, legend: { top: 'bottom', textStyle: { color: '#d1d5db' }}, series: [{ name: 'Data State', type: 'pie', radius: ['40%', '70%'], avoidLabelOverlap: false, itemStyle: { borderRadius: 10, borderColor: '#1e293b', borderWidth: 2 }, label: { show: false, position: 'center' }, emphasis: { label: { show: true, fontSize: '20', fontWeight: 'bold' } }, labelLine: { show: false }, data: dashboardData.fourStateData, color: ['#4ade80', '#f97316', '#94a3b8', '#dc2626']}] });
+            pieChart.setOption({
+                tooltip: { trigger: 'item', formatter: '{b}<br/>{c} points ({d}%)', backgroundColor: '#fff', borderColor: '#e5e7eb', textStyle: { color: '#334155' } },
+                legend: { top: 'bottom', textStyle: { color: '#334155' }, itemGap: 24, padding: [24,0,0,0] },
+                series: [{
+                    name: 'Data State',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['50%', '35%'], // moved up from 48% to 44%
+                    avoidLabelOverlap: false,
+                    itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+                    label: { show: false, position: 'center' },
+                    emphasis: { label: { show: true, fontSize: '20', fontWeight: 'bold', color: '#0f172a' } },
+                    labelLine: { show: false },
+                    data: dashboardData.fourStateData,
+                    color: ['#22c55e', '#f97316', '#94a3b8', '#dc2626']
+                }]
+            });
             const radarChart = echarts.init(document.getElementById('radar-chart'));
-            radarChart.setOption({ radar: { indicator: dashboardData.departmentalScoresData.map(d => ({name: d.name, max: 100})), axisName: { color: '#d1d5db' }, }, tooltip: { trigger: 'item' }, series: [{ name: 'Departmental Digitalization', type: 'radar', data: [{ value: dashboardData.departmentalScoresData.map(d => d.value.toFixed(1)), name: 'Digitalization %' }], areaStyle: { color: 'rgba(59, 130, 246, 0.4)'}, lineStyle: { color: '#3b82f6'}, itemStyle: { color: '#3b82f6' } }] });
+            radarChart.setOption({
+                radar: {
+                    indicator: dashboardData.departmentalScoresData.map(d => ({ name: d.name, max: 100 })),
+                    axisName: { color: '#334155' },
+                    splitLine: { lineStyle: { color: '#e5e7eb' } },
+                    splitArea: { areaStyle: { color: ['#f1f5f9', '#fff'] } },
+                    axisLine: { lineStyle: { color: '#cbd5e1' } }
+                },
+                tooltip: { trigger: 'item', backgroundColor: '#fff', borderColor: '#e5e7eb', textStyle: { color: '#334155' } },
+                series: [{
+                    name: 'Departmental Digitalization',
+                    type: 'radar',
+                    data: [{
+                        value: dashboardData.departmentalScoresData.map(d => d.value.toFixed(1)),
+                        name: 'Digitalization %'
+                    }],
+                    areaStyle: { color: 'rgba(59, 130, 246, 0.10)' },
+                    lineStyle: { color: '#3b82f6' },
+                    itemStyle: { color: '#3b82f6' }
+                }]
+            });
             const barChart = echarts.init(document.getElementById('bar-chart'));
-            barChart.setOption({ tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }}, grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }, xAxis: { type: 'value', boundaryGap: [0, 0.01], axisLabel: {color: '#d1d5db'}}, yAxis: { type: 'category', data: dashboardData.systemWorkloadData.map(d => d.name).reverse(), axisLabel: {color: '#d1d5db'}}, series: [{ name: 'Data Points', type: 'bar', data: dashboardData.systemWorkloadData.map(d => d.value).reverse(), itemStyle: { color: '#3b82f6' } }] });
+            barChart.setOption({
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, backgroundColor: '#fff', borderColor: '#e5e7eb', textStyle: { color: '#334155' } },
+                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                xAxis: { type: 'value', boundaryGap: [0, 0.01], axisLabel: { color: '#334155' }, splitLine: { lineStyle: { color: '#e5e7eb' } } },
+                yAxis: { type: 'category', data: dashboardData.systemWorkloadData.map(d => d.name).reverse(), axisLabel: { color: '#334155' } },
+                series: [{
+                    name: 'Data Points',
+                    type: 'bar',
+                    data: dashboardData.systemWorkloadData.map(d => d.value).reverse(),
+                    itemStyle: { color: '#3b82f6' }
+                }]
+            });
         }
 
         // --- Graph Explorer Logic ---
@@ -219,12 +297,14 @@
             // Convert systemNodes to Set for fast lookup
             const systemNodesSet = new Set(dashboardData.systemNodes);
 
+            // Light mode node colors
             const departmentColors = [
+                "#0ea5e9", // blue-500 for System
                 "#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#8b5cf6", "#f472b6", "#14b8a6", "#facc15"
             ];
             const departmentNames = dashboardData.departmentalScoresData.map(d => d.name);
             const departmentColorMap = {};
-            departmentNames.forEach((name, i) => { departmentColorMap[name] = departmentColors[i % departmentColors.length]; });
+            departmentNames.forEach((name, i) => { departmentColorMap[name] = departmentColors[(i + 1) % departmentColors.length]; });
 
             function getDepartment(nodeName) {
                 for (const dep of departmentNames) {
@@ -253,13 +333,18 @@
                         name: nodeName,
                         symbolSize: isSystem ? 35 : 18,
                         category,
-                        label: { show: isSystem }
+                        label: { show: isSystem, color: '#0f172a', fontWeight: 700, fontSize: isSystem ? 14 : 10 }
                     };
                 });
                 const option = {
                     backgroundColor: 'transparent',
-                    tooltip: { formatter: '{b}' },
-                    legend: [{ data: categories.map(a => a.name), textStyle: { color: '#d1d5db' }, bottom: 10, type: 'scroll' }],
+                    tooltip: { 
+                        formatter: '{b}',
+                        backgroundColor: '#fff',
+                        borderColor: '#e5e7eb',
+                        textStyle: { color: '#334155' }
+                    },
+                    legend: [{ data: categories.map(a => a.name), textStyle: { color: '#334155' }, bottom: 10, type: 'scroll' }],
                     series: [{
                         name: title,
                         type: 'graph',
@@ -269,10 +354,11 @@
                         categories: categories,
                         roam: true,
                         draggable: true,
-                        label: { position: 'right', color: '#d1d5db', fontSize: 10 },
+                        label: { position: 'right', color: '#0f172a', fontSize: 10 },
                         force: { repulsion: 200, edgeLength: [80, 120], gravity: 0.1, layoutAnimation: true },
-                        lineStyle: { color: '#4b5563', opacity: 0.7, width: 1.5, curveness: 0 },
-                        emphasis: { focus: 'adjacency', label: { show: true }, lineStyle: { width: 4 } }
+                        lineStyle: { color: '#64748b', opacity: 0.7, width: 1.5, curveness: 0 },
+                        emphasis: { focus: 'adjacency', label: { show: true, color: '#0f172a' }, lineStyle: { width: 4 } },
+                        zoom: 0.5 // initial zoom out
                     }]
                 };
                 const myChart = echarts.init(containerEl);
@@ -339,12 +425,19 @@
             if (dashboardData.topOpportunitiesData.length > 0) {
                 dashboardData.topOpportunitiesData.forEach(item => {
                     const li = document.createElement('li');
-                    li.className = 'p-3 bg-slate-700/50 rounded-md';
-                    li.innerHTML = `<p class="font-semibold text-white">${item.name}</p><p class="text-sm text-slate-400">Reason: ${item.reason} → Target: <span class="font-bold text-sky-400">${item.target}</span></p>`;
+                    li.className = 'p-3 bg-slate-100 border border-slate-200 rounded-md';
+                    li.innerHTML = `
+                        <p class="font-semibold text-slate-800">${item.name}</p>
+                        <p class="text-sm text-slate-600 mt-1">
+                            <span class="font-semibold">Reason:</span> ${item.reason}
+                            <span class="mx-2 text-slate-400">→</span>
+                            <span class="font-semibold">Target:</span> <span class="font-bold text-sky-600">${item.target}</span>
+                        </p>
+                    `;
                     listEl.appendChild(li);
                 });
             } else {
-                listEl.innerHTML = `<p class="text-center text-green-400 font-semibold">No major gaps found. Great work!</p>`;
+                listEl.innerHTML = `<p class="text-center text-green-600 font-semibold">No major gaps found. Great work!</p>`;
             }
         }
 
@@ -397,36 +490,6 @@
                 }, 100);
             });
         });
-
-        // Theme toggle logic
-        function setTheme(theme) {
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-                document.body.classList.remove('bg-slate-50', 'text-slate-800');
-                document.body.classList.add('bg-slate-900', 'text-slate-100');
-                document.getElementById('theme-icon-sun').style.display = 'inline';
-                document.getElementById('theme-icon-moon').style.display = 'none';
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.body.classList.remove('bg-slate-900', 'text-slate-100');
-                document.body.classList.add('bg-slate-50', 'text-slate-800');
-                document.getElementById('theme-icon-sun').style.display = 'none';
-                document.getElementById('theme-icon-moon').style.display = 'inline';
-            }
-            localStorage.setItem('theme', theme);
-        }
-        function toggleTheme() {
-            const theme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-            setTheme(theme);
-        }
-        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-        // On load, set theme from localStorage or system preference
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved) setTheme(saved);
-            else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
-            else setTheme('light');
-        })();
     </script>
 </body>
 </html>

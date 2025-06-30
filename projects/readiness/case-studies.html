@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Studies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Use Tailwind utility classes directly in HTML for best compatibility.
+           The @apply directive only works in a Tailwind build pipeline, not in <style> tags in HTML.
+           So, remove @apply and use class attributes on elements instead. */
+        .modal-bg {
+            background: rgba(30,41,59,0.7);
+        }
+        .modal-content {
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        @media (max-width: 640px) {
+            .case-list { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+    <!-- Top Navigation Bar -->
+    <nav class="mb-10 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link">Industry 4.0 Platform</a>
+            <a href="questionnaire.html" class="nav-link">Questionnaire</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="learn.html" class="nav-link">Learn about Digitilization</a>
+            <a href="case-studies.html" class="nav-link font-semibold text-sky-700">Case Studies</a>
+        </div>
+    </nav>
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-8">
+        <h1 class="text-4xl font-extrabold text-slate-900 mb-2 text-center tracking-tight">Case Studies</h1>
+        <p class="text-lg text-slate-600 mb-8 text-center">Explore real-world digital transformation journeys across manufacturing, retail, healthcare, and more.</p>
+        <!-- Case Studies Container -->
+        <div id="case-studies-root"></div>
+    </main>
+    <!-- Modal for full case study -->
+    <div id="modal-bg" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 modal-content relative">
+            <button id="modal-close" class="absolute top-2 right-2 text-slate-400 hover:text-sky-600 text-3xl font-bold leading-none">&times;</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    <footer class="text-center text-slate-400 text-xs py-6 mt-10 border-t border-slate-200">
+        &copy; 2025 Industry 4.0 Readiness Platform. Internship-CSI.
+    </footer>
+    <script type="module">
+        // --- CASE STUDY DATA ---
+        // Each entry: { category, title, summary, content }
+        const caseStudies = [
+            // --- Productivity / Automation / Approval (Kissflow) ---
+            {
+                category: "Productivity",
+                title: "Olympus: Modernizing Operations with Kissflow",
+                summary: "Olympus needed a modern, intuitive, and automated platform to enhance processes and hasten the delivery of tasks.",
+                content: `
+<b>Industry:</b> Manufacturing<br>
+<b>Employees:</b> 10,000+<br>
+<b>Headquarters:</b> Japan<br><br>
+Olympus is passionate about creating customer-driven solutions for the medical, life sciences, and industrial equipment industries. For over 100 years, Olympus has focused on making people’s lives healthier, safer, and more fulfilling. Their vision is to help detect, prevent, and treat diseases and advance scientific research while ensuring public safety. Olympus is headquartered in Tokyo, Japan, with more than 35,000 employees worldwide in nearly 40 countries and regions.<br><br>
+<b>Challenges faced:</b><br>
+- Modernization: Olympus struggled to modernize its operations as the tool it used could not support this vision.<br>
+- Burden on IT: Every small change in their operations required a team of skilled IT professionals to implement.<br>
+- Integration: A simple integration, such as linking their database to spreadsheets, was a challenge using their old workflow automation tool.<br><br>
+<b>Solution:</b><br>
+Olympus ES transitioned many of its processes from its old tool to Kissflow, including purchasing processes, RMAs, demo requests, and offering discounts. The ability to add attachments, reassign tasks midstream, and modify data were big selling points.<br><br>
+<b>Results:</b><br>
+- Reduced process cycle time<br>
+- Improved organization and efficiency<br>
+- More control over budgets<br>
+- Less burden on IT
+`
+            },
+            {
+                category: "Productivity",
+                title: "Vietnamobile: Digital Workplace Management",
+                summary: "Vietnamobile adopted a digital workplace management platform for easy tracking and reliable internal communication.",
+                content: `
+<b>Industry:</b> Telecom<br>
+<b>Location:</b> Vietnam<br><br>
+Efficiency was a top priority for the Hanoi-based Vietnamobile. It envisioned adopting a digital workplace management platform for easy tracking and reliable internal communication.<br><br>
+<b>Result:</b> Improved efficiency and communication across teams.
+`
+            },
+            {
+                category: "Productivity",
+                title: "Quality Companies LLC: Document Trail Optimization",
+                summary: "Logistics company Quality Companies needed a clear documentation trail to stay on top of requests and processing dates.",
+                content: `
+<b>Industry:</b> Logistics<br>
+Quality Companies gathered countless documents via email daily. It needed a clear documentation trail to stay on top of requests and processing dates.<br><br>
+<b>Result:</b> Enhanced documentation and process tracking.
+`
+            },
+            {
+                category: "Productivity",
+                title: "Davenport University: Streamlining Student Forms",
+                summary: "Davenport University sought an innovative solution to save time on processing student forms and other documents.",
+                content: `
+<b>Industry:</b> Education<br>
+Universities are no strangers to budget cuts and complex procedures to manage requests. Davenport University sought an innovative solution to save time on processing student forms and other documents.<br><br>
+<b>Result:</b> Reduced processing time and improved efficiency.
+`
+            },
+            {
+                category: "Approval",
+                title: "GreenCube Global: Payment Approval Solution",
+                summary: "GreenCube Global required a payment approval solution to monitor requests exchanged between managers and the finance department.",
+                content: `
+<b>Industry:</b> Finance<br>
+Speed and precision are vital to handling finance documents. GreenCube Global required a payment approval solution to monitor requests exchanged between managers and the finance department.<br><br>
+<b>Result:</b> Faster, more precise approvals.
+`
+            },
+            {
+                category: "Approval",
+                title: "Bergstrom Automotive: Automated Write-Off Approvals",
+                summary: "Bergstrom Automotive streamlined write-off approvals, saving money and reducing paper forms.",
+                content: `
+<b>Industry:</b> Retail (Automotive)<br>
+<b>Employees:</b> 1,001-5,000<br>
+<b>Headquarters:</b> USA<br><br>
+Bergstrom Automotive is Wisconsin’s #1 Automotive Dealer. They have 44 car dealerships and thousands of employees. Bergstrom found it challenging to standardize processes and workflows across branches. Accounting had to send paper forms through the mail to each branch to get signatures, often resulting in lost paperwork.<br><br>
+<b>Solution:</b> Kissflow enabled digital, automated workflows for accounting write-offs. The process became trackable, and approvals could be stopped or rerouted as needed.<br><br>
+<b>Results:</b><br>
+- Reduction in time taken to process approvals<br>
+- Saved money by stopping unnecessary write-offs<br>
+- Reduction of paper forms and mail costs
+`
+            },
+            {
+                category: "Approval",
+                title: "Verisys: Coordinated Healthcare Data Approvals",
+                summary: "Verisys needed well-coordinated workflows for swift approval processes in healthcare data management.",
+                content: `
+<b>Industry:</b> Healthcare<br>
+Verisys needed well-coordinated workflows for swift approval processes in healthcare data management.<br><br>
+<b>Result:</b> Improved approval speed and data management.
+`
+            },
+            {
+                category: "Approval",
+                title: "Tripwolf: Automated Leave Requests",
+                summary: "Tripwolf, a startup travel agency, automated employee leave requests for easy approval and workload adjustment.",
+                content: `
+<b>Industry:</b> Travel<br>
+Tripwolf, a startup travel agency, sought to automate employee leave requests for easy approval and adjustment of workload.<br><br>
+<b>Result:</b> Streamlined HR processes.
+`
+            },
+            {
+                category: "Automation",
+                title: "Landmark Properties: Central Workplace Platform",
+                summary: "Landmark Properties empowered its teams with a central workplace platform to enhance efficiency.",
+                content: `
+<b>Industry:</b> Real Estate<br>
+Landmark Properties empowered its marketing and other teams with a central workplace platform to enhance efficiency.<br><br>
+<b>Result:</b> Improved collaboration and transparency.
+`
+            },
+            {
+                category: "Automation",
+                title: "Project SYNCERE: Automating Document Management",
+                summary: "Project SYNCERE embraced automation to improve internal operations and manage documents from over 20 programs.",
+                content: `
+<b>Industry:</b> Non-profit<br>
+Project SYNCERE embraced automation to improve internal operations and manage documents from over 20 programs.<br><br>
+<b>Result:</b> Streamlined document management.
+`
+            },
+            {
+                category: "Automation",
+                title: "Beqom: Simplified Global Approval Pipelines",
+                summary: "Beqom used automated workflows to simplify global approval pipelines and track pending requests.",
+                content: `
+<b>Industry:</b> Software Development<br>
+Beqom used automated workflows to simplify global approval pipelines and track pending requests.<br><br>
+<b>Result:</b> Improved process visibility and speed.
+`
+            },
+            {
+                category: "Automation",
+                title: "Lincoln Financial Media: Digital Collaboration Platform",
+                summary: "Lincoln Financial Media transitioned from paper forms to a fully digital and collaborative platform.",
+                content: `
+<b>Industry:</b> Media<br>
+Lincoln Financial Media left traditional paper forms and archives for a fully digital and collaborative platform.<br><br>
+<b>Result:</b> Enhanced digital collaboration.
+`
+            },
+            // --- Ectobox ---
+            {
+                category: "Manufacturing",
+                title: "Universal Electric Corporation: Managing Data and Workflow",
+                summary: "Managing ECN data and workflow for mass customization manufacturing.",
+                content: `
+<b>Industry:</b> Manufacturing<br>
+Universal Electric Corporation had the challenge of managing the data and workflow for Engineering Change Notices (ECNs) in their mass customization business model. The current processes were digital but manual and time intensive.<br><br>
+<b>Solution:</b> Ectobox built a solution using Microsoft SQL Server and .NET (C#) to create an application for tracking, modifying, and closing document changes.<br><br>
+<b>Results:</b> Time required to manage document changes is much faster and more accurate; service and product quality increased.
+`
+            },
+            {
+                category: "Manufacturing",
+                title: "The Borough of Chambersburg: Leveraging Data with Canary Labs Historian",
+                summary: "Improving efficiency and reporting by leveraging data from legacy generation units.",
+                content: `
+<b>Industry:</b> Utilities<br>
+The Borough of Chambersburg wanted to improve data collection from older generation units. Ectobox implemented a scalable architecture using MQTT Data Broker and Canary Labs Historian.<br><br>
+<b>Results:</b> Real-time data collection, improved reporting, and diagnostic capabilities for generation stations.
+`
+            },
+            {
+                category: "Manufacturing",
+                title: "Bayer Healthcare: Improving Data Management",
+                summary: "Fixing and enhancing a legacy Access/SQL Server application for medical device manufacturing.",
+                content: `
+<b>Industry:</b> Medical Devices<br>
+Bayer Healthcare had a legacy Access application with a SQL Server backend that was buggy and unsupported. Ectobox fixed all bugs and added new features.<br><br>
+<b>Results:</b> Increased productivity and efficiency, seamless application operation, and further custom software development.
+`
+            },
+            // --- Fictional / Digital Transformation ---
+            {
+                category: "Manufacturing",
+                title: "Dissolving Manufacturing Silos: A Digital Transformation Story",
+                summary: "A beverage plant breaks down silos and achieves peak efficiency with digital transformation.",
+                content: `
+<b>Industry:</b> Beverage Manufacturing<br>
+A beverage plant struggled with siloed departments and fragmented data. By implementing SAP Production Planning, Fujitsu Digital Kaizen, HCI Edge, and a unified Control Tower, the plant achieved:<br>
+- Integrated planning, scheduling, and resource allocation<br>
+- Real-time data collection and analytics<br>
+- Continuous improvement and feedback loops<br>
+- Enhanced cybersecurity and operational resilience<br>
+<b>Outcome:</b> Highly efficient, responsive, and secure production process.
+`
+            },
+            // --- InnoTech / Ceramics ---
+            {
+                category: "Manufacturing",
+                title: "Ceramics Group: Digital Transformation in Production",
+                summary: "A ceramics manufacturer modernizes production with Proplan and Shop Floor applications.",
+                content: `
+<b>Industry:</b> Ceramics Manufacturing<br>
+A leading ceramics producer partnered with InnoTech to develop Proplan (for planning) and a Shop Floor Application (for real-time tracking).<br><br>
+<b>Results:</b> Streamlined planning, real-time production visibility, improved efficiency, and scalable digital solutions.
+`
+            },
+            // --- Digital Transformation (Various Industries) ---
+            {
+                category: "Cross-Industry",
+                title: "Digital Transformation Case Studies (Various Industries)",
+                summary: "A collection of 100+ digital transformation case studies across retail, healthcare, manufacturing, and more.",
+                content: `
+<b>Industries:</b> Retail, Healthcare, Manufacturing, Hospitality, Media, Logistics, Education, and more.<br>
+Explore summarized backgrounds and challenges for dozens of organizations facing digital transformation:<br>
+<ul class="list-disc pl-6">
+<li>Independent Bookstore Chain: Overcame a 20% decline in foot traffic and 30% increase in online competition by implementing digital inventory and sales platforms.</li>
+<li>Southeast Asia Retail Chain: Addressed declining sales and outdated IT systems with a comprehensive digital transformation.</li>
+<li>Boutique Hotel Chains: Revitalized customer engagement and streamlined operations to recover from declining bookings and outdated digital platforms.</li>
+<li>Regional Healthcare Providers: Enhanced patient care and streamlined operations through digital health technologies.</li>
+<li>Sports Analytics Firm: Reduced data processing times and improved customer retention with advanced analytics tools.</li>
+<li>Apparel Manufacturers: Improved operational efficiency and growth with digital tools and automation.</li>
+<li>...and many more. <span class="text-sky-600">See full details in the source file.</span></li>
+</ul>
+`
+            }
+        ];
+
+        // --- RENDERING LOGIC ---
+        function groupByCategory(data) {
+            const map = {};
+            data.forEach(cs => {
+                if (!map[cs.category]) map[cs.category] = [];
+                map[cs.category].push(cs);
+            });
+            return map;
+        }
+
+        function renderCaseStudies() {
+            const grouped = groupByCategory(caseStudies);
+            const root = document.getElementById('case-studies-root');
+            root.innerHTML = '';
+            Object.keys(grouped).forEach(category => {
+                // Category Title
+                const catTitle = document.createElement('div');
+                catTitle.className = 'text-2xl font-bold text-sky-700 mt-12 mb-4 tracking-tight';
+                catTitle.textContent = category;
+                root.appendChild(catTitle);
+
+                // Case List
+                const list = document.createElement('div');
+                list.className = 'case-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8';
+                grouped[category].forEach((cs, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-2xl shadow-lg border border-slate-200 p-6 flex flex-col transition hover:shadow-2xl hover:border-sky-400 cursor-pointer relative overflow-hidden group';
+                    card.tabIndex = 0;
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('aria-label', cs.title);
+
+                    // Add badge for category (on card)
+                    card.innerHTML = `
+                        <span class="absolute top-4 right-4 bg-sky-100 text-sky-700 text-xs font-bold px-3 py-1 rounded-full shadow">${category}</span>
+                        <div class="text-lg font-bold text-slate-900 mb-2 leading-tight group-hover:text-sky-700">${cs.title}</div>
+                        <div class="text-slate-600 mb-4">${cs.summary}</div>
+                        <div class="text-sky-600 underline text-sm font-semibold mt-auto pt-2 group-hover:text-sky-800">Read More &rarr;</div>
+                    `;
+                    card.addEventListener('click', () => showModal(cs));
+                    card.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') showModal(cs);
+                    });
+                    list.appendChild(card);
+                });
+                root.appendChild(list);
+            });
+        }
+
+        function showModal(cs) {
+            document.getElementById('modal-body').innerHTML = `
+                <h2 class="text-2xl font-bold mb-2 text-sky-700">${cs.title}</h2>
+                <div class="text-slate-600 mb-4">${cs.summary}</div>
+                <div class="prose max-w-none">${cs.content}</div>
+            `;
+            document.getElementById('modal-bg').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-bg').classList.add('hidden');
+        }
+
+        document.getElementById('modal-close').onclick = closeModal;
+        document.getElementById('modal-bg').onclick = function(e) {
+            if (e.target === this) closeModal();
+        };
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        renderCaseStudies();
+    </script>
+</body>
+</html>

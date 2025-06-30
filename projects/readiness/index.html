@@ -6,27 +6,37 @@
     <title>Industry 4.0 Readiness Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .progress-bar-bg { background: #e5e7eb; }
-        .progress-bar-fill { transition: width 0.4s; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="mb-10 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link active">Industry 4.0 Platform</a>
+            <a href="questionnaire.html" class="nav-link">Questionnaire</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="learn.html" class="nav-link">Learn about Digitilization</a>
+            <a href="case-studies.html" class="nav-link">Case Studies</a>
+        </div>
+    </nav>
     <div class="max-w-5xl mx-auto px-4 py-10">
         <header class="mb-10 text-center">
-            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Industry 4.0 Readiness Platform</h1>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+            <h1 class="text-4xl font-extrabold header-title mb-2">Industry 4.0 Readiness Platform</h1>
+            <p class="text-lg header-desc max-w-2xl mx-auto">
                 Data-readiness software and strategic roadmaps to guide manufacturers in their transition towards digital transformation and Industry 4.0 solutions.
+            </p>
+            <p class="mt-2 text-base text-slate-500">
+                <span class="font-semibold">Made by Abe, Saii, and Sammie for the Internship-CSI program.</span>
             </p>
             <div class="mt-6 flex justify-center gap-4">
                 <a href="questionnaire.html" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition">Start Questionnaire</a>
                 <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-6 py-3 rounded-lg shadow transition">View Dashboard</a>
+                <a href="learn.html" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition">Learn about Digitilization</a>
+                <a href="case-studies.html" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition">Case Studies</a>
             </div>
         </header>
-
         <section class="mb-12">
-            <h2 class="text-2xl font-bold text-slate-800 mb-4">Project Progress</h2>
+            <h2 class="text-2xl font-bold section-title mb-4">Project Progress</h2>
             <div class="space-y-8">
                 <!-- PLANNING & QUESTIONNAIRE -->
                 <div>
