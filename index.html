@@ -1,430 +1,242 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abdallah Benelmadjat | Engineering Portfolio</title>
+    <title>Abe Benelmadjat | AI Researcher & Energy Engineer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a192f;
-            color: #ccd6f6;
-        }
-
-        .glass-effect {
-            background: rgba(10, 25, 47, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 191, 255, 0.2);
-        }
-
-        .section-title {
-            position: relative;
-            padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 4px;
-            background-color: #00bfff;
-            border-radius: 2px;
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -31px;
-            top: 5px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #00bfff;
-            border: 3px solid #0a192f;
-        }
-
-        .project-card:hover .project-overlay {
-            opacity: 1;
-        }
-        
-        .skill-card {
-            transition: all 0.3s ease-in-out;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 191, 255, 0.1), 0 4px 6px -2px rgba(0, 191, 255, 0.05);
-        }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body class="antialiased">
 
-    <!-- Header -->
-    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-effect">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-white">A.B.</a>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#about" class="text-gray-300 hover:text-cyan-400 transition">About</a>
-                <a href="#experience" class="text-gray-300 hover:text-cyan-400 transition">Experience</a>
-                <a href="#projects" class="text-gray-300 hover:text-cyan-400 transition">Projects</a>
-                <a href="#skills" class="text-gray-300 hover:text-cyan-400 transition">Skills</a>
-                <a href="#contact" class="text-gray-300 hover:text-cyan-400 transition">Contact</a>
+    <!-- Header & Navigation -->
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <nav class="flex justify-between items-center">
+                <div class="text-xl font-bold tracking-tight">
+                    <a href="#hero" class="hover:text-blue-600 transition-colors">Abe Benelmadjat</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#experience" class="nav-link text-gray-600 hover:text-blue-600 transition-colors">Experience</a>
+                    <a href="#projects" class="nav-link text-gray-600 hover:text-blue-600 transition-colors">Projects</a>
+                    <a href="#skills" class="nav-link text-gray-600 hover:text-blue-600 transition-colors">Skills</a>
+                    <a href="#education" class="nav-link text-gray-600 hover:text-blue-600 transition-colors">Education</a>
+                </div>
+                <a href="mailto:abe.benelmad@gmail.com" class="hidden md:block bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105">
+                    Contact Me
+                </a>
             </nav>
-            <a href="https://github.com/abdallah-benelmadjat/portfolio/raw/f1ad84233948d72f49410d367843a6be202a6e11/Resume%20-%20Abdallah%20Benelmadjat%205.0.pdf" target="_blank" class="hidden md:block bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg transition">
-                View Resume
-            </a>
-            <button id="mobile-menu-button" class="md:hidden text-white">
-                <i class="fas fa-bars fa-lg"></i>
-            </button>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4">
-             <a href="#about" class="block py-2 text-gray-300 hover:text-cyan-400">About</a>
-             <a href="#experience" class="block py-2 text-gray-300 hover:text-cyan-400">Experience</a>
-             <a href="#projects" class="block py-2 text-gray-300 hover:text-cyan-400">Projects</a>
-             <a href="#skills" class="block py-2 text-gray-300 hover:text-cyan-400">Skills</a>
-             <a href="#contact" class="block py-2 text-gray-300 hover:text-cyan-400">Contact</a>
-             <a href="https://github.com/abdallah-benelmadjat/portfolio/raw/f1ad84233948d72f49410d367843a6be202a6e11/Resume%20-%20Abdallah%20Benelmadjat%205.0.pdf" target="_blank" class="block mt-2 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg text-center transition">
-                View Resume
-            </a>
         </div>
     </header>
 
-    <main class="container mx-auto px-6">
+    <main>
         <!-- Hero Section -->
-        <section id="hero" class="min-h-screen flex items-center justify-center text-center">
-            <div class="max-w-4xl">
-                <img src="./img/abdallah_benelmadjat.png" alt="Abdallah Benelmadjat" class="w-64 h-64 rounded-full mx-auto mb-6 border-4 border-cyan-400 shadow-xl">
-                <h1 class="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
-                    Hi, I'm <span class="text-cyan-400">Abdallah Benelmadjat</span>
-                </h1>
-                <p class="text-xl md:text-2xl text-gray-300 mb-8">
-                    An Energy Engineer and AI Researcher Driving Innovation in Sustainable Technology.
-                </p>
-                <div class="flex justify-center space-x-4">
-                    <a href="https://www.linkedin.com/in/benelmadjat/" target="_blank" class="text-white hover:text-cyan-400 transition text-3xl"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://github.com/abdallah-benelmadjat" target="_blank" class="text-white hover:text-cyan-400 transition text-3xl"><i class="fab fa-github"></i></a>
-                    <a href="mailto:benelma2@uwm.edu" class="text-white hover:text-cyan-400 transition text-3xl"><i class="fas fa-envelope"></i></a>
+        <section id="hero" class="py-20 md:py-32">
+            <canvas id="particle-canvas"></canvas>
+            <div id="hero-content" class="container mx-auto px-6 text-center">
+                <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                    <!-- Profile Picture -->
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQHaB-OfUjfWqA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1710224953929?e=1756944000&v=beta&t=AxwvGxW3yWuvIWDgUBmbK061O4BzuIEIDdYcBfVJW3E" 
+                         alt="Abe Benelmadjat" 
+                         class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-slate-400 shadow-lg"
+                         onerror="this.onerror=null;this.src='https://placehold.co/400x400/0f172a/e2e8f0?text=Abe';">
+                    
+                    <!-- Hero Text -->
+                    <div class="text-center md:text-left">
+                        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-4 text-white">Abe Benelmadjat</h1>
+                        <p class="text-xl md:text-2xl text-slate-300 mb-8">
+                            AI Researcher | Energy Engineer | M.E PhD Candidate
+                        </p>
+                        <div class="flex flex-wrap justify-center md:justify-start items-center gap-x-6 gap-y-2 text-slate-400">
+                             <a href="mailto:abe.benelmad@gmail.com" class="flex items-center space-x-2 hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
+                                <span>Email</span>
+                            </a>
+                            <a href="https://linkedin.com/in/Benelmadjat" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                <span>LinkedIn</span>
+                            </a>
+                            <span class="flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.518.76a11.034 11.034 0 006.364 6.364l.76-1.518a1 1 0 011.06-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                                <span>480-742-4515</span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- About Me Section -->
-        <section id="about" class="py-20 fade-in">
-             <h2 class="section-title">About Me</h2>
-            <div class="grid md:grid-cols-5 gap-10 items-center">
-                <div class="md:col-span-3 text-lg text-gray-300 leading-relaxed">
-                   <p class="mb-4">
-                        I am a Ph.D. student and Research Assistant at the University of Wisconsin-Milwaukee, with a deep-seated passion for leveraging technology to solve complex energy challenges. My research focuses on the intersection of artificial intelligence and mechanical engineering, specifically on optimizing wind turbine designs for noise reduction using genetic algorithms and deep neural networks.
-                    </p>
-                    <p class="mb-4">
-                        With a Master's degree in Energy Engineering from Arizona State University and hands-on experience as an Energy Engineer at the U.S. Department of Energy's Industrial Assessment Center, I possess a strong foundation in both theoretical knowledge and practical application. I am driven by the goal of advancing sustainable energy solutions and shaping the future of Industry 4.0.
-                    </p>
-                    <p>
-                        Currently, I serve as the President of the Association of Energy Engineers (AEE) student chapter in Milwaukee, where I lead initiatives to promote energy awareness and professional development among my peers.
-                    </p>
-                </div>
-                <div class="md:col-span-2">
-                     <div class="glass-effect rounded-lg p-6 shadow-xl">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-star fa-fw text-cyan-400 mr-3"></i>
-                            <div>
-                                <h3 class="font-bold text-white">Fulbright Scholar</h3>
-                                <p class="text-sm text-gray-400">U.S. Department of State</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-lightbulb fa-fw text-cyan-400 mr-3"></i>
-                            <div>
-                                <h3 class="font-bold text-white">Leidos Spotlight Intern</h3>
-                                <p class="text-sm text-gray-400">One of 10 selected from 400</p>
-                            </div>
-                        </div>
-                     </div>
-                </div>
-            </div>
-        </section>
-        
         <!-- Experience Section -->
-        <section id="experience" class="py-20 fade-in">
-            <h2 class="section-title">Professional Experience</h2>
-            <div class="relative border-l-2 border-cyan-700 ml-4">
-                <!-- AI Research Assistant -->
-                 <div class="mb-12 pl-12 timeline-item">
-                    <h3 class="text-xl font-bold text-white">AI Research Assistant</h3>
-                    <p class="font-semibold text-cyan-400">Connected Systems Institute</p>
-                    <p class="text-sm text-gray-400 mb-2">June 2025 - Present · Milwaukee, WI</p>
-                    <ul class="list-disc list-inside text-gray-300">
-                        <li>Conducting industrial audits for Microsoft's Co-Innovation Lab at UWM.</li>
-                        <li>Developing AI readiness assessments and digitalization roadmaps for Industry 4.0 adoption.</li>
-                    </ul>
-                </div>
-                <!-- Energy Engineer -->
-                <div class="mb-12 pl-12 timeline-item">
-                    <h3 class="text-xl font-bold text-white">Energy Engineer</h3>
-                    <p class="font-semibold text-cyan-400">Industrial Assessment Center at UW-Milwaukee (UWM-IAC)</p>
-                    <p class="text-sm text-gray-400 mb-2">Aug 2024 - Present · Milwaukee, WI</p>
-                    <ul class="list-disc list-inside text-gray-300">
-                        <li>Analyzing utility consumption to recommend energy-saving opportunities.</li>
-                        <li>Conducting on-site assessments of energy systems.</li>
-                        <li>Researching to enhance energy efficiency solutions.</li>
-                    </ul>
-                </div>
-                 <!-- Research Assistant PhD -->
-                <div class="mb-12 pl-12 timeline-item">
-                    <h3 class="text-xl font-bold text-white">Research Assistant PhD</h3>
-                     <p class="font-semibold text-cyan-400">University of Wisconsin-Milwaukee</p>
-                     <p class="text-sm text-gray-400 mb-2">Aug 2024 - Present · Milwaukee, WI</p>
-                     <p class="text-gray-300">Combining genetic algorithms and deep learning to optimize wind turbine blade noise reduction.</p>
-                </div>
-                <!-- Leidos Internship -->
-                <div class="mb-12 pl-12 timeline-item">
-                    <h3 class="text-xl font-bold text-white">Energy Efficiency Engineering Intern</h3>
-                    <p class="font-semibold text-cyan-400">Leidos</p>
-                    <p class="text-sm text-gray-400 mb-2">May 2023 - Aug 2023 · Madison County, IL</p>
-                    <ul class="list-disc list-inside text-gray-300">
-                        <li>Conducted 45 compliance reviews for the Energy Efficiency Illinois Statewide Technical Manual.</li>
-                        <li>Reduced application processing time by 30% for Ameren's energy efficiency program.</li>
-                        <li>Implemented AI-driven OCR to automate energy usage analysis from utility bills.</li>
-                    </ul>
+        <section id="experience" class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-16 reveal">Work Experience</h2>
+                <div class="space-y-16">
+                    <!-- Experience Item -->
+                    <div class="reveal timeline-item flex flex-col md:flex-row items-start gap-8">
+                        <div class="logo-container">
+                            <img src="images/csi-logo.png" alt="Connected Systems Institute Logo" class="logo">
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-blue-700">AI Research Assistant</h3>
+                            <p class="text-gray-600">Connected Systems Institute · Internship</p>
+                            <p class="text-sm text-gray-500">Jun 2025 - Present · Milwaukee, WI · On-site</p>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2 mt-2">
+                                <li>Conduct industrial on-site audits to collect manufacturing data for Microsoft's Co-Innovation Lab at UWM.</li>
+                                <li>Perform AI readiness assessments and develop digitalization roadmaps to help manufacturers adopt Industry 4.0 solutions.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Experience Item -->
+                    <div class="reveal timeline-item flex flex-col md:flex-row items-start gap-8">
+                        <div class="logo-container">
+                            <img src="images/doe-logo.png" alt="DOE Logo" class="logo">
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-blue-700">Energy Engineer</h3>
+                            <p class="text-gray-600">Industrial Assessment Center at UW-Milwaukee</p>
+                            <p class="text-sm text-gray-500">Aug 2024 - Present · Milwaukee, WI</p>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2 mt-2">
+                                <li>Analyze customer utility consumption and costs to identify and recommend opportunities for energy savings.</li>
+                                <li>Conduct on-site assessments to evaluate the performance of energy systems and identify areas for improvement.</li>
+                                <li>Develop tailored energy efficiency measures that align with client goals and applications.</li>
+                                <li>Perform research to enhance energy efficiency solutions based on data collected from energy audits.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Experience Item -->
+                    <div class="reveal timeline-item flex flex-col md:flex-row items-start gap-8">
+                        <div class="logo-container">
+                            <img src="images/leidos-logo.png" alt="Leidos Logo" class="logo">
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-blue-700">Energy Engineering Intern</h3>
+                            <p class="text-gray-600">Leidos · Internship</p>
+                            <p class="text-sm text-gray-500">May 2023 - Aug 2023 · Illinois, United States · On-site</p>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2 mt-2">
+                                <li>Highlighted on the front page of the company as intern spotlight.</li>
+                                <li>Conducted 45 compliance reviews and updates to the Energy Efficiency Illinois Statewide Technical Manual.</li>
+                                <li>Managed Salesforce database reports to identify trends and write weekly budgeting reports ahead of schedule.</li>
+                                <li>Analyzed utility bills and technical datasheets to calculate energy savings and approve incentives for Ameren’s energy efficiency program, finishing 72 applications and reducing processing time by 30%.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Projects Section -->
-        <section id="projects" class="py-20 fade-in">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project 1 -->
-                <div class="project-card group relative overflow-hidden rounded-lg shadow-lg glass-effect">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">AI-Optimized Wind Turbine Design</h3>
-                        <p class="text-gray-400">Utilizing genetic algorithms and DNNs to create quieter, more efficient 3D wind turbine blade designs.</p>
+        <section id="projects" class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12 reveal">Projects Portfolio</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Cards will be populated here -->
+                    <div class="custom-card p-6 reveal">
+                        <h3 class="text-xl font-semibold mb-2 text-blue-700">Industry 4.0 Readiness Platform</h3>
+                        <p class="text-sm text-gray-500 mb-4">Jul 2025</p>
+                        <p class="text-gray-600 mb-4">Data-readiness software and strategic roadmaps to guide manufacturers in their transition towards digital transformation and Industry 4.0 solutions.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">AI Strategy</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Digital Transformation</span>
+                        </div>
                     </div>
-                    <div class="project-overlay absolute inset-0 bg-cyan-900 bg-opacity-90 opacity-0 transition-opacity duration-300 p-6 flex flex-col justify-center items-center text-center">
-                        <p class="text-white">A Ph.D. research project aimed at revolutionizing renewable energy technology through advanced AI.</p>
+                    <div class="custom-card p-6 reveal">
+                        <h3 class="text-xl font-semibold mb-2 text-blue-700">AI-Driven Gear Fault Diagnosis</h3>
+                        <p class="text-sm text-gray-500 mb-4">Jul 2021</p>
+                        <p class="text-gray-600 mb-4">Developed a gear fault classification system using MLP neural networks and wavelet-based feature extraction.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">TensorFlow</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Keras</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Scikit-learn</span>
+                        </div>
+                    </div>
+                    <div class="custom-card p-6 reveal">
+                        <h3 class="text-xl font-semibold mb-2 text-blue-700">Wind Power Forecasting</h3>
+                        <p class="text-sm text-gray-500 mb-4">Apr 2023</p>
+                        <p class="text-gray-600 mb-4">Applied reinforcement learning and game theory to optimize wind power forecasting, training LSTM models in TensorFlow.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Reinforcement Learning</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">LSTMs</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Game Theory</span>
+                        </div>
+                    </div>
+                    <div class="custom-card p-6 reveal">
+                        <h3 class="text-xl font-semibold mb-2 text-blue-700">Virtual Medical Assistant</h3>
+                        <p class="text-sm text-gray-500 mb-4">Mar 2021</p>
+                        <p class="text-gray-600 mb-4">Built a disease prediction model using Scikit-learn/XGBoost with a Django backend and React frontend.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Scikit-learn</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">XGBoost</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Django</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">React</span>
+                        </div>
+                    </div>
+                    <div class="custom-card p-6 reveal">
+                        <h3 class="text-xl font-semibold mb-2 text-blue-700">HVAC Duct System Design</h3>
+                        <p class="text-sm text-gray-500 mb-4">Dec 2023</p>
+                        <p class="text-gray-600 mb-4">Designed a complete HVAC duct system in AutoDesk Revit, focusing on optimizing airflow and thermal performance.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">AutoDesk Revit</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">HVAC Design</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Fluid Dynamics</span>
+                        </div>
+                    </div>
+                    <div class="custom-card p-6 reveal">
+                        <h3 class="text-xl font-semibold mb-2 text-blue-700">Solar Panel Optimization</h3>
+                        <p class="text-sm text-gray-500 mb-4">Nov 2023</p>
+                        <p class="text-gray-600 mb-4">Utilized SolidWorks to analyze and improve a modular solar panel, designing new components to improve structural integrity.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">SolidWorks</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">Structural Analysis</span>
+                            <span class="bg-slate-200 text-slate-700 rounded-md px-2 py-1 text-xs font-medium">CAD</span>
+                        </div>
                     </div>
                 </div>
-                <!-- Project 2 -->
-                <div class="project-card group relative overflow-hidden rounded-lg shadow-lg glass-effect">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">Utility Bill Analyzer</h3>
-                        <p class="text-gray-400">An intelligent system to analyze utility bills, identify consumption patterns, and recommend energy-saving measures.</p>
-                    </div>
-                     <div class="project-overlay absolute inset-0 bg-cyan-900 bg-opacity-90 opacity-0 transition-opacity duration-300 p-6 flex flex-col justify-center items-center text-center">
-                        <p class="text-white">Leverages OCR and machine learning to automate data extraction and provide actionable insights.</p>
-                    </div>
-                </div>
-                <!-- Project 3 -->
-                <div class="project-card group relative overflow-hidden rounded-lg shadow-lg glass-effect">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">Industry 4.0 Readiness</h3>
-                        <p class="text-gray-400">Developing data-readiness software and strategic roadmaps for manufacturers to transition to Industry 4.0.</p>
-                    </div>
-                     <div class="project-overlay absolute inset-0 bg-cyan-900 bg-opacity-90 opacity-0 transition-opacity duration-300 p-6 flex flex-col justify-center items-center text-center">
-                        <p class="text-white">A practical application of AI and data analysis to guide digital transformation in the manufacturing sector.</p>
-                    </div>
-                </div>
-                <!-- Project 4 -->
-                 <div class="project-card group relative overflow-hidden rounded-lg shadow-lg glass-effect">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">Wind Power Forecasting</h3>
-                        <p class="text-gray-400">Applied game theory and reinforcement learning to enhance the accuracy of wind power forecasting.</p>
-                    </div>
-                     <div class="project-overlay absolute inset-0 bg-cyan-900 bg-opacity-90 opacity-0 transition-opacity duration-300 p-6 flex flex-col justify-center items-center text-center">
-                        <p class="text-white">Trained LSTM models on large-scale meteorological data to predict wind energy fluctuations.</p>
-                    </div>
-                </div>
-                <!-- Project 5 -->
-                 <div class="project-card group relative overflow-hidden rounded-lg shadow-lg glass-effect">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">AI Gear Fault Diagnosis</h3>
-                        <p class="text-gray-400">Developed a deep learning model for classifying gear faults using wavelet transforms for feature extraction.</p>
-                    </div>
-                     <div class="project-overlay absolute inset-0 bg-cyan-900 bg-opacity-90 opacity-0 transition-opacity duration-300 p-6 flex flex-col justify-center items-center text-center">
-                        <p class="text-white">Achieved superior performance over traditional methods in detecting nonlinear vibration patterns.</p>
-                    </div>
-                </div>
-                <!-- Project 6 -->
-                 <div class="project-card group relative overflow-hidden rounded-lg shadow-lg glass-effect">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">Virtual Medical Assistant</h3>
-                        <p class="text-gray-400">Built a disease prediction model for a hackathon using Scikit-learn and XGBoost.</p>
-                    </div>
-                     <div class="project-overlay absolute inset-0 bg-cyan-900 bg-opacity-90 opacity-0 transition-opacity duration-300 p-6 flex flex-col justify-center items-center text-center">
-                        <p class="text-white">Features a Django backend, React frontend, and an AI-driven chatbot for real-time symptom analysis.</p>
-                    </div>
+                <div class="text-center mt-12">
+                    <a href="projects.html" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg">Detailed Projects</a>
                 </div>
             </div>
         </section>
 
         <!-- Skills Section -->
-        <section id="skills" class="py-20 fade-in">
-            <h2 class="section-title">Technical Skills</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="skill-card glass-effect p-6 rounded-lg">
-                    <h3 class="text-xl font-bold text-white mb-3">Data Analysis & Big Data</h3>
-                    <ul class="text-gray-300 space-y-2">
-                        <li><i class="fas fa-check-circle text-cyan-400 mr-2"></i>Python (Pandas, NumPy, SciPy)</li>
-                        <li><i class="fas fa-check-circle text-cyan-400 mr-2"></i>MATLAB, JMP, Excel, SQL</li>
-                    </ul>
-                </div>
-                <div class="skill-card glass-effect p-6 rounded-lg">
-                    <h3 class="text-xl font-bold text-white mb-3">AI & Machine Learning</h3>
-                    <ul class="text-gray-300 space-y-2">
-                        <li><i class="fas fa-check-circle text-cyan-400 mr-2"></i>TensorFlow, Keras, PyTorch</li>
-                        <li><i class="fas fa-check-circle text-cyan-400 mr-2"></i>Scikit-learn, XGBoost, OpenCV</li>
-                    </ul>
-                </div>
-                <div class="skill-card glass-effect p-6 rounded-lg">
-                    <h3 class="text-xl font-bold text-white mb-3">Modeling & Energy Tools</h3>
-                     <ul class="text-gray-300 space-y-2">
-                        <li><i class="fas fa-check-circle text-cyan-400 mr-2"></i>SolidWorks, AutoCAD, Revit, Ansys</li>
-                        <li><i class="fas fa-check-circle text-cyan-400 mr-2"></i>eQuest, EnergyPlus, MEASUR</li>
-                    </ul>
+        <section id="skills" class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12 reveal">Technical Skills</h2>
+                <div class="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="reveal custom-card p-6 text-center"><h3 class="text-lg font-semibold mb-2 text-blue-700">AI & Machine Learning</h3><p class="text-gray-600">TensorFlow, Keras, PyTorch</p></div>
+                    <div class="reveal custom-card p-6 text-center"><h3 class="text-lg font-semibold mb-2 text-blue-700">Data & Analysis</h3><p class="text-gray-600">Python, MATLAB, SQL</p></div>
+                    <div class="reveal custom-card p-6 text-center"><h3 class="text-lg font-semibold mb-2 text-blue-700">Modeling & CAD</h3><p class="text-gray-600">SolidWorks, Revit, Ansys</p></div>
+                    <div class="reveal custom-card p-6 text-center"><h3 class="text-lg font-semibold mb-2 text-blue-700">Energy Systems</h3><p class="text-gray-600">HVAC, EnergyPlus, Audits</p></div>
                 </div>
             </div>
         </section>
 
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-20 text-center fade-in">
-            <h2 class="section-title inline-block">Get In Touch</h2>
-             <p class="text-xl text-gray-300 mt-4 mb-8 max-w-2xl mx-auto">
-                I am always open to discussing new opportunities, research collaborations, or just connecting with fellow professionals in the field. Feel free to reach out!
-            </p>
-            <a href="mailto:benelma2@uwm.edu" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-4 px-8 rounded-lg transition text-lg inline-block">
-                Say Hello
-            </a>
+        <!-- Education & Awards Section -->
+        <section id="education" class="py-20">
+             <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-16">
+                    <div class="reveal">
+                        <h2 class="text-3xl font-bold text-center mb-8">Education</h2>
+                        <div class="space-y-6"><div class="custom-card p-6"><p class="text-sm text-gray-500">Expected May 2027</p><h3 class="text-xl font-semibold">Ph.D., Mechanical Engineering</h3><p class="text-gray-600">University of Wisconsin-Milwaukee</p></div><div class="custom-card p-6"><p class="text-sm text-gray-500">May 2024</p><h3 class="text-xl font-semibold">M.S., Energy Engineering</h3><p class="text-gray-600">Arizona State University (GPA: 4.0)</p></div></div>
+                    </div>
+                    <div class="reveal">
+                        <h2 class="text-3xl font-bold text-center mb-8">Awards</h2>
+                        <div class="space-y-6"><div class="custom-card p-6"><p class="text-sm text-gray-500">2021 – 2024</p><h3 class="text-xl font-semibold">Fulbright Student Scholarship</h3><p class="text-gray-600">U.S. Department of State</p></div><div class="custom-card p-6"><p class="text-sm text-gray-500">Summer 2023</p><h3 class="text-xl font-semibold">Leidos Intern Spotlight</h3><p class="text-gray-600">Featured as a top 10 intern out of 400.</p></div></div>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 
     <!-- Footer -->
-    <footer class="py-6 border-t border-gray-800">
-        <div class="container mx-auto px-6 text-center text-gray-500">
-             <div class="flex justify-center space-x-4 mb-4">
-                <a href="https://www.linkedin.com/in/benelmadjat/" target="_blank" class="hover:text-cyan-400 transition text-2xl"><i class="fab fa-linkedin"></i></a>
-                <a href="https://github.com/abdallah-benelmadjat" target="_blank" class="hover:text-cyan-400 transition text-2xl"><i class="fab fa-github"></i></a>
-            </div>
-            <p>&copy; <span id="year"></span> Abdallah Benelmadjat. All Rights Reserved.</p>
-        </div>
+    <footer class="bg-slate-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center"><p>&copy; 2024 Abe Benelmadjat. All Rights Reserved.</p></div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <button id="back-to-top" class="fixed bottom-5 right-5 bg-cyan-500 hover:bg-cyan-600 text-white w-12 h-12 rounded-full hidden justify-center items-center shadow-lg transition-opacity">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-
-            // Set current year in footer
-            document.getElementById('year').textContent = new Date().getFullYear();
-
-            // Header transparency on scroll
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('bg-opacity-90');
-                } else {
-                    header.classList.remove('bg-opacity-90');
-                }
-            });
-
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                     // Close mobile menu after click
-                    if (!mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
-            });
-
-            // Back to top button
-            const backToTopButton = document.getElementById('back-to-top');
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    if(backToTopButton.classList.contains('hidden')){
-                       backToTopButton.classList.remove('hidden');
-                       backToTopButton.classList.add('flex');
-                    }
-                } else {
-                    if(backToTopButton.classList.contains('flex')){
-                       backToTopButton.classList.remove('flex');
-                       backToTopButton.classList.add('hidden');
-                    }
-                }
-            });
-
-            backToTopButton.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-            
-             // Fade-in animation on scroll
-            const faders = document.querySelectorAll('.fade-in');
-            const appearOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-
-            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    } else {
-                        entry.target.classList.add('visible');
-                        appearOnScroll.unobserve(entry.target);
-                    }
-                });
-            }, appearOptions);
-
-            faders.forEach(fader => {
-                appearOnScroll.observe(fader);
-            });
-            
-             // Hero section animation
-            anime({
-                targets: '#hero .text-5xl, #hero .text-xl, #hero img',
-                translateY: [20, 0],
-                opacity: [0, 1],
-                delay: anime.stagger(200, {start: 300}),
-                duration: 800,
-                easing: 'easeOutExpo'
-            });
-        });
-    </script>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="experience.js"></script>
 </body>
 </html>

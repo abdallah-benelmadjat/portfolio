@@ -1,0 +1,114 @@
+/* Custom styles for a sleek look and feel */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc; /* Light gray background */
+    color: #1f2937; /* Dark gray text */
+}
+
+/* Hero section specific styles */
+#hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(45deg, #0f172a, #1e293b, #334155);
+}
+
+#particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Hide elements initially for the scroll animation */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Header shadow and transition */
+#main-header {
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Active link styling for navigation */
+.nav-link.active {
+    color: #2563eb; 
+    position: relative;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #2563eb;
+    animation: draw-line 0.3s ease-out forwards;
+}
+
+@keyframes draw-line {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Custom card styling with more outline */
+.custom-card {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.custom-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+    border-color: #3b82f6;
+}
+
+/* Timeline dot animation */
+.timeline-dot {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.timeline-item:hover .timeline-dot {
+    transform: scale(1.5);
+    background-color: #2563eb;
+}
+
+/* Logo container styles */
+.logo-container {
+    width: 120px; /* Existing size */
+    height: 120px; /* Existing size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgb(255, 255, 255); /* Less dark color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logo-container:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    width: 100%; /* Existing size */
+    height: 100%; /* Existing size */
+    object-fit: contain;
+}
