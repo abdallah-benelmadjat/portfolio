@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Manufacturer Data Map (D3.js)</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: row;
+      font-family: sans-serif;
+    }
+    .left-pane {
+      flex: 3;
+    }
+    .right-pane {
+      flex: 1;
+      padding: 20px;
+    }
+    svg {
+      width: 100%;
+      height: 70vh;
+    }
+    circle {
+      fill: #6baed6;
+      stroke: #2171b5;
+      stroke-width: 1.5px;
+      cursor: move;
+    }
+    text {
+      font: 14px sans-serif;
+      pointer-events: none;
+    }
+    line {
+      stroke: #999;
+      stroke-opacity: 0.6;
+      stroke-width: 2px;
+      marker-end: url(#arrow);
+    }
+    .form-container {
+      margin: 20px;
+    }
+    .form-container label {
+      margin-right: 10px;
+    }
+    table.label-info {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    table.label-info th, table.label-info td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+    }
+    table.label-info th {
+      background-color: #f2f2f2;
+    }
+    .context-menu {
+      position: absolute;
+      display: none;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+    .context-menu div {
+      padding: 8px;
+      cursor: pointer;
+    }
+    .context-menu div:hover {
+      background-color: #f2f2f2;
+    }
+    .instruction {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #eef;
+      border: 1px solid #99c;
+      font-size: 14px;
+    }
+
+    .edge-controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .edge-controls-row label {
+      margin-bottom: 0;
+      margin-right: 4px;
+      font-size: 15px;
+    }
+    .edge-controls-row select {
+      margin-right: 2px;
+    }
+  </style>
+<style>
+  body {
+    background: #f4f7fb;
+  }
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 32px 2vw;
+    width: 100vw;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  .left-column, .center-column, .right-column {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+    padding: 24px 20px 20px 20px;
+    margin: 0;
+    min-height: 540px;
+    min-width: 300px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .left-column {
+    flex: 1.2;
+    min-width: 300px;
+    margin-right: 0;
+  }
+  .center-column {
+    flex: 0 0 340px;
+    max-width: 360px;
+  }
+  .right-column {
+    flex: 0 0 410px;
+    max-width: 410px;
+    margin-left: 0;
+  }
+  h2 {
+    color: #2b3990;
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 1.35rem;
+  }
+  .form-container label, .form-container button {
+    margin-right: 8px;
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+  .form-container select, .form-container input[type="file"] {
+    border: 1px solid #b6c6e3;
+    border-radius: 5px;
+    padding: 5px 8px;
+    margin-right: 6px;
+    font-size: 15px;
+    background: #f8fafd;
+    transition: border-color 0.2s;
+  }
+  .form-container select:focus, .form-container input[type="file"]:focus {
+    border-color: #2b3990;
+    outline: none;
+  }
+  .maturity-btn {
+    background-color: #2b3990;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 6px rgba(44, 62, 80, 0.07);
+  }
+  .maturity-btn:hover {
+    background-color: #1e285e;
+    box-shadow: 0 4px 10px rgba(44, 62, 80, 0.13);
+  }
+  .maturity-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .maturity-table, .maturity-table th, .maturity-table td {
+    border: 1px solid #333;
+  }
+  .maturity-table th, .maturity-table td {
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 15px;
+  }
+  .maturity-table th {
+    background: #e6eaf7;
+    color: #2b3990;
+    font-weight: 600;
+  }
+  #maturityResult {
+    background: #e6eaf7;
+    border-radius: 7px;
+    padding: 18px 14px 14px 14px;
+    color: #2b3990;
+    font-size: 18px;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    box-shadow: 0 1px 6px rgba(44, 62, 80, 0.07);
+    width: 100%;
+    text-align: center;
+  }
+  .context-menu {
+    position: absolute;
+    display: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    z-index: 10;
+  }
+  .context-menu div {
+    padding: 8px;
+    cursor: pointer;
+  }
+  .context-menu div:hover {
+    background-color: #f2f2f2;
+  }
+  .instruction {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #eef;
+    border: 1px solid #99c;
+    font-size: 14px;
+  }
+  svg {
+    border: 1px solid #e4e8f2;
+    background: #f9fafd;
+    margin-top: 15px;
+    border-radius: 7px;
+    box-shadow: 0 1px 6px rgba(44, 62, 80, 0.06);
+  }
+  @media (max-width: 1100px) {
+    .container {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+      padding: 18px 2vw;
+      width: 100vw;
+      max-width: 100vw;
+    }
+    .left-column, .center-column, .right-column {
+      max-width: 100%;
+      min-width: 0;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left: Graph and controls -->
+    <div class="left-column">
+      <h2>Manufacturer Data Map (D3.js Interactive)</h2>
+
+      <div class="form-container">
+        <label>Add Machine/Process:
+          <select id="nodeName">
+            <option value="">-- Select Machine/Process --</option>
+            <option value="ERP">ERP</option>
+            <option value="MES">MES</option>
+            <option value="SCADA">SCADA</option>
+            <option value="PLC">PLC</option>
+            <option value="WMS">WMS</option>
+            <option value="CMMS">CMMS</option>
+            <option value="LIMS">LIMS</option>
+            <option value="CRM">CRM</option>
+            <option value="MRP">MRP</option>
+            <option value="IIoT Sensors">IIoT Sensors</option>
+            <option value="Historian">Historian</option>
+            <option value="Spreadsheet">Spreadsheet</option>
+            <option value="Paper Logs">Paper Logs</option>
+            <option value="Cloud Analytics">Cloud Analytics</option>
+          </select>
+        </label>
+        <button onclick="addNode()">Add Node</button>
+        <br><br>
+        <div class="edge-controls-row">
+          <label>Source:
+            <select id="sourceNode"></select>
+          </label>
+          <label>Target:
+            <select id="targetNode"></select>
+          </label>
+          <label>Label:
+            <select id="linkLabel">
+              <option value="">-- Select Label --</option>
+              <option value="Whiteboard (-1)">Whiteboard (-1)</option>
+              <option value="Legacy (-1)">Legacy (-1)</option>
+              <option value="Manual (0)">Manual (0)</option>
+              <option value="Manual (1)">Manual (1)</option>
+              <option value="Batch (1)">Batch (1)</option>
+              <option value="Batch (2)">Batch (2)</option>
+              <option value="Automated (3)">Automated (3)</option>
+            </select>
+          </label>
+          <button onclick="addLink()" style="margin-left:10px;">Add Edge</button>
+        </div>
+      </div>
+          <option value="MRP">MRP</option>
+          <option value="IIoT Sensors">IIoT Sensors</option>
+          <option value="Historian">Historian</option>
+          <option value="Spreadsheet">Spreadsheet</option>
+          <option value="Paper Logs">Paper Logs</option>
+          <option value="Cloud Analytics">Cloud Analytics</option>
+        </select>
+      </label>
+
+      <br><br>
+      <label>Source Machine/Process:
+        <select id="sourceNode"></select>
+      </label>
+      <label>Target Machine/Process:
+        <select id="targetNode"></select>
+      </label>
+      <button onclick="downloadGraph()">Save Graph</button>
+      <input type="file" id="fileInput" onchange="loadGraph(event)" />
+      <svg width="500" height="400" style="border:1px solid #ccc;margin-top:15px;background:#f9f9f9;"></svg>
+    </div>
+    <!-- Center: Maturity calculation/results -->
+    <div class="center-column">
+      <button class="maturity-btn" onclick="calculateMaturity()">Calculate Data Maturity</button>
+      <div id="maturityResult" style="margin-top:10px;font-size:18px;color:#2b3990;"></div>
+      <div style="margin-top:10px;color:#444;font-size:15px;max-width:320px;">
+        <b>Tip:</b> Click any node to set its importance (1 = least important, 5 = most important).<br>
+        The maturity score now weights nodes by their importance and their connected edge maturities.
+      </div>
+    </div>
+    <!-- Right: Label meaning table + instructions -->
+    <div class="right-column">
+      <!-- Label meaning table -->
+      <table class="maturity-table" style="margin-bottom: 10px;">
+        <tr><th>Label</th><th>Meaning</th><th>Maturity Level</th></tr>
+        <tr><td>Whiteboard (-1)</td><td>Physical whiteboards for tracking</td><td>-1</td></tr>
+        <tr><td>Legacy (-1)</td><td>Obsolete systems with no integration</td><td>-1</td></tr>
+        <tr><td>Manual (0)</td><td>Paper-based or human-entered data</td><td>0</td></tr>
+        <tr><td>Manual (1)</td><td>Typed-in data (e.g., spreadsheets)</td><td>1</td></tr>
+        <tr><td>Batch (1)</td><td>Daily uploads / scheduled jobs</td><td>2</td></tr>
+        <tr><td>Batch (2)</td><td>Near-real-time but not event-driven</td><td>3</td></tr>
+        <tr><td>Automated (3)</td><td>API or PLC-to-MES real-time link</td><td>4</td></tr>
+      </table>
+      <!-- Instructions box -->
+      <div style="margin-top:0;padding:10px 15px;background:#eef3fa;border:1px solid #b6c6e3;color:#222;font-size:14px;max-width:370px;">
+        <b>Edge Instructions:</b><br>
+        - To edit or remove an edge, <b>right-click</b> on the line connecting nodes.<br>
+        - Choose "Edit Edge" to change its label, or "Remove Edge" to delete the connection.<br>
+        <br>
+        <b>Save/Load:</b><br>
+        - Click "Save Graph" to download a JSON file of the current map.<br>
+        - Use the file input to upload and restore a previous map.
+      </div>
+    </div>
+  </div>
+  <div class="context-menu" id="contextMenu">
+    <div onclick="removeSelectedLink()">Remove Edge</div>
+    <div onclick="editSelectedLink()">Edit Edge</div>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    let nodes = [], links = [], selectedLink = null;
+    const svg = d3.select("svg");
+
+    function getSvgSize() {
+      const bbox = svg.node().getBoundingClientRect();
+      return { width: bbox.width, height: bbox.height };
+    }
+
+    function addNode() {
+      const nodeName = document.getElementById("nodeName").value;
+      if (!nodeName || nodes.find(n => n.id === nodeName)) return;
+
+      const { width, height } = getSvgSize();
+      const newX = width / 2 + Math.random() * 200 - 100;
+      const newY = height / 2 + Math.random() * 200 - 100;
+
+      // Place new node at a random position within the SVG area, with padding
+      const padding = 60;
+      const randX = Math.random() * (width - 2 * padding) + padding;
+      const randY = Math.random() * (height - 2 * padding) + padding;
+      nodes.push({ id: nodeName, x: randX, y: randY });
+      updateDropdowns();
+      updateGraph();
+    }
+
+    function updateDropdowns() {
+      const nodeSelects = [document.getElementById("sourceNode"), document.getElementById("targetNode")];
+      nodeSelects.forEach(select => {
+        select.innerHTML = nodes.map(n => `<option value="${n.id}">${n.id}</option>`).join("");
+      });
+    }
+
+    function updateGraph() {
+      const drag = d3.drag()
+        .on("start", (event, d) => {
+          d3.select(event.sourceEvent.target).raise().attr("stroke", "black");
+        })
+        .on("drag", (event, d) => {
+          d.x = event.x;
+          d.y = event.y;
+          updateGraph();
+        });
+
+      const nodeMap = new Map(nodes.map(n => [n.id, n]));
+
+      const line = svg.selectAll("line").data(links, d => d.source + "-" + d.target);
+      line.join(
+        enter => enter.append("line")
+          .on("contextmenu", (event, d) => {
+            event.preventDefault();
+            selectedLink = d;
+            showContextMenu(event.pageX, event.pageY);
+          }),
+        update => update,
+        exit => exit.remove()
+      )
+        .attr("x1", d => nodeMap.get(d.source).x)
+        .attr("y1", d => nodeMap.get(d.source).y)
+        .attr("x2", d => nodeMap.get(d.target).x)
+        .attr("y2", d => nodeMap.get(d.target).y);
+
+      svg.selectAll("circle").data(nodes, d => d.id)
+        .join(
+          enter => enter.append("circle")
+            .attr("r", 20)
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .style("cursor", "pointer")
+            .call(drag)
+            .on("click", (event, d) => {
+              if (!event.defaultPrevented) {
+                showImportanceInput(d);
+              }
+            }),
+          update => update
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .style("cursor", "pointer")
+            .call(drag)
+            .on("click", (event, d) => {
+              if (!event.defaultPrevented) {
+                showImportanceInput(d);
+              }
+            }),
+          exit => exit.remove()
+        );
+
+      // Node label above node
+      svg.selectAll("text.node-label").data(nodes, d => d.id)
+        .join("text")
+        .attr("class", "node-label")
+        .attr("x", d => d.x)
+        .attr("y", d => d.y - 25)
+        .attr("text-anchor", "middle")
+        .text(d => d.id);
+
+      // Remove old importance text elements to avoid duplicates
+      svg.selectAll("text.node-importance").remove();
+      // Importance value inside node
+      svg.selectAll(null)
+        .data(nodes, d => d.id)
+        .enter()
+        .append("text")
+        .attr("class", "node-importance")
+        .attr("x", d => d.x)
+        .attr("y", d => d.y + 6)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16px")
+        .attr("font-weight", "bold")
+        .attr("fill", d => d.importance ? "#2b3990" : "#bbb")
+        .text(d => d.importance ? d.importance : "");
+
+      svg.selectAll("text.link-label").data(links, d => d.source + "-" + d.target)
+        .join(
+          enter => enter.append("text")
+            .attr("class", "link-label")
+            .attr("font-size", "12px")
+            .attr("text-anchor", "middle"),
+          update => update,
+          exit => exit.remove()
+        )
+        .attr("x", d => (nodeMap.get(d.source).x + nodeMap.get(d.target).x) / 2)
+        .attr("y", d => (nodeMap.get(d.source).y + nodeMap.get(d.target).y) / 2 - 5)
+        .text(d => d.label);
+    }
+
+    function getNode(id) {
+      return nodes.find(n => n.id === id);
+    }
+
+    function addLink() {
+      const source = document.getElementById("sourceNode").value;
+      const target = document.getElementById("targetNode").value;
+      const label = document.getElementById("linkLabel").value;
+      if (!source || !target || !label) return;
+      links.push({ source, target, label });
+      updateGraph();
+    }
+
+    function showContextMenu(x, y) {
+      const menu = document.getElementById("contextMenu");
+      menu.style.left = `${x}px`;
+      menu.style.top = `${y}px`;
+      menu.style.display = "block";
+      document.addEventListener("click", hideContextMenu);
+    }
+
+    function hideContextMenu() {
+      document.getElementById("contextMenu").style.display = "none";
+      document.removeEventListener("click", hideContextMenu);
+    }
+
+    function removeSelectedLink() {
+      links = links.filter(l => l !== selectedLink);
+      selectedLink = null;
+      hideContextMenu();
+      updateGraph();
+    }
+
+    function editSelectedLink() {
+      const newLabel = prompt("Enter new label:", selectedLink.label);
+      if (newLabel !== null) {
+        selectedLink.label = newLabel;
+        updateGraph();
+      }
+      hideContextMenu();
+    }
+
+    function downloadGraph() {
+      const blob = new Blob([JSON.stringify({ nodes, links }, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "graph.json";
+      a.click();
+    }
+
+    function loadGraph(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const data = JSON.parse(e.target.result);
+        nodes = data.nodes || [];
+        links = data.links || [];
+        updateDropdowns();
+        updateGraph();
+      };
+      reader.readAsText(file);
+    }
+    // --- Data Maturity Calculation ---
+    // Map edge labels to maturity values
+    const maturityMap = {
+      "Whiteboard": -1,
+      "Legacy": -1,
+      "Manual (0)": 0,
+      "Manual (1)": 1,
+      "Batch (1)": 2,
+      "Batch (2)": 3,
+      "Automated (3)": 4
+    };
+
+    function calculateMaturity() {
+      if (nodes.length === 0) {
+        showMaturityResult("No nodes in the graph.");
+        return;
+      }
+      const min = -1, max = 4;
+      // For each node, calculate average maturity of its connected edges, multiply by importance
+      let weightedSum = 0, totalImportance = 0;
+      nodes.forEach(node => {
+        // Find all edges connected to this node
+        const connected = links.filter(l => l.source === node.id || l.target === node.id);
+        if (connected.length === 0 || !node.importance) return;
+        // Average maturity value for this node
+        const avgMat = connected.map(l => maturityMap[l.label] ?? 0).reduce((a,b) => a+b,0) / connected.length;
+        weightedSum += avgMat * node.importance;
+        totalImportance += node.importance;
+      });
+      if (totalImportance === 0) {
+        showMaturityResult("No node importance set.");
+        return;
+      }
+      const weightedAvg = weightedSum / totalImportance;
+      const normalized = (weightedAvg - min) / (max - min);
+      let level = "";
+      if (normalized < 0.2) level = "Very Low";
+      else if (normalized < 0.4) level = "Low";
+      else if (normalized < 0.6) level = "Medium";
+      else if (normalized < 0.8) level = "High";
+      else level = "Very High";
+      showMaturityResult(`Node-weighted Normalized Maturity: <b>${normalized.toFixed(2)}</b> (0 = lowest, 1 = highest)<br>Level: <b>${level}</b>`);
+    }
+
+    function showMaturityResult(html) {
+      document.getElementById("maturityResult").innerHTML = html;
+    }
+    // Show importance input for a node
+    function showImportanceInput(node) {
+      const val = prompt(`Set importance for node '${node.id}' (1-5):`, node.importance ?? 3);
+      const imp = parseInt(val);
+      if (!isNaN(imp) && imp >= 1 && imp <= 5) {
+        node.importance = imp;
+        updateGraph();
+      }
+    }
+  </script>
+
+</body>
+</html>

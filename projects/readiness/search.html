@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study Search</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+    <header class="bg-white shadow-md p-4">
+        <nav class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-sky-700">Digital Transformation</a>
+            <div>
+                <a href="case-studies.html" class="nav-link">Case Studies</a>
+                <a href="search.html" class="nav-link active">Search</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-8 flex-grow">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Search Case Studies</h1>
+            <p class="text-lg text-slate-600">Find relevant case studies by searching for keywords in the title or scenario.</p>
+        </div>
+
+        <div class="max-w-2xl mx-auto mb-8">
+            <input type="text" id="search-input" placeholder="Search for a case study..." class="w-full p-4 text-lg border-2 border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition">
+        </div>
+
+        <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </main>
+
+    <footer class="text-center text-slate-400 text-xs py-6 mt-10 border-t border-slate-200">
+        <p>&copy; 2025 Digital Transformation Insights. All Rights Reserved.</p>
+    </footer>
+
+    <script src="search.js"></script>
+</body>
+</html>

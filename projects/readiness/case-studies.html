@@ -37,6 +37,11 @@
     <main class="flex-grow max-w-6xl mx-auto px-4 py-8">
         <h1 class="text-4xl font-extrabold text-slate-900 mb-2 text-center tracking-tight">Case Studies</h1>
         <p class="text-lg text-slate-600 mb-8 text-center">Explore real-world digital transformation journeys across manufacturing, retail, healthcare, and more.</p>
+        <!-- Search Bar and Results Section -->
+        <div id="search-container" class="p-4 bg-gray-100 border-b">
+            <input id="search-bar" type="text" placeholder="Search case studies..." class="w-full p-2 border rounded mb-4">
+            <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
         <!-- Case Studies Container -->
         <div id="case-studies-root"></div>
     </main>
@@ -54,221 +59,229 @@
         // --- CASE STUDY DATA ---
         // Each entry: { category, title, summary, content }
         const caseStudies = [
-            // --- Productivity / Automation / Approval (Kissflow) ---
-            {
-                category: "Productivity",
-                title: "Olympus: Modernizing Operations with Kissflow",
-                summary: "Olympus needed a modern, intuitive, and automated platform to enhance processes and hasten the delivery of tasks.",
-                content: `
-<b>Industry:</b> Manufacturing<br>
-<b>Employees:</b> 10,000+<br>
-<b>Headquarters:</b> Japan<br><br>
-Olympus is passionate about creating customer-driven solutions for the medical, life sciences, and industrial equipment industries. For over 100 years, Olympus has focused on making people’s lives healthier, safer, and more fulfilling. Their vision is to help detect, prevent, and treat diseases and advance scientific research while ensuring public safety. Olympus is headquartered in Tokyo, Japan, with more than 35,000 employees worldwide in nearly 40 countries and regions.<br><br>
-<b>Challenges faced:</b><br>
-- Modernization: Olympus struggled to modernize its operations as the tool it used could not support this vision.<br>
-- Burden on IT: Every small change in their operations required a team of skilled IT professionals to implement.<br>
-- Integration: A simple integration, such as linking their database to spreadsheets, was a challenge using their old workflow automation tool.<br><br>
-<b>Solution:</b><br>
-Olympus ES transitioned many of its processes from its old tool to Kissflow, including purchasing processes, RMAs, demo requests, and offering discounts. The ability to add attachments, reassign tasks midstream, and modify data were big selling points.<br><br>
-<b>Results:</b><br>
-- Reduced process cycle time<br>
-- Improved organization and efficiency<br>
-- More control over budgets<br>
-- Less burden on IT
-`
-            },
-            {
-                category: "Productivity",
-                title: "Vietnamobile: Digital Workplace Management",
-                summary: "Vietnamobile adopted a digital workplace management platform for easy tracking and reliable internal communication.",
-                content: `
-<b>Industry:</b> Telecom<br>
-<b>Location:</b> Vietnam<br><br>
-Efficiency was a top priority for the Hanoi-based Vietnamobile. It envisioned adopting a digital workplace management platform for easy tracking and reliable internal communication.<br><br>
-<b>Result:</b> Improved efficiency and communication across teams.
-`
-            },
-            {
-                category: "Productivity",
-                title: "Quality Companies LLC: Document Trail Optimization",
-                summary: "Logistics company Quality Companies needed a clear documentation trail to stay on top of requests and processing dates.",
-                content: `
-<b>Industry:</b> Logistics<br>
-Quality Companies gathered countless documents via email daily. It needed a clear documentation trail to stay on top of requests and processing dates.<br><br>
-<b>Result:</b> Enhanced documentation and process tracking.
-`
-            },
-            {
-                category: "Productivity",
-                title: "Davenport University: Streamlining Student Forms",
-                summary: "Davenport University sought an innovative solution to save time on processing student forms and other documents.",
-                content: `
-<b>Industry:</b> Education<br>
-Universities are no strangers to budget cuts and complex procedures to manage requests. Davenport University sought an innovative solution to save time on processing student forms and other documents.<br><br>
-<b>Result:</b> Reduced processing time and improved efficiency.
-`
-            },
-            {
-                category: "Approval",
-                title: "GreenCube Global: Payment Approval Solution",
-                summary: "GreenCube Global required a payment approval solution to monitor requests exchanged between managers and the finance department.",
-                content: `
-<b>Industry:</b> Finance<br>
-Speed and precision are vital to handling finance documents. GreenCube Global required a payment approval solution to monitor requests exchanged between managers and the finance department.<br><br>
-<b>Result:</b> Faster, more precise approvals.
-`
-            },
-            {
-                category: "Approval",
-                title: "Bergstrom Automotive: Automated Write-Off Approvals",
-                summary: "Bergstrom Automotive streamlined write-off approvals, saving money and reducing paper forms.",
-                content: `
-<b>Industry:</b> Retail (Automotive)<br>
-<b>Employees:</b> 1,001-5,000<br>
-<b>Headquarters:</b> USA<br><br>
-Bergstrom Automotive is Wisconsin’s #1 Automotive Dealer. They have 44 car dealerships and thousands of employees. Bergstrom found it challenging to standardize processes and workflows across branches. Accounting had to send paper forms through the mail to each branch to get signatures, often resulting in lost paperwork.<br><br>
-<b>Solution:</b> Kissflow enabled digital, automated workflows for accounting write-offs. The process became trackable, and approvals could be stopped or rerouted as needed.<br><br>
-<b>Results:</b><br>
-- Reduction in time taken to process approvals<br>
-- Saved money by stopping unnecessary write-offs<br>
-- Reduction of paper forms and mail costs
-`
-            },
-            {
-                category: "Approval",
-                title: "Verisys: Coordinated Healthcare Data Approvals",
-                summary: "Verisys needed well-coordinated workflows for swift approval processes in healthcare data management.",
-                content: `
-<b>Industry:</b> Healthcare<br>
-Verisys needed well-coordinated workflows for swift approval processes in healthcare data management.<br><br>
-<b>Result:</b> Improved approval speed and data management.
-`
-            },
-            {
-                category: "Approval",
-                title: "Tripwolf: Automated Leave Requests",
-                summary: "Tripwolf, a startup travel agency, automated employee leave requests for easy approval and workload adjustment.",
-                content: `
-<b>Industry:</b> Travel<br>
-Tripwolf, a startup travel agency, sought to automate employee leave requests for easy approval and adjustment of workload.<br><br>
-<b>Result:</b> Streamlined HR processes.
-`
-            },
-            {
-                category: "Automation",
-                title: "Landmark Properties: Central Workplace Platform",
-                summary: "Landmark Properties empowered its teams with a central workplace platform to enhance efficiency.",
-                content: `
-<b>Industry:</b> Real Estate<br>
-Landmark Properties empowered its marketing and other teams with a central workplace platform to enhance efficiency.<br><br>
-<b>Result:</b> Improved collaboration and transparency.
-`
-            },
-            {
-                category: "Automation",
-                title: "Project SYNCERE: Automating Document Management",
-                summary: "Project SYNCERE embraced automation to improve internal operations and manage documents from over 20 programs.",
-                content: `
-<b>Industry:</b> Non-profit<br>
-Project SYNCERE embraced automation to improve internal operations and manage documents from over 20 programs.<br><br>
-<b>Result:</b> Streamlined document management.
-`
-            },
-            {
-                category: "Automation",
-                title: "Beqom: Simplified Global Approval Pipelines",
-                summary: "Beqom used automated workflows to simplify global approval pipelines and track pending requests.",
-                content: `
-<b>Industry:</b> Software Development<br>
-Beqom used automated workflows to simplify global approval pipelines and track pending requests.<br><br>
-<b>Result:</b> Improved process visibility and speed.
-`
-            },
-            {
-                category: "Automation",
-                title: "Lincoln Financial Media: Digital Collaboration Platform",
-                summary: "Lincoln Financial Media transitioned from paper forms to a fully digital and collaborative platform.",
-                content: `
-<b>Industry:</b> Media<br>
-Lincoln Financial Media left traditional paper forms and archives for a fully digital and collaborative platform.<br><br>
-<b>Result:</b> Enhanced digital collaboration.
-`
-            },
-            // --- Ectobox ---
             {
                 category: "Manufacturing",
-                title: "Universal Electric Corporation: Managing Data and Workflow",
-                summary: "Managing ECN data and workflow for mass customization manufacturing.",
+                title: "MacDon: A Digital Transformation with Legacy Solutions",
+                summary: "MacDon, a world leader in agricultural equipment, modernized its legacy dealer portal to improve user experience, data management, and self-service capabilities, leading to significant sales growth.",
                 content: `
-<b>Industry:</b> Manufacturing<br>
-Universal Electric Corporation had the challenge of managing the data and workflow for Engineering Change Notices (ECNs) in their mass customization business model. The current processes were digital but manual and time intensive.<br><br>
-<b>Solution:</b> Ectobox built a solution using Microsoft SQL Server and .NET (C#) to create an application for tracking, modifying, and closing document changes.<br><br>
-<b>Results:</b> Time required to manage document changes is much faster and more accurate; service and product quality increased.
+<b>The Company:</b><br>
+To see a manufacturing company shaping the future of our world, look no further than MacDon, a world leader in the production of agricultural and harvesting equipment. For over 70 years, MacDon has supported farmers in the cultivation of crops necessary to feed, clothe, and support the global community. As consumer needs grow, MacDon has adapted with impressive flexibility — but they eventually hit a wall with their legacy technology.<br><br>
+<b>The Struggle:</b><br>
+MacDon offered a self-service dealer portal utilizing legacy Liferay software. While the platform was once robust enough to address the manufacturing company’s needs, new supply chain challenges and mounting customer expectations led MacDon to recognize significant pain points.<br><br>
+For example, MacDon’s high standards for user experience weren’t being met with their existing technology. The look and feel of the site were noticeably outdated, while mobile users routinely encountered issues when accessing the platform. Further, the impressive amount of data created by the company wasn’t being managed in an efficient manner, leaving platform users to waste time and effort on document management tasks.<br><br>
+<b>The Solution:</b><br>
+MacDon knew it was time to begin their digital transformation journey. However, their legacy system required careful navigation and adaptation — a frequent need in the manufacturing space.<br><br>
+With help from a Liferay partner, MacDon was able to upgrade their platform without having to start from scratch. By migrating big data from legacy systems and taking advantage of the existing framework, this digital transformation journey addressed significant challenges while creating new functionality for users.<br><br>
+On the upgraded MacDon dealer portal, users can retrieve invoice information, check production inventory, create shopping lists, submit warranty claims, and perform key self-service tasks. Equally as important, the manufacturer’s big data is now much easier to navigate and control, enabling the efficient completion of document management operations.<br><br>
+<b>The Results:</b><br>
+The new MacDon portal is a true testament to the power of digital transformation. It’s not just sleek, modern, and easy to use; it also delivers significant results:<br>
+- Overall sales increased by 20%.<br>
+- eCommerce transactions have increased by 50%.<br>
+- Site visitor numbers have doubled.<br>
+- Call, fax, and in-person orders have decreased thanks to easier self-service and online options.
 `
             },
             {
                 category: "Manufacturing",
-                title: "The Borough of Chambersburg: Leveraging Data with Canary Labs Historian",
-                summary: "Improving efficiency and reporting by leveraging data from legacy generation units.",
+                title: "Digital Transformation at Acme Industries",
+                summary: "A traditional manufacturing firm, Acme Industries leveraged digital technologies to revolutionize its operations, resulting in increased efficiency and market share.",
                 content: `
-<b>Industry:</b> Utilities<br>
-The Borough of Chambersburg wanted to improve data collection from older generation units. Ectobox implemented a scalable architecture using MQTT Data Broker and Canary Labs Historian.<br><br>
-<b>Results:</b> Real-time data collection, improved reporting, and diagnostic capabilities for generation stations.
+<b>Company Background:</b><br>
+Established in the 1980s, Acme Industries specializes in producing automotive components with operations spanning over 40 global production facilities. Historically recognized for its commitment to quality, Acme faced new challenges as the digital age ushered in a wave of technological advancements and heightened global competition.<br><br>
+<b>Challenges:</b><br>
+Acme encountered several obstacles that necessitated a digital overhaul:<br>
+- <b>Outdated Legacy Systems:</b> Old systems’ inefficiency and high maintenance costs were increasingly unsustainable.<br>
+- <b>Supply Chain Inefficiencies:</b> There was a critical need for greater transparency and agility in the supply chain to meet rapidly changing customer demands.<br>
+- <b>Market Competition:</b> Keeping pace with industry leaders already adopting advanced digital strategies was crucial for maintaining a competitive edge.<br><br>
+<b>Digital Transformation Strategy:</b><br>
+To address these challenges, Acme devised a comprehensive digital strategy focused on several transformative technologies:<br>
+- <b>Internet of Things (IoT):</b> Implemented IoT sensors in machinery for real-time monitoring and predictive maintenance, minimizing downtime and boosting production efficiency.<br>
+- <b>Artificial Intelligence (AI) and Machine Learning:</b> Integrated AI to optimize production lines and employ machine learning to analyze data trends, predict production issues, and streamline operations.<br>
+- <b>Cloud Computing:</b> Transitioned to cloud-based solutions to improve data accessibility, collaboration, and scalability across global facilities.<br>
+- <b>Advanced-Data Analytics:</b> Introduced a centralized analytics dashboard to track key performance indicators and enable data-driven decisions.<br>
+- <b>Customer Integration Platforms:</b> Developed digital platforms for direct customer engagement, allowing for customized orders and providing real-time production updates.<br><br>
+<b>Implementation:</b><br>
+Acme’s digital transformation was implemented in phases:<br>
+- <b>Pilot Testing:</b> Started with pilot programs in select facilities to gauge technology impacts and refine solutions.<br>
+- <b>Employee Training:</b> Established dedicated change management teams to train employees and facilitate a smooth transition to new digital tools.<br>
+- <b>Partner Collaborations:</b> Worked closely with technology partners to ensure access to state-of-the-art digital solutions tailored to specific operational needs.<br><br>
+<b>Outcomes:</b><br>
+The digital transformation initiative at Acme yielded significant results:<br>
+- <b>Operational Efficiency:</b> Production speed increased by 30%, and machine downtime decreased by 25%.<br>
+- <b>Cost Savings:</b> Operational costs were reduced by 20% due to more efficient maintenance and energy use.<br>
+- <b>Customer Satisfaction:</b> Enhanced customization and faster delivery improved customer satisfaction rates.<br>
+- <b>Strategic Decision-Making:</b> Enhanced analytics capabilities enabled quicker and more informed decision-making processes.<br><br>
+<b>Conclusion:</b><br>
+Acme Industries’ digital transformation illustrates the revitalization of traditional manufacturing through strategic technology integration. Adopting IoT, AI, cloud computing, and data analytics, Acme boosted its operational efficiency and strengthened its global market position. This case study is a blueprint for other manufacturers seeking to leverage digital transformation for sustainable business growth.
 `
             },
             {
-                category: "Manufacturing",
-                title: "Bayer Healthcare: Improving Data Management",
-                summary: "Fixing and enhancing a legacy Access/SQL Server application for medical device manufacturing.",
+                category: "Electronics",
+                title: "Digital Transformation at Beta Manufacturing Co.",
+                summary: "Beta Manufacturing Co., a key player in the electronics sector, embarked on a strategic digital transformation to tackle modern market demands and technological challenges.",
                 content: `
-<b>Industry:</b> Medical Devices<br>
-Bayer Healthcare had a legacy Access application with a SQL Server backend that was buggy and unsupported. Ectobox fixed all bugs and added new features.<br><br>
-<b>Results:</b> Increased productivity and efficiency, seamless application operation, and further custom software development.
+<b>Company Background:</b><br>
+Since its establishment in the late 1990s, Beta Manufacturing Co. has led the industry in producing high-quality electronic components for various sectors. With over 25 manufacturing sites worldwide, the company has consistently prioritized innovation and customer satisfaction but recognized the need for a digital upgrade to maintain its industry standing.<br><br>
+<b>Challenges:</b><br>
+Beta faced several critical challenges that necessitated a shift toward digital solutions:<br>
+- <b>Increasing Production Complexity:</b> The complexity of new electronic components requires more sophisticated production techniques.<br>
+- <b>High Customer Expectations:</b> Customers demanded faster delivery times and more customizable product options.<br>
+- <b>Global Supply Chain Management:</b> Managing a global supply chain became increasingly challenging with fluctuating demand and logistical constraints.<br><br>
+<b>Digital Transformation Strategy:</b><br>
+Beta’s strategy for digital transformation was centered around several key technological advancements:<br>
+- <b>Robotic Process Automation (RPA):</b> Introduced RPA to automate repetitive tasks and streamline production processes, leading to higher throughput and fewer errors.<br>
+- <b>Digital Twin Technology:</b> Implemented digital twin models to simulate production processes and predict outcomes, enabling proactive adjustments and reducing waste.<br>
+- <b>Blockchain for Supply Chain:</b> Employed blockchain technology to boost transparency and security in supply chain management, ensuring real-time tracking and data integrity.<br>
+- <b>Customer Relationship Management (CRM) Systems:</b> Deployed advanced CRM systems to improve customer interaction and service by offering detailed insights into consumer preferences and behaviors.<br>
+- <b>Virtual Reality (VR) for Training:</b> Adopted VR tools to train staff in a virtual environment, reducing training time and improving learning outcomes.<br><br>
+<b>Implementation:</b><br>
+The implementation of Beta’s digital strategy included several stages:<br>
+- <b>Technology Integration:</b> Carefully selected technologies were integrated into existing systems with minimal disruption.<br>
+- <b>Staff Engagement:</b> Conducted extensive training programs to ensure all employees were adept at using new technologies.<br>
+- <b>Continuous Monitoring:</b> Set up systems to monitor the performance of digital tools and make necessary adjustments.<br><br>
+<b>Outcomes:</b><br>
+The adoption of digital technologies brought transformative results to Beta Manufacturing Co.:<br>
+- <b>Enhanced Production Efficiency:</b> Production efficiency improved by 40%, significantly reducing manual errors.<br>
+- <b>Supply Chain Optimization:</b> Enhanced supply chain visibility and efficiency, reducing lead times by 15%.<br>
+- <b>Increased Customer Satisfaction:</b> More responsive customer service and tailored product offerings led to a 30% improvement in customer satisfaction scores.<br>
+- <b>Innovative Training Solutions:</b> VR training reduced personnel training time by 50% and increased operational safety.<br><br>
+<b>Conclusion:</b><br>
+Beta Manufacturing Co.’s digital transformation journey highlights the critical role of innovative technologies in modernizing manufacturing processes. By adopting RPA, digital twins, blockchain, CRM systems, and VR training, Beta enhanced its operational capabilities and solidified its competitive edge in the electronics sector. This case study showcases the transformative power of digital strategies in addressing modern business challenges and establishing new industry standards.
 `
             },
-            // --- Fictional / Digital Transformation ---
             {
-                category: "Manufacturing",
-                title: "Dissolving Manufacturing Silos: A Digital Transformation Story",
-                summary: "A beverage plant breaks down silos and achieves peak efficiency with digital transformation.",
+                category: "Heavy Machinery",
+                title: "Digital Reinvention at Delta Fabrication Corp.",
+                summary: "Delta Fabrication Corp., a leader in the heavy machinery sector, undertook a comprehensive digital transformation to enhance its manufacturing processes and improve customer engagement through digital innovation.",
                 content: `
-<b>Industry:</b> Beverage Manufacturing<br>
-A beverage plant struggled with siloed departments and fragmented data. By implementing SAP Production Planning, Fujitsu Digital Kaizen, HCI Edge, and a unified Control Tower, the plant achieved:<br>
-- Integrated planning, scheduling, and resource allocation<br>
-- Real-time data collection and analytics<br>
-- Continuous improvement and feedback loops<br>
-- Enhanced cybersecurity and operational resilience<br>
-<b>Outcome:</b> Highly efficient, responsive, and secure production process.
+<b>Company Background:</b><br>
+Established in the mid-1990s, Delta Fabrication Corp. specializes in producing heavy-duty machinery for construction and mining industries. Operating across 30 international locations, Delta has been known for its robust engineering and reliable products but has faced growing pressures from market dynamics and technological advancements.<br><br>
+<b>Challenges:</b><br>
+Delta was confronted with several challenges that prompted a digital shift:<br>
+- <b>Aging Infrastructure:</b> The existing production infrastructure was outdated, leading to inefficiencies and increased maintenance costs.<br>
+- <b>Environmental Regulations:</b> New environmental regulations demanded more sustainable production practices.<br>
+- <b>Global Market Pressures:</b> Intense competition from established and emerging markets required Delta to innovate rapidly and reduce costs.<br><br>
+<b>Digital Transformation Strategy:</b><br>
+Delta’s digital transformation was built around key technological implementations:<br>
+- <b>3D Printing Technology:</b> Integrated 3D printing to produce complex components, reducing lead time and material waste and fostering innovation in product design.<br>
+- <b>Sustainable Energy Solutions:</b> Deployed energy management systems to optimize power usage and incorporated renewable energy sources into production facilities.<br>
+- <b>Enhanced Data Management Systems:</b> Upgraded ERP (Enterprise Resource Planning) systems to enhance department data flow, improving decision-making and operational transparency.<br>
+- <b>Smart Sensors and IoT:</b> Implemented smart sensors and IoT devices to monitor equipment health, predict failures, and enable preventive maintenance strategies.<br>
+- <b>Augmented Reality (AR) for Maintenance:</b> Adopted AR tools to assist technicians in maintenance operations, offering real-time data and visual guidance to enhance accuracy and speed.<br><br>
+<b>Implementation:</b><br>
+The digital transformation plan was executed through a structured approach:<br>
+- <b>Strategic Planning:</b> Conducted thorough assessments to identify technological gaps and define clear digital objectives.<br>
+- <b>Phased Rollout:</b> Technologies were rolled out in phases to manage the transition smoothly and ensure minimal disruption to ongoing operations.<br>
+- <b>Employee Upskilling:</b> Initiated extensive training programs to equip workers with the skills to handle new technologies effectively.<br><br>
+<b>Outcomes:</b><br>
+The digital overhaul at Delta Fabrication Corp. resulted in significant improvements:<br>
+- <b>Operational Efficiency:</b> Production efficiency increased by 35%, with a marked reduction in downtime due to predictive maintenance.<br>
+- <b>Sustainability Gains:</b> Achieved a 20% reduction in energy consumption through optimized energy management and sustainable practices.<br>
+- <b>Market Responsiveness:</b> Enhanced agility in production and supply chain operations, allowing quicker adaptation to market changes.<br>
+- <b>Workforce Empowerment:</b> Improved employee performance and job satisfaction through advanced training tools and streamlined workflows.<br><br>
+<b>Conclusion:</b><br>
+Delta Fabrication Corp.’s digital transformation highlights the transformative effects of advanced technologies in traditional manufacturing. Integrating 3D printing, smart sensors, AR, and sustainable solutions, Delta boosted its production capabilities and secured a leadership position in the high-tech heavy machinery market. This case study illustrates how strategic digital investments can revitalize operations and strategic frameworks, fostering sustainable growth and competitive advantage.
 `
             },
-            // --- InnoTech / Ceramics ---
             {
-                category: "Manufacturing",
-                title: "Ceramics Group: Digital Transformation in Production",
-                summary: "A ceramics manufacturer modernizes production with Proplan and Shop Floor applications.",
+                category: "Consumer Electronics",
+                title: "Digital Evolution at Gamma Electronics Ltd.",
+                summary: "Gamma Electronics Ltd., a prominent name in the consumer electronics industry, embarked on an ambitious digital transformation initiative to streamline its operations and enhance customer engagement.",
                 content: `
-<b>Industry:</b> Ceramics Manufacturing<br>
-A leading ceramics producer partnered with InnoTech to develop Proplan (for planning) and a Shop Floor Application (for real-time tracking).<br><br>
-<b>Results:</b> Streamlined planning, real-time production visibility, improved efficiency, and scalable digital solutions.
+<b>Company Background:</b><br>
+Founded in the late 1990s, Gamma Electronics Ltd. has been a significant player in designing and manufacturing consumer electronics, including smartphones and home entertainment systems. With a global presence and a reputation for innovation, Gamma faced the dual challenges of rapidly changing technology and consumer expectations.<br><br>
+<b>Challenges:</b><br>
+Gamma encountered several strategic and operational challenges:<br>
+- <b>Rapid Technological Changes:</b> The fast technological advancement in electronics required Gamma to continuously innovate and update its product lines.<br>
+- <b>Consumer Demand for Personalization:</b> Increasing consumer demand for customized products necessitated a shift in Gamma’s manufacturing and marketing strategies.<br>
+- <b>Supply Chain Complexity:</b> Managing a complex, international supply chain became increasingly difficult with fluctuating demands and logistical disruptions.<br><br>
+<b>Digital Transformation Strategy:</b><br>
+Gamma’s transformation strategy was centered on implementing cutting-edge technologies and practices:<br>
+- <b>Advanced Robotics and Automation:</b> Deployed advanced robotics in manufacturing processes to increase production precision and reduce labor costs.<br>
+- <b>Big Data and Analytics:</b> Leveraged big data tools to analyze market trends and consumer behaviors, enabling more targeted product development and marketing strategies.<br>
+- <b>Customer-Centric Platforms:</b> Developed interactive, AI-driven customer service platforms to offer customized customer support and enhance user experience.<br>
+- <b>Supply Chain Integration:</b> Implemented an AI-driven, fully integrated supply chain management system to optimize inventory and enhance delivery efficiency.<br>
+- <b>Cybersecurity Enhancements:</b> Strengthened cybersecurity measures to protect sensitive customer and company data amidst an increasingly digital operational framework.<br><br>
+<b>Implementation:</b><br>
+The implementation of the digital strategy at Gamma Electronics Ltd. involved:<br>
+- <b>Technology Adoption:</b> Integrated new technologies into existing systems, emphasizing minimizing disruption.<br>
+- <b>Stakeholder Engagement:</b> Regularly updated and gathered feedback from stakeholders to ensure alignment and address concerns.<br>
+- <b>Continuous Improvement:</b> Established mechanisms for ongoing review and adaptation of technologies to keep pace with industry developments.<br><br>
+<b>Outcomes:</b><br>
+Gamma’s digital transformation yielded significant benefits:<br>
+- <b>Increased Production Efficiency:</b> Automation led to a 40% increase in production speed and a 30% decrease in production costs.<br>
+- <b>Enhanced Customer Engagement:</b> The new customer service platforms resulted in a 50% improvement in customer satisfaction ratings.<br>
+- <b>Supply Chain Optimization:</b> The integrated supply chain system reduced logistical errors by 25% and shortened delivery times.<br>
+- <b>Data Security:</b> Enhanced cybersecurity measures significantly reduced the incidence of data breaches, protecting company and customer data.<br><br>
+<b>Conclusion:</b><br>
+Gamma Electronics Ltd.’s digital transformation showcases the significant impact of digital technologies in revitalizing the consumer electronics industry. Gamma streamlined operations and enhanced customer engagement and supply chain management by adopting robotics, big data, AI, and cybersecurity. This case study underscores the strategic importance of digital transformation in addressing industry challenges and driving growth and customer satisfaction.
 `
             },
-            // --- Digital Transformation (Various Industries) ---
             {
-                category: "Cross-Industry",
-                title: "Digital Transformation Case Studies (Various Industries)",
-                summary: "A collection of 100+ digital transformation case studies across retail, healthcare, manufacturing, and more.",
+                category: "Chemical Manufacturing",
+                title: "Digital Advancement at Zeta Industrial Solutions",
+                summary: "Zeta Industrial Solutions, a leader in the chemical manufacturing industry, initiated a strategic digital transformation to modernize its operations and improve its competitive stance in the global market.",
                 content: `
-<b>Industries:</b> Retail, Healthcare, Manufacturing, Hospitality, Media, Logistics, Education, and more.<br>
-Explore summarized backgrounds and challenges for dozens of organizations facing digital transformation:<br>
-<ul class="list-disc pl-6">
-<li>Independent Bookstore Chain: Overcame a 20% decline in foot traffic and 30% increase in online competition by implementing digital inventory and sales platforms.</li>
-<li>Southeast Asia Retail Chain: Addressed declining sales and outdated IT systems with a comprehensive digital transformation.</li>
-<li>Boutique Hotel Chains: Revitalized customer engagement and streamlined operations to recover from declining bookings and outdated digital platforms.</li>
-<li>Regional Healthcare Providers: Enhanced patient care and streamlined operations through digital health technologies.</li>
-<li>Sports Analytics Firm: Reduced data processing times and improved customer retention with advanced analytics tools.</li>
-<li>Apparel Manufacturers: Improved operational efficiency and growth with digital tools and automation.</li>
-<li>...and many more. <span class="text-sky-600">See full details in the source file.</span></li>
-</ul>
+<b>Company Background:</b><br>
+Established in the early 2000s, Zeta Industrial Solutions has been at the forefront of producing specialized chemicals used in agriculture, pharmaceuticals, and consumer goods. With production facilities in over 15 countries, Zeta has consistently prioritized safety, quality, and sustainability. However, evolving regulatory demands and industry standards prompted a reassessment of their traditional operational models.<br><br>
+<b>Challenges:</b><br>
+Zeta faced multiple challenges that drove the need for digital innovation:<br>
+- <b>Regulatory Compliance:</b> Increasingly stringent environmental regulations required Zeta to improve its sustainability practices and compliance reporting.<br>
+- <b>Operational Inefficiencies:</b> Legacy systems and manual processes caused inefficiencies and heightened the risk of production errors.<br>
+- <b>Market Adaptability:</b> Rapidly adapting to market changes and customer demands requires more agile and responsive operational systems.<br><br>
+<b>Digital Transformation Strategy:</b><br>
+Zeta’s digital transformation focused on several technological implementations to address its operational and regulatory challenges:<br>
+- <b>Process Automation:</b> Introduced automation technologies in production lines to enhance precision and reduce human error, significantly improving throughput and safety.<br>
+- <b>Environmental Monitoring Systems:</b> Deployed real-time environmental monitoring systems to track emissions and waste, ensuring compliance with global environmental standards.<br>
+- <b>Enterprise Resource Planning (ERP) Upgrade:</b> Upgraded to a more robust ERP system to integrate all core business processes, improving data accuracy and real-time visibility across the organization.<br>
+- <b>Machine Learning for Demand Forecasting:</b> Utilized machine learning algorithms to predict market demand and optimize inventory management, reducing overproduction and waste.<br>
+- <b>Blockchain for Supply Chain Transparency:</b> Implemented blockchain technology to enhance traceability and transparency in the supply chain, securing the integrity of raw material sourcing and distribution.<br><br>
+<b>Implementation:</b><br>
+Zeta’s digital transformation was methodically executed through:<br>
+- <b>Strategic Partnerships:</b> Collaborated with technology providers to ensure access to advanced solutions tailored to the chemical industry’s needs.<br>
+- <b>Workforce Training:</b> Rolled comprehensive training programs to upskill employees, ensuring they were well-prepared to operate new systems and technologies.<br>
+- <b>Iterative Implementation:</b> An iterative implementation approach allowed real-time adjustments and optimizations based on feedback and performance data.<br><br>
+<b>Outcomes:</b><br>
+The impact of digital transformation at Zeta Industrial Solutions was substantial:<br>
+- <b>Operational Excellence:</b> Automation and ERP upgrades led to a 30% boost in operational efficiency and a 20% reduction in production costs.<br>
+- <b>Environmental Performance:</b> Enhanced monitoring and compliance systems resulted in a 25% decrease in environmental violations and improved sustainability ratings.<br>
+- <b>Supply Chain Integrity:</b> Blockchain implementation increased supply chain transparency, improving stakeholder trust and regulatory compliance.<br>
+- <b>Market Responsiveness:</b> Improved demand forecasting and inventory management enabled Zeta to respond more swiftly to market changes, increasing customer satisfaction.<br><br>
+<b>Conclusion:</b><br>
+Zeta Industrial Solutions’ digital transformation journey demonstrates the significant enhancements in operational capabilities and regulatory compliance within the chemical manufacturing sector. By adopting technologies like automation, ERP, machine learning, and blockchain, Zeta optimized its production processes and reinforced its commitment to environmental stewardship and adaptability. This case study highlights the transformative impact of digital strategies in addressing specific industry challenges and driving long-term success.
+`
+            },
+            {
+                category: "Packaging",
+                title: "Manufacturing 4.0 at Intertape Polymer Group",
+                summary: "Intertape Polymer Group (IPG), a packaging solutions company, embarked on a Manufacturing 4.0 journey to empower employees and enhance business performance through technology, analytics, and training.",
+                content: `
+<b>Company Background:</b><br>
+As a packaging and protective solutions company with $1.5B in revenue, Intertape Polymer Group (IPG) has a proven track record of excellence. In 2019, the company initiated a Manufacturing 4.0 journey to ensure its operations and technologies were future-ready, aiming to empower all employees with technology, analytic insights, and training to make a meaningful impact on business performance.<br><br>
+<b>Challenges:</b><br>
+IPG's transformation was driven by the need to modernize its operations. The primary challenges included:<br>
+- <b>Operational Efficiency:</b> A need to improve processes, reduce waste, and lower costs to boost bottom-line savings.<br>
+- <b>Workforce Empowerment:</b> The necessity to equip employees with the right technology, training, and analytical insights.<br>
+- <b>Technology Scalability:</b> The challenge of identifying and implementing scalable M4.0 technologies across its global operations.<br>
+- <b>Maintenance and Downtime:</b> High costs associated with spare parts, supply constraints, and machine downtime.<br><br>
+<b>Digital Transformation Strategy:</b><br>
+IPG's journey included a multi-faceted approach with five key focus areas:<br>
+- <b>Digital Analytical Platform:</b> Harnessing equipment performance analytics to improve operational efficiency.<br>
+- <b>Augmented Reality (AR):</b> Training and developing employees and attracting new talent.<br>
+- <b>3D Printing:</b> Reducing spare parts cost and supply constraints.<br>
+- <b>Machine Health:</b> Monitoring key assets 24/7 to reduce downtime and extend asset life.<br>
+- <b>Cloud-Based Maintenance Management System:</b> Centralizing asset information and reducing operating costs through proactive maintenance.<br><br>
+<b>Implementation:</b><br>
+IPG began its M4.0 journey by creating a roadmap, vetting and piloting technologies, and working with vendors to identify scalable solutions. The company used pilot projects to identify impactful technologies and the resources needed to implement them. Project leads worked with cross-functional teams to apply each facet of the deployment strategy, and IPG continues to implement these projects across the organization.<br><br>
+<b>Outcomes:</b><br>
+The business impact of contextualized data and M4.0 technology was significant:<br>
+- <b>Data and Analytics:</b> The digital analytical platform opened the door to take a deeper look at process parameters to understand its impact on yield and quality, with the potential to save millions. A new process control ideology called "centerlining" was developed, and process hack-a-thons using this framework improved uptime and reduced waste.<br>
+- <b>Machine Health & Maintenance:</b> Machine Health IoT sensors and AI algorithms predicted machine failures, resulting in a significant reduction of downtime. The cloud-based maintenance management system was deployed to track over 50,000 SKUs, aiming to reduce inventories.<br>
+- <b>3D Printing:</b> Implemented in more than 13 sites, printing over 1,000 parts, IPG realized a 75% cost savings while reducing lead time for machine parts from weeks to hours.<br>
+- <b>Augmented Reality:</b> AR technology reduced onboarding time for new employees and improved labor efficiencies by 12% at pilot sites.<br>
+- <b>Industry Recognition:</b> IPG’s efforts earned a 2022 Manufacturing Leadership Award, and its leaders and plants have received multiple awards for digital transformation and technology leadership.<br><br>
+<b>Conclusion:</b><br>
+IPG’s digital transformation journey showcases how a strategic focus on Manufacturing 4.0 can drive operational excellence. By implementing technologies like analytics, AR, 3D printing, and IoT-based machine health, IPG has gained a deeper understanding of its processes to solve complex problems, achieve significant savings, and empower its workforce. As IPG scales these technologies, it continues to create additional value for the business and its customers, with plans to expand digital tools into supply chain and commercial functions.
 `
             }
         ];
@@ -341,6 +354,74 @@ Explore summarized backgrounds and challenges for dozens of organizations facing
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
         });
+
+        // Search functionality
+        const searchInput = document.getElementById('search-bar');
+        const searchResults = document.getElementById('search-results');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filteredStudies = caseStudies.filter(cs =>
+                cs.title.toLowerCase().includes(query) ||
+                cs.summary.toLowerCase().includes(query)
+            );
+            renderSearchResults(filteredStudies);
+        });
+
+        async function fetchExternalCaseStudies() {
+            const response = await fetch('Case_studies.json');
+            const externalCaseStudies = await response.json();
+            return externalCaseStudies.map(cs => ({
+                title: cs.Title,
+                summary: cs.Scenario,
+                link: cs.Link,
+                category: cs.Category || 'Undefined'
+            }));
+        }
+
+        async function initializeCaseStudies() {
+            const externalCaseStudies = await fetchExternalCaseStudies();
+            caseStudies.push(...externalCaseStudies);
+            renderSearchResults(caseStudies);
+            renderCaseStudies();
+        }
+
+        initializeCaseStudies();
+
+        function renderSearchResults(studies) {
+            searchResults.innerHTML = '';
+            if (studies.length === 0) {
+                searchResults.innerHTML = '<p class="text-center text-gray-500">No results found.</p>';
+                return;
+            }
+
+            studies.forEach(cs => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded shadow p-4 border hover:shadow-lg transition';
+
+                const title = document.createElement('h3');
+                title.className = 'text-lg font-bold mb-2';
+                title.textContent = cs.title;
+
+                const summary = document.createElement('p');
+                summary.className = 'text-sm text-gray-600';
+                summary.textContent = cs.summary;
+
+                const link = document.createElement('a');
+                link.href = cs.link || '#';
+                link.className = 'text-blue-500 hover:underline mt-2 block';
+                link.textContent = 'Read More';
+
+                card.appendChild(title);
+                card.appendChild(summary);
+                card.appendChild(link);
+
+                searchResults.appendChild(card);
+            });
+        }
+
+        // Initial render
+        renderSearchResults(caseStudies);
 
         renderCaseStudies();
     </script>
