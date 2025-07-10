@@ -403,20 +403,33 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
 
             studies.forEach(cs => {
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded shadow p-4 border hover:shadow-lg transition';
+                card.className = 'bg-white rounded shadow p-4 border hover:shadow-lg transition flex flex-col';
 
                 const title = document.createElement('h3');
                 title.className = 'text-lg font-bold mb-2';
                 title.textContent = cs.title;
 
                 const summary = document.createElement('p');
-                summary.className = 'text-sm text-gray-600';
+                summary.className = 'text-sm text-gray-600 mb-4';
                 summary.textContent = cs.summary;
 
                 const link = document.createElement('a');
-                link.href = cs.link || '#';
-                link.className = 'text-blue-500 hover:underline mt-2 block';
-                link.textContent = 'Read More';
+                link.className = 'text-sky-600 hover:underline mt-auto pt-2 text-sm font-semibold';
+                link.textContent = 'Read More →';
+
+                if (cs.content) {
+                    link.href = '#';
+                    link.onclick = (e) => {
+                        e.preventDefault();
+                        showModal(cs);
+                    };
+                } else if (cs.link) {
+                    link.href = cs.link;
+                    link.target = '_blank'; // Open external links in a new tab
+                } else {
+                    link.href = '#';
+                    link.style.display = 'none'; // Hide link if no content or link
+                }
 
                 card.appendChild(title);
                 card.appendChild(summary);
