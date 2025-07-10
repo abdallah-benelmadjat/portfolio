@@ -6,6 +6,8 @@
     <title>Case Studies</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <style>
         /* Use Tailwind utility classes directly in HTML for best compatibility.
            The @apply directive only works in a Tailwind build pipeline, not in <style> tags in HTML.
@@ -37,6 +39,10 @@
     <main class="flex-grow max-w-6xl mx-auto px-4 py-8">
         <h1 class="text-4xl font-extrabold text-slate-900 mb-2 text-center tracking-tight">Case Studies</h1>
         <p class="text-lg text-slate-600 mb-8 text-center">Explore real-world digital transformation journeys across manufacturing, retail, healthcare, and more.</p>
+        <!-- Pareto Chart Section -->
+        <div class="mb-8">
+            <canvas id="paretoChart" width="400" height="200"></canvas>
+        </div>
         <!-- Search Bar and Results Section -->
         <div id="search-container" class="p-4 bg-gray-100 border-b">
             <input id="search-bar" type="text" placeholder="Search case studies..." class="w-full p-2 border rounded mb-4">
@@ -420,10 +426,120 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
             });
         }
 
-        // Initial render
-        renderSearchResults(caseStudies);
+        async function fetchTagData() {
+            const response = await fetch('Case_studies.json');
+            const caseStudies = await response.json();
 
-        renderCaseStudies();
+            // Count occurrences of each tag
+            const tagCounts = {};
+            caseStudies.forEach(cs => {
+                const tag = cs.Tag || 'Undefined';
+                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+            });
+
+            // Sort tags by count in descending order
+            const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+
+            // Prepare data for the Pareto chart
+            const labels = sortedTags.map(entry => entry[0]);
+            const data = sortedTags.map(entry => entry[1]);
+            const cumulativeData = data.reduce((acc, value, index) => {
+                acc.push((acc[index - 1] || 0) + value);
+                return acc;
+            }, []);
+
+            return { labels, data, cumulativeData };
+        }
+
+        async function renderParetoChart() {
+            const { labels, data, cumulativeData } = await fetchTagData();
+
+            // Find the x-axis value where cumulative percentage reaches or exceeds 80%
+            const total = cumulativeData[cumulativeData.length - 1];
+            const targetIndex = cumulativeData.findIndex(value => (value / total) * 100 >= 78.8);
+            const targetLabel = labels[targetIndex];
+
+            const ctx = document.getElementById('paretoChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Case Studies',
+                            data: data,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Cumulative Percentage',
+                            data: cumulativeData.map(value => (value / total) * 100),
+                            type: 'line',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 2,
+                            fill: false,
+                            yAxisID: 'y-axis-2'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Case Studies'
+                            }
+                        },
+                        'y-axis-2': {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cumulative Percentage'
+                            }
+                        }
+                    },
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                line80: {
+                                    type: 'line',
+                                    scaleID: 'y-axis-2',
+                                    value: 80,
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 2,
+                                    borderDash: [6, 6],
+                                    label: {
+                                        content: '80%',
+                                        enabled: true,
+                                        position: 'end'
+                                    }
+                                },
+                                verticalLine: {
+                                    type: 'line',
+                                    scaleID: 'x',
+                                    value: targetLabel,
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 2,
+                                    borderDash: [4, 4],
+                                    label: {
+                                        content: targetLabel,
+                                        enabled: true,
+                                        position: 'start'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', renderParetoChart);
     </script>
 </body>
 </html>
