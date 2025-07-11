@@ -26,11 +26,24 @@ body {
     z-index: 2;
 }
 
+/* Header scroll effect */
+#main-header {
+    transition: background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
+}
+
+#main-header.scrolled {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* Hide elements initially for the scroll animation */
 .reveal {
     opacity: 0;
     transform: translateY(30px) scale(0.98);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    will-change: opacity, transform;
 }
 
 .reveal.is-visible {
@@ -38,9 +51,24 @@ body {
     transform: translateY(0) scale(1);
 }
 
-/* Header shadow and transition */
-#main-header {
-    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animated gradient text */
+.animated-gradient {
+    background: linear-gradient(90deg, #4f46e5, #fb923c, #3b82f6, #4f46e5);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-animation 5s ease infinite;
+}
+
+@keyframes gradient-animation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* Active link styling for navigation */
@@ -78,6 +106,12 @@ body {
     transform: translateY(-8px);
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
     border-color: #3b82f6;
+}
+
+/* Card tilt effect */
+.card-tilt {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    will-change: transform;
 }
 
 /* Timeline dot animation */
