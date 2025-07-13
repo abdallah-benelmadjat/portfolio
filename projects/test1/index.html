@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algerian Assets Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://css.gg/css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <style>
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .main-menu {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-menu .retro-text {
+            animation: glow 1.5s ease-in-out infinite alternate, flicker 5s linear infinite;
+        }
+
+        .main-menu .btn {
+            animation: pulse 2s infinite;
+        }
+
+        .floating-phrase, .background-item {
+            position: absolute;
+            animation: float 8s ease-in-out infinite, fade 4s ease-in-out infinite alternate;
+            z-index: 10; /* Ensure it appears above other elements */
+        }
+
+        .floating-phrase {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f59e0b; /* Ensure good contrast */
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+        }
+
+        .background-item {
+            opacity: 0.8;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        @keyframes fade {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow:
+                    0 0 4px #fff,
+                    0 0 11px #fff,
+                    0 0 19px #fff,
+                    0 0 40px rgb(0, 255, 115),
+                    0 0 80px rgb(0, 255, 115),
+                    0 0 90px rgb(0, 255, 115),
+                    0 0 100px rgb(0, 255, 115),
+                    0 0 150px rgb(0, 255, 115);
+            }
+            20%, 24%, 55% {        
+                text-shadow: none;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 10px 20px rgba(245, 158, 11, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+            }
+        }
+
+        .player-box {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border: 2px solid #f59e0b;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            clip-path: polygon(0 0, 95% 0, 100% 10%, 100% 95%, 90% 100%, 0 100%);
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .player-box h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .player-box p {
+            font-size: 1rem;
+            margin: 0.25rem 0;
+        }
+
+        .player-box span {
+            font-weight: bold;
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <audio id="menu-music" loop src="./audio/menu-music.mp3"></audio> <!-- NOTE: Provide your own music file -->
+
+    <div id="main-menu" class="main-menu flex flex-col justify-center items-center h-screen bg-gray-900/80 text-white">
+        <!-- Background Items -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Flag_of_Algeria.svg/1200px-Flag_of_Algeria.svg.png" alt="Algerian Flag" class="background-item" style="top: 10%; left: 5%; width: 150px; animation-delay: 0s;">
+        <img src="./makkamchahid.png" alt="Makkam Chahid" class="background-item" style="bottom: 15%; right: 10%; width: 120px; animation-delay: 2s;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Nokia_3310_Blue_R7309170_%28retouch%29.png/120px-Nokia_3310_Blue_R7309170_%28retouch%29.png" alt="Nokia 3310" class="background-item" style="top: 50%; left: 80%; width: 80px; animation-delay: 4s;">
+        <img src="https://static.vecteezy.com/system/resources/previews/045/838/759/non_2x/raw-couscous-in-the-bowl-on-transparent-background-png.png" alt="Couscous Dish" class="background-item" style="bottom: 5%; left: 20%; width: 100px; animation-delay: 6s;">
+        <img src="./kouvirta.png" alt="Kouvirta" class="background-item" style="top: 20%; left: 15%; width: 120px; animation-delay: 1s;">
+        <img src="./caprice.png" alt="Caprice" class="background-item" style="bottom: 10%; right: 15%; width: 100px; animation-delay: 3s;">
+        <img src="./404.png" alt="404" class="background-item" style="top: 40%; left: 60%; width: 80px; animation-delay: 5s;">
+        <img src="./404.png" alt="404" class="background-item" style="top: 70%; left: 30%; width: 80px; animation-delay: 7s;">
+        <img src="./404.png" alt="404" class="background-item" style="top: 20%; left: 80%; width: 80px; animation-delay: 9s;">
+
+        <!-- Floating Phrases -->
+        <div class="floating-phrase" style="top: 10%; left: 30%; animation-delay: 0s;">Wach kho</div>
+        <div class="floating-phrase" style="top: 50%; left: 10%; animation-delay: 2s;">Saha</div>
+        <div class="floating-phrase" style="top: 70%; left: 50%; animation-delay: 4s;">Kifah?</div>
+        <div class="floating-phrase" style="top: 30%; left: 70%; animation-delay: 6s;">Cava</div>
+        <div class="floating-phrase" style="top: 80%; left: 20%; animation-delay: 8s;">Sahbi</div>
+        <div class="floating-phrase" style="top: 40%; left: 80%; animation-delay: 10s;">La3ziz</div>
+        <div class="floating-phrase" style="top: 60%; left: 40%; animation-delay: 12s;">Lizzomes</div>
+        <div class="floating-phrase" style="top: 15%; left: 50%; animation-delay: 14s;">Salam</div>
+        <div class="floating-phrase" style="top: 65%; left: 15%; animation-delay: 16s;">Choukran</div>
+
+        <h1 class="text-6xl retro-text text-amber-400 glow mb-8">Khebi Razkak</h1>
+        <button id="start-game-btn" class="btn hover:scale-110 transition-transform mb-4">Start Game</button>
+        <button id="instructions-btn" class="btn hover:scale-110 transition-transform mb-4">Instructions</button>
+        <button id="credits-btn" class="btn hover:scale-110 transition-transform">Credits</button>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div id="instructions-modal" class="hidden fixed inset-0 bg-gray-900/90 text-white flex flex-col justify-center items-center p-8">
+        <h2 class="text-4xl font-bold mb-6">How to Play 🎮</h2>
+        <ul class="text-lg space-y-4">
+            <li>🃏 **Draw a Card**: Click the deck to draw a card.</li>
+            <li>🖐️ **Play a Set**: Combine cards of the same type to form an asset set.</li>
+            <li>🕵️‍♂️ **Steal Assets**: Use special cards to steal assets from other players.</li>
+            <li>🗑️ **Discard**: End your turn by discarding a card.</li>
+            <li>🏆 **Win**: Collect the most valuable asset sets to win!</li>
+        </ul>
+        <button id="close-instructions-btn" class="btn hover:scale-110 transition-transform mt-6">Close</button>
+    </div>
+
+    <!-- Credits Modal -->
+    <div id="credits-modal" class="hidden fixed inset-0 bg-gray-900/90 text-white flex flex-col justify-center items-center p-8">
+        <h2 class="text-4xl font-bold mb-6">Credits</h2>
+        <div class="flex flex-col items-center space-y-6">
+            <div class="text-center">
+                <img src="https://media.licdn.com/dms/image/v2/C4E03AQH8B42PCok3TQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1649862768519?e=2147483647&v=beta&t=aYNVLiGEvu1_rQrMeAEdSm2BQ86nxgpmbVmDLg_UoRw" alt="Mohamed Maache" class="w-32 h-32 rounded-full mb-4">
+                <p class="text-lg font-bold">Mohamed Maache</p>
+                <p>Idea Contributor</p>
+            </div>
+            <div class="text-center">
+                <img src="https://i1.sndcdn.com/artworks-CyUsO4JJjiy0NlaS-arQAaA-t500x500.jpg" alt="Abdallah Benelmadjat" class="w-32 h-32 rounded-full mb-4">
+                <p class="text-lg font-bold">Abdallah Benelmadjat</p>
+                <p>Implementation</p>
+            </div>
+        </div>
+        <button id="close-credits-btn" class="btn hover:scale-110 transition-transform mt-6">Close</button>
+    </div>
+
+    <div id="game-container" class="hidden bg-[url('./path-to-your-image.jpg')] bg-cover bg-center"></div>
+
+    <div class="ui-overlay hidden p-5 grid grid-cols-9 grid-rows-9 gap-4 h-full">
+        <div class="col-start-1 col-span-4 row-start-1 flex items-start">
+            <h1 class="text-6xl retro-text text-amber-400 glow">Khebi Razkak</h1>
+        </div>
+
+        <div id="player-box-2" class="player-box col-start-5 text-center row-start-1">
+            <h2>Bot 2</h2>
+            <p>Score: <span id="player-score-2">0</span> DA</p>
+            <p>Cards: <span id="player-card-count-2">0</span></p>
+        </div>
+
+        <div id="player-box-1" class="player-box row-start-5 self-center">
+            <h2>Bot 1</h2>
+            <p>Score: <span id="player-score-1">0</span> DA</p>
+            <p>Cards: <span id="player-card-count-1">0</span></p>
+        </div>
+
+        <div class="row-start-6 col-start-2 col-span-7 flex flex-col justify-center items-center space-y-4">
+            <div class="relative w-full h-28">
+                <div class="center-label deck-label">Deck</div>
+                <div class="center-label discard-label">Discard</div>
+            </div>
+            <div id="turn-indicator" class="text-xl font-bold bg-gray-900/50 px-6 py-3 rounded-lg border-2 border-amber-400 backdrop-blur-sm glow">Starting Game...</div>
+            <button id="end-turn-btn" class="btn hover:scale-110 transition-transform">End Turn</button>
+        </div>
+
+        <div id="player-box-3" class="player-box row-start-5 col-start-9 self-center text-right">
+            <h2>Bot 3</h2>
+            <p>Score: <span id="player-score-3">0</span> DA</p>
+            <p>Cards: <span id="player-card-count-3">0</span></p>
+        </div>
+
+        <div id="player-box-0" class="player-box row-start-9 col-start-1 col-span-3 text-center">
+            <h2>You</h2>
+            <p>Score: <span id="player-score-0">0</span> DA</p>
+        </div>
+    </div>
+
+    <div id="message-box" class="message-box hidden">
+        <h3 id="message-title" class="text-3xl font-bold mb-4 retro-text glow">Game Over!</h3>
+        <p id="message-text" class="mb-6">You won the game!</p>
+        <button id="message-btn" class="btn hover:scale-110 transition-transform">Play Again</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Background Animation
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            const particlesGeometry = new THREE.BufferGeometry;
+            const particlesCnt = 5000;
+            const posArray = new Float32Array(particlesCnt * 3);
+            for (let i = 0; i < particlesCnt * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * (Math.random() * 5);
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({ size: 0.005, color: 0xf59e0b });
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            camera.position.z = 2;
+
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            const clock = new THREE.Clock();
+            const animate = () => {
+                const elapsedTime = clock.getElapsedTime();
+                particlesMesh.rotation.y = -0.1 * elapsedTime;
+                if (mouseX !== 0) {
+                    particlesMesh.rotation.x = -mouseY * (elapsedTime * 0.0008);
+                    particlesMesh.rotation.y += -mouseX * (elapsedTime * 0.0008);
+                }
+                renderer.render(scene, camera);
+                window.requestAnimationFrame(animate);
+            };
+            animate();
+
+            window.addEventListener('resize', () => {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+            });
+
+            // Menu Logic
+            const mainMenu = document.getElementById('main-menu');
+            const gameContainer = document.getElementById('game-container');
+            const uiOverlay = document.querySelector('.ui-overlay');
+            const startGameBtn = document.getElementById('start-game-btn');
+            const instructionsBtn = document.getElementById('instructions-btn');
+            const instructionsModal = document.getElementById('instructions-modal');
+            const closeInstructionsBtn = document.getElementById('close-instructions-btn');
+            const creditsBtn = document.getElementById('credits-btn');
+            const creditsModal = document.getElementById('credits-modal');
+            const closeCreditsBtn = document.getElementById('close-credits-btn');
+            const menuMusic = document.getElementById('menu-music');
+
+            // Play music on first user interaction
+            const playMusic = () => {
+                menuMusic.play().catch(e => console.error("Audio play failed:", e));
+                document.body.removeEventListener('click', playMusic);
+                document.body.removeEventListener('keydown', playMusic);
+            };
+            document.body.addEventListener('click', playMusic);
+            document.body.addEventListener('keydown', playMusic);
+
+            startGameBtn.addEventListener('click', () => {
+                mainMenu.classList.add('hidden');
+                gameContainer.classList.remove('hidden');
+                uiOverlay.classList.remove('hidden');
+                menuMusic.pause();
+                import('./script.js').then(module => {
+                    module.init();
+                });
+            });
+
+            instructionsBtn.addEventListener('click', () => {
+                instructionsModal.classList.remove('hidden');
+            });
+
+            closeInstructionsBtn.addEventListener('click', () => {
+                instructionsModal.classList.add('hidden');
+            });
+
+            creditsBtn.addEventListener('click', () => {
+                creditsModal.classList.remove('hidden');
+            });
+
+            closeCreditsBtn.addEventListener('click', () => {
+                creditsModal.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
