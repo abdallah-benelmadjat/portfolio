@@ -20,7 +20,7 @@
         <h1 class="text-center">Utility Bill Analyzer</h1>
         <p class="text-center">Upload your utility bill PDFs to generate a detailed report.</p>
 
-        <form id="uploadForm" enctype="multipart/form-data">
+        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="/upload">
             <div class="mb-3">
                 <label for="pdfFiles" class="form-label">Select PDF Files</label>
                 <input class="form-control" type="file" id="pdfFiles" name="pdfFiles" multiple accept="application/pdf" required>
