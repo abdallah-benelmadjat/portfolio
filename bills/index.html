@@ -35,6 +35,11 @@
   <script>
     const BASE = 'https://5475c21c0c8f.ngrok-free.app';
 
+    // Make ngrok return your JSON instead of the warning HTML
+    $.ajaxSetup({
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    });
+
     $(function () {
       $('#uploadForm').on('submit', function (e) {
         e.preventDefault();
@@ -51,8 +56,8 @@
           processData: false,
           contentType: false,
           success: function (res) {
-          //  IMPORTANT: we now get a job_id back
             const jobId = res.job_id;
+            console.log('jobId from /upload:', jobId);
             pollProgress(jobId);
           },
           error: function (xhr) {
@@ -64,7 +69,11 @@
 
       function pollProgress(jobId) {
         const interval = setInterval(function () {
-          $.get(`${BASE}/progress`, { job_id: jobId }, function (data) {
+          $.ajax({
+            url: `${BASE}/progress`,
+            method: 'GET',
+            data: { job_id: jobId }
+          }).done(function (data) {
             const progress = data.percent ?? 0;
             $('#progressBar')
               .css('width', `${progress}%`)
