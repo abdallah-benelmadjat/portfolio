@@ -52,7 +52,7 @@
 
                 // Upload the file
                 $.ajax({
-                    url: 'https://bills.abe-ben.dev/upload', // Backend endpoint
+                    url: 'https://5475c21c0c8f.ngrok-free.app/upload', // Updated backend endpoint
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -69,7 +69,7 @@
 
             function checkProgress() {
                 const interval = setInterval(function () {
-                    $.get('https://bills.abe-ben.dev/progress', function (data) {
+                    $.get('https://5475c21c0c8f.ngrok-free.app/progress', function (data) { // Updated backend endpoint
                         const progress = data.progress;
 
                         if (progress >= 0) {
@@ -78,7 +78,7 @@
 
                         if (progress === 100) {
                             clearInterval(interval);
-                            window.location.href = 'https://bills.abe-ben.dev/results';
+                            window.location.href = 'https://5475c21c0c8f.ngrok-free.app/results'; // Updated backend endpoint
                         } else if (progress === -1) {
                             clearInterval(interval);
                             $('#message').text('An error occurred during processing.');
