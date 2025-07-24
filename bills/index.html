@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Bill Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .progress {
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Utility Bill Analyzer</h1>
+        <p class="text-center">Upload your utility bill PDFs to generate a detailed report.</p>
+
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="pdfFiles" class="form-label">Select PDF Files</label>
+                <input class="form-control" type="file" id="pdfFiles" name="pdfFiles" multiple accept="application/pdf" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Upload and Analyze</button>
+        </form>
+
+        <div id="progressContainer" class="mt-4" style="display: none;">
+            <h5>Processing...</h5>
+            <div class="progress">
+                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+        </div>
+
+        <div id="resultContainer" class="mt-4" style="display: none;">
+            <h5>Analysis Complete!</h5>
+            <a id="resultLink" href="#" class="btn btn-success w-100">View Report</a>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                $('#progressContainer').show();
+                $('#progressBar').css('width', '0%').text('0%');
+
+                $.ajax({
+                    url: 'http://localhost:5000/upload', // Backend endpoint
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhr: function() {
+                        const xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', function(e) {
+                            if (e.lengthComputable) {
+                                const percentComplete = Math.round((e.loaded / e.total) * 100);
+                                $('#progressBar').css('width', percentComplete + '%').text(percentComplete + '%');
+                            }
+                        });
+                        return xhr;
+                    },
+                    success: function(response) {
+                        $('#progressBar').css('width', '100%').text('100%');
+                        $('#resultContainer').show();
+                        $('#resultLink').attr('href', response.result_url); // Backend should return the result URL
+                    },
+                    error: function() {
+                        alert('An error occurred while processing your files. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
