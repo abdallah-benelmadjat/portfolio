@@ -35,7 +35,7 @@
   <script>
     const BASE = 'https://5475c21c0c8f.ngrok-free.app';
 
-    // Make ngrok return your JSON instead of the warning HTML
+    // Force ngrok to skip the browser warning page
     $.ajaxSetup({
       headers: { 'ngrok-skip-browser-warning': 'true' }
     });
@@ -55,13 +55,16 @@
           data: formData,
           processData: false,
           contentType: false,
+          dataType: 'json',
           success: function (res) {
             const jobId = res.job_id;
             console.log('jobId from /upload:', jobId);
             pollProgress(jobId);
           },
           error: function (xhr) {
-            $('#message').text(`Error: ${xhr.responseJSON?.error || 'An error occurred'}`);
+          // If ngrok warning HTML came back, xhr.responseText will start with "<!DOCTYPE html>"
+            const msg = xhr.responseJSON?.error || xhr.statusText || 'An error occurred';
+            $('#message').text(`Error: ${msg}`);
             $('.progress').hide();
           }
         });
@@ -72,7 +75,9 @@
           $.ajax({
             url: `${BASE}/progress`,
             method: 'GET',
-            data: { job_id: jobId }
+            data: { job_id: jobId },
+            dataType: 'json',   // force JSON – if HTML comes back, it will fail into .fail()
+            headers: { 'ngrok-skip-browser-warning': 'true' } // redundant, but explicit
           }).done(function (data) {
             const progress = data.percent ?? 0;
             $('#progressBar')
@@ -92,8 +97,10 @@
               clearInterval(interval);
               window.location.href = `${BASE}/results?job_id=${jobId}`;
             }
-          }).fail(function () {
+          }).fail(function (xhr) {
             clearInterval(interval);
+            // If you still get the HTML warning page, log it so you can see it:
+            console.warn('Progress request failed. Body:', xhr.responseText?.slice(0, 200));
             $('#message').text('Failed to fetch progress.');
             $('.progress').hide();
           });
