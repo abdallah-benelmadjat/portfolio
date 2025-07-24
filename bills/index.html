@@ -55,7 +55,7 @@
         setProgress(0, 0, 0, '');
 
         $.ajax({
-          url: '/upload',
+          url: 'https://5475c21c0c8f.ngrok-free.app/upload',
           type: 'POST',
           data: formData,
           processData: false,
@@ -87,7 +87,7 @@
 
       function pollProgress() {
         const interval = setInterval(function () {
-          $.get('/progress', function (data) {
+          $.get('https://5475c21c0c8f.ngrok-free.app/progress', function (data) {
             const { status, percent, processed, total, current_file, error } = data;
 
             if (status === 'running') {
@@ -97,7 +97,7 @@
               setProgress(100, total, total, '');
               $('#resultContainer').show();
               // Auto-redirect (optional). Remove if you only want the button.
-              setTimeout(() => window.location.href = '/results', 1000);
+              setTimeout(() => window.location.href = 'https://5475c21c0c8f.ngrok-free.app/results', 1000);
             } else if (status === 'error') {
               clearInterval(interval);
               $('#message').text('An error occurred: ' + (error || 'Unknown error.'));
