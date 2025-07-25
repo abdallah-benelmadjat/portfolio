@@ -9,6 +9,16 @@
   <style>
     body { background-color: #f8f9fa; }
     .progress { height: 30px; }
+    pre.error-reason {
+      white-space: pre-wrap;
+      font-size: 12px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 8px;
+      border-radius: 4px;
+      max-height: 300px;
+      overflow: auto;
+    }
   </style>
 </head>
 <body>
@@ -45,7 +55,7 @@
         e.preventDefault();
 
         const formData = new FormData(this);
-        $('#message').text('');
+        $('#message').html('');
         $('.progress').show();
         $('#progressBar').css('width', '0%').attr('aria-valuenow', 0).text('0%');
 
@@ -62,9 +72,10 @@
             pollProgress(jobId);
           },
           error: function (xhr) {
-          // If ngrok warning HTML came back, xhr.responseText will start with "<!DOCTYPE html>"
             const msg = xhr.responseJSON?.error || xhr.statusText || 'An error occurred';
-            $('#message').text(`Error: ${msg}`);
+            $('#message').html(
+              `<div class="alert alert-danger" role="alert">Error: ${escapeHtml(msg)}</div>`
+            );
             $('.progress').hide();
           }
         });
@@ -76,35 +87,62 @@
             url: `${BASE}/progress`,
             method: 'GET',
             data: { job_id: jobId },
-            dataType: 'json',   // force JSON – if HTML comes back, it will fail into .fail()
-            headers: { 'ngrok-skip-browser-warning': 'true' } // redundant, but explicit
+            dataType: 'json',
+            headers: { 'ngrok-skip-browser-warning': 'true' }
           }).done(function (data) {
             const progress = data.percent ?? 0;
+
             $('#progressBar')
               .css('width', `${progress}%`)
               .attr('aria-valuenow', progress)
               .text(`${progress}%`);
 
             if (data.current_file) {
-              $('#message').text(`Analyzing: ${data.current_file} (${data.current}/${data.total})`);
+              $('#message').html(
+                `<div class="alert alert-info" role="alert">
+                   Analyzing: ${escapeHtml(data.current_file)} (${data.current}/${data.total})
+                 </div>`
+              );
             }
 
             if (data.status === 'error') {
               clearInterval(interval);
-              $('#message').text('An error occurred during processing.');
+
+              const reason = data.error_reason
+                ? `<details class="mt-2">
+                     <summary>Details</summary>
+                     <pre class="error-reason">${escapeHtml(data.error_reason)}</pre>
+                   </details>`
+                : '';
+
+              $('#message').html(
+                `<div class="alert alert-danger" role="alert">
+                   An error occurred during processing.
+                   ${reason}
+                 </div>`
+              );
               $('.progress').hide();
+
             } else if (progress === 100 && data.status === 'done') {
               clearInterval(interval);
               window.location.href = `${BASE}/results?job_id=${jobId}`;
             }
           }).fail(function (xhr) {
             clearInterval(interval);
-            // If you still get the HTML warning page, log it so you can see it:
             console.warn('Progress request failed. Body:', xhr.responseText?.slice(0, 200));
-            $('#message').text('Failed to fetch progress.');
+            $('#message').html(
+              `<div class="alert alert-danger" role="alert">
+                 Failed to fetch progress.
+               </div>`
+            );
             $('.progress').hide();
           });
         }, 1000);
+      }
+
+      // Simple HTML escaper to avoid injecting raw server strings
+      function escapeHtml(str) {
+        return $('<div/>').text(str ?? '').html();
       }
     });
   </script>
