@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jobs Dashboard</title>
+  <!-- Tailwind CSS (or your index theme stylesheet) -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <!-- Supabase JS UMD bundle exposes a global `supabase` object -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* Custom overrides matching your index theme */
+    body { background-color: #f5f7fa; }
+    .card{ transition: transform .15s, box-shadow .15s; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+    .loading { animation: pulse 1.5s infinite; }
+
+    /* Define colors for job categories */
+    .category-engineer { background-color: #e0f7fa; }
+    .category-technician { background-color: #e8f5e9; }
+    .category-manager { background-color: #fff3e0; }
+    .category-default { background-color: #f5f5f5; }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Company Careers Dashboard</h1>
+
+    <!-- Filters -->
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-3 sm:space-y-0">
+      <input id="search" type="text" placeholder="Search title or company..." class="px-4 py-2 border rounded-lg flex-grow" />
+      <select id="tableFilter" class="px-4 py-2 border rounded-lg">
+        <option value="alljobs">All Jobs</option>
+        <option value="allinternships">All Internships</option>
+        <option value="jobs">Jobs</option>
+        <option value="internship">Internships</option>
+      </select>
+      <select id="sortOrder" class="px-4 py-2 border rounded-lg">
+        <option value="desc">Newest First</option>
+        <option value="asc">Oldest First</option>
+      </select>
+      <button id="refresh" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Refresh</button>
+    </div>
+
+    <!-- Cards Container -->
+    <div id="cardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+
+  <script>
+    // *** SECURITY WARNING ***
+    // Do NOT ship a service_role key to the browser in production. Use the public anon key + RLS or a backend proxy.
+    const SUPABASE_URL = 'https://qdcxtfnuezcznygvpvsc.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY3h0Zm51ZXpjem55Z3ZwdnNjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDA0NjEzMiwiZXhwIjoyMDY1NjIyMTMyfQ.-W9Ii2b8PT5lFzBDT7J2NYCDIRdvIABfWuZ76gasWv8';
+
+    // The CDN exposes global `supabase`. We destructure createClient from it.
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Tables to fetch. (Your schema says `internship`, but the brief also mentioned `internships`.)
+    const tables = ['alljobs', 'allinternships', 'jobs', 'internship'];
+
+    // State
+    const dataStore = {};
+    let activeTable = 'alljobs';
+
+    // DOM Elements
+    const cardsContainer = document.getElementById('cardsContainer');
+    const searchInput = document.getElementById('search');
+    const tableFilter = document.getElementById('tableFilter');
+    const refreshBtn = document.getElementById('refresh');
+
+    async function fetchTable(table) {
+      const { data, error } = await db.from(table).select('*');
+      if (error) {
+        console.error(`Error fetching ${table}:`, error);
+        dataStore[table] = [];
+      } else {
+        dataStore[table] = data || [];
+      }
+    }
+
+    // Fetch data for all tables
+    async function fetchAll() {
+      cardsContainer.innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 loading">Loading...</div>';
+      await Promise.all(tables.map(fetchTable));
+      renderCards();
+    }
+
+    function safeDate(d) {
+      try {
+        return d ? new Date(d).toLocaleDateString() : '';
+      } catch (_) {
+        return '';
+      }
+    }
+
+    function getCategoryClass(job) {
+      const title = (job.title || '').toLowerCase();
+      const description = (job.description || '').toLowerCase();
+
+      if (title.includes('engineer') || description.includes('engineer')) {
+        return 'category-engineer';
+      } else if (title.includes('technician') || description.includes('technician')) {
+        return 'category-technician';
+      } else if (title.includes('manager') || description.includes('manager')) {
+        return 'category-manager';
+      } else {
+        return 'category-default';
+      }
+    }
+
+    // Render cards based on activeTable and search query
+    function renderCards() {
+      const items = dataStore[activeTable] || [];
+      const q = searchInput.value.trim().toLowerCase();
+      const sortOrder = document.getElementById('sortOrder').value;
+
+      const filtered = q
+        ? items.filter(j =>
+            (j.title || '').toLowerCase().includes(q) ||
+            (j.company || '').toLowerCase().includes(q) ||
+            (j.loc || '').toLowerCase().includes(q)
+          )
+        : items;
+
+      if (!filtered.length) {
+        cardsContainer.innerHTML = '<div class="col-span-full text-center text-gray-500">No results found</div>';
+        return;
+      }
+
+      const sorted = filtered.sort((a, b) => {
+        const dateA = new Date(a.posted || a.posted_r || 0);
+        const dateB = new Date(b.posted || b.posted_r || 0);
+        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+
+      cardsContainer.innerHTML = sorted
+        .map(job => {
+          const categoryClass = getCategoryClass(job);
+          const posted = safeDate(job.posted) || (job.posted_r || '');
+          return `
+            <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card block p-4 rounded-lg shadow-md hover:bg-gray-50 ${categoryClass}">
+              <h2 class="text-xl font-semibold mb-1">${job.title || ''}</h2>
+              <div class="text-sm text-gray-600 mb-2">${job.company || ''} &mdash; ${job.loc || ''}</div>
+              <div class="text-xs text-gray-500">Posted: ${posted}</div>
+              ${job.compatibility ? `<div class=\"mt-2 inline-block text-xs px-2 py-1 rounded bg-indigo-100 text-indigo-700\">${job.compatibility}</div>` : ''}
+            </a>`;
+        })
+        .join('');
+    }
+
+    // Event Listeners
+    searchInput.addEventListener('input', renderCards);
+    tableFilter.addEventListener('change', e => {
+      activeTable = e.target.value;
+      renderCards();
+    });
+    document.getElementById('sortOrder').addEventListener('change', renderCards);
+    refreshBtn.addEventListener('click', fetchAll);
+
+    // Initial load
+    fetchAll();
+  </script>
+</body>
+</html>
