@@ -3,11 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Utility Bill Analyzer</title>
+  <title>Utility Bill Analyzer - Testing Dashboard</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
-    body { background-color: #f8f9fa; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    :root {
+      --wasmer-dark-blue: #0A192F; 
+      --wasmer-dark-blue-end: #122647;
+      --wasmer-green: #64FFDA;     
+      --accent-red: #D92525;         
+      --background-color: #f4f7f6;
+      --card-background: #ffffff;
+      --text-color: #333;
+      --light-text-color: #e6f1ff;
+      --heading-color: var(--wasmer-dark-blue);
+      --border-color: #e0e0e0;
+      --shadow: 0 4px 8px rgba(0,0,0,0.05);
+      --shadow-hover: 0 8px 24px rgba(0,0,0,0.15);
+      --glow: 0 0 15px rgba(100, 255, 218, 0.5);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      line-height: 1.6;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--wasmer-dark-blue), var(--wasmer-dark-blue-end));
+      padding: 1.5em 2em;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .header img {
+      max-height: 50px; width: auto; transition: transform 0.3s ease;
+    }
+    .header img:hover { transform: scale(1.05); }
+
+    .footer {
+      background: linear-gradient(135deg, var(--wasmer-dark-blue), var(--wasmer-dark-blue-end));
+      color: var(--light-text-color);
+      text-align: center;
+      padding: 2.5em 1em;
+      margin-top: 4em;
+      border-bottom: 12px solid var(--accent-red);
+    }
+    .footer p { margin: 0; font-size: 1em; font-weight: 300; }
+
     .progress { height: 30px; }
     pre.error-reason {
       white-space: pre-wrap;
@@ -22,14 +71,34 @@
   </style>
 </head>
 <body>
+  <div class="header">
+    <img src="https://wasmerco.com/wp-content/uploads/2024/06/Wasmer-Align-Logo-White.png" alt="Wasmer Company Logo">
+  </div>
+
   <div class="container mt-5">
-    <h1 class="text-center">Utility Bill Analyzer</h1>
+    <h1 class="text-center">Utility Bill Analyzer - Testing Dashboard</h1>
     <p class="text-center">Upload your utility bill PDFs to generate a detailed report.</p>
+
+    <div class="alert alert-info" role="alert">
+      <strong>Project Details:</strong> This tool analyzes utility bills to provide insights into consumption and costs. Currently, only PDF files with text content are supported. For best results, upload 12 months of utility bills.
+    </div>
+
+    <div class="alert alert-warning text-center" role="alert">
+      <strong>Testing Phase:</strong> This dashboard is for testing purposes. Please report any errors by clicking the button below.
+      <br>
+      <button class="btn btn-danger mt-2" onclick="window.location.href='mailto:abe.benelmad@gmail.com';">Report an Issue</button>
+    </div>
 
     <form id="uploadForm" enctype="multipart/form-data" method="POST">
       <div class="mb-3">
         <label for="pdfFiles" class="form-label">Select PDF Files</label>
         <input class="form-control" type="file" id="pdfFiles" name="file" multiple accept="application/pdf" required>
+      </div>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="parallelProcessing" name="parallelProcessing">
+        <label class="form-check-label" for="parallelProcessing">
+          Enable experimental parallel file analysis (may affect performance)
+        </label>
       </div>
       <button type="submit" class="btn btn-primary w-100">Upload and Analyze</button>
     </form>
@@ -40,6 +109,10 @@
     </div>
 
     <div id="message" class="mt-3"></div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2025 Utility Bill Analyzer. All rights reserved.</p>
   </div>
 
   <script>
@@ -55,6 +128,9 @@
         e.preventDefault();
 
         const formData = new FormData(this);
+        const isParallel = $('#parallelProcessing').is(':checked');
+        formData.append('parallel', isParallel);
+
         $('#message').html('');
         $('.progress').show();
         $('#progressBar').css('width', '0%').attr('aria-valuenow', 0).text('0%');
@@ -69,6 +145,9 @@
           success: function (res) {
             const jobId = res.job_id;
             console.log('jobId from /upload:', jobId);
+            if (isParallel) {
+              console.log('Parallel processing enabled');
+            }
             pollProgress(jobId);
           },
           error: function (xhr) {
