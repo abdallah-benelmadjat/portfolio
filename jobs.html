@@ -90,6 +90,12 @@
 
     async function fetchTableGroup(group) {
       const tableGroup = tables[group];
+      if (!tableGroup) {
+        console.error(`Invalid table group: ${group}`);
+        dataStore[group] = [];
+        return;
+      }
+
       const promises = tableGroup.map(table =>
         db
           .from(table)
