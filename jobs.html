@@ -30,10 +30,9 @@
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-3 sm:space-y-0">
       <input id="search" type="text" placeholder="Search title or company..." class="px-4 py-2 border rounded-lg flex-grow" />
       <select id="tableFilter" class="px-4 py-2 border rounded-lg">
-        <option value="alljobs">All Jobs</option>
-        <option value="allinternships">All Internships</option>
-        <option value="jobs">Jobs</option>
-        <option value="internship">Internships</option>
+        <option value="all">All</option>
+        <option value="alljobs_internships">All Jobs & Internships</option>
+        <option value="jobs_internships">Jobs & Internships</option>
       </select>
       <select id="sortOrder" class="px-4 py-2 border rounded-lg">
         <option value="desc">Newest First</option>
@@ -57,11 +56,15 @@
     const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // Tables to fetch. (Your schema says `internship`, but the brief also mentioned `internships`.)
-    const tables = ['alljobs', 'allinternships', 'jobs', 'internship'];
+    const tables = {
+      all: ['alljobs', 'allinternships', 'jobs', 'internship'],
+      mechanical_digital: ['alljobs', 'allinternships'],
+      energy: ['jobs', 'internship']
+    };
 
     // State
     const dataStore = {};
-    let activeTable = 'alljobs';
+    let activeTable = 'all';
 
     // DOM Elements
     const cardsContainer = document.getElementById('cardsContainer');
@@ -85,10 +88,26 @@
       }
     }
 
+    async function fetchTableGroup(group) {
+      const tableGroup = tables[group];
+      const promises = tableGroup.map(table =>
+        db
+          .from(table)
+          .select('*')
+          .or(
+            `title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%`
+          )
+      );
+
+      const results = await Promise.all(promises);
+      const combinedData = results.flatMap(({ data }) => data || []);
+      dataStore[group] = combinedData;
+    }
+
     // Fetch data for all tables
     async function fetchAll() {
       cardsContainer.innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 loading">Loading...</div>';
-      await Promise.all(tables.map(fetchTable));
+      await fetchTableGroup(activeTable);
       renderCards();
     }
 
@@ -159,7 +178,7 @@
     searchInput.addEventListener('input', renderCards);
     tableFilter.addEventListener('change', e => {
       activeTable = e.target.value;
-      renderCards();
+      fetchAll();
     });
     document.getElementById('sortOrder').addEventListener('change', renderCards);
     refreshBtn.addEventListener('click', fetchAll);
