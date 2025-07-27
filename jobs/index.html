@@ -325,16 +325,18 @@
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
       });
 
+      // Update the logo path generation logic to dynamically construct company domains
       cardsContainer.innerHTML = sorted
         .map(job => {
           const categoryClass = getCategoryClass(job);
-          const posted = safeDateWithDaysAgoAndReposted(job.posted, job.posted_r || '');
-          const logoPath = `https://img.logo.dev/${(job.company_domain || '').toLowerCase()}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&size=150&format=png&retina=true`;
+          const posted = safeDateWithDaysAgo(job.posted) || (job.posted_r || '');
+          const companyDomain = (job.company || '').toLowerCase().replace(/\s+/g, '') + '.com';
+          const logoUrl = `https://img.logo.dev/${companyDomain}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&size=100&format=png`;
 
           return `
             <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card block p-4 rounded-lg shadow-md hover:bg-gray-50 ${categoryClass}">
               <div class="flex items-center mb-2">
-                <img src="${logoPath}" alt="${job.company || ''} logo" class="w-12 h-12 mr-4" />
+                <img src="${logoUrl}" alt="${job.company || ''} logo" class="w-12 h-12 mr-4" />
                 <h2 class="text-xl font-semibold">${job.title || ''}</h2>
               </div>
               <div class="text-sm text-gray-600 mb-2">${job.company || ''} &mdash; ${job.loc || ''}</div>
