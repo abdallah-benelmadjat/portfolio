@@ -326,10 +326,15 @@
       });
 
       // Update the logo path generation logic to dynamically construct company domains
+      // Update the logic to include the reposted tag next to x days ago
       cardsContainer.innerHTML = sorted
         .map(job => {
           const categoryClass = getCategoryClass(job);
-          const posted = safeDateWithDaysAgo(job.posted) || (job.posted_r || '');
+          const postedDate = safeDateWithDaysAgo(job.posted);
+          const repostedTag = (job.posted_r || '').toLowerCase().includes('reposted')
+            ? '<span class="text-xs text-red-500">(Reposted)</span>'
+            : '';
+          const posted = `${postedDate} ${repostedTag}`;
           const companyDomain = (job.company || '').toLowerCase().replace(/\s+/g, '') + '.com';
           const logoUrl = `https://img.logo.dev/${companyDomain}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&size=100&format=png`;
 
