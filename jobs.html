@@ -107,7 +107,13 @@
 
       const results = await Promise.all(promises);
       const combinedData = results.flatMap(({ data }) => data || []);
-      dataStore[group] = combinedData;
+
+      // Remove duplicates based on job title and company
+      const uniqueData = combinedData.filter((job, index, self) =>
+        index === self.findIndex(j => j.title === job.title && j.company === job.company)
+      );
+
+      dataStore[group] = uniqueData;
     }
 
     // Fetch data for all tables
