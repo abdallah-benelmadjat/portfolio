@@ -163,11 +163,12 @@
 
     // Add new database tables to the tables object
     const tables = {
-      all: ['alljobs', 'allinternships', 'jobs', 'internship', 'anyjobs', 'anyinternships'],
+      all: ['alljobs', 'allinternships', 'jobs', 'internship'],
       alljobs_internships: ['alljobs', 'allinternships'],
       jobs_internships: ['jobs', 'internship'],
       high_level: ['alljobs', 'allinternships', 'jobs', 'internship'],
       low_level: ['anyjobs', 'anyinternships']
+      all_all: ['alljobs', 'allinternships', 'jobs', 'internship', 'anyjobs', 'anyinternships']
     };
 
     // State
@@ -328,7 +329,7 @@
     levelFilter.innerHTML = `
       <option value="high_level">High Level</option>
       <option value="low_level">Low Level</option>
-      <option value="all">All</option>
+      <option value="all_all">All</option>
     `;
     levelFilter.value = 'high_level'; // Set default to high level
     filtersContainer.appendChild(levelFilter);
