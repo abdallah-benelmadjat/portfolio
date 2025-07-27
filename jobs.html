@@ -146,19 +146,40 @@
       }
     }
 
+    // Add checkbox for filtering reposted jobs
+    const repostedCheckbox = document.createElement('input');
+    repostedCheckbox.type = 'checkbox';
+    repostedCheckbox.id = 'repostedFilter';
+    repostedCheckbox.checked = true;
+    repostedCheckbox.className = 'ml-2';
+
+    const repostedLabel = document.createElement('label');
+    repostedLabel.htmlFor = 'repostedFilter';
+    repostedLabel.textContent = 'Include Reposted';
+    repostedLabel.className = 'text-sm ml-2';
+
+    const filtersContainer = document.querySelector('.mb-6');
+    filtersContainer.appendChild(repostedCheckbox);
+    filtersContainer.appendChild(repostedLabel);
+
     // Render cards based on activeTable and search query
     function renderCards() {
       const items = dataStore[activeTable] || [];
       const q = searchInput.value.trim().toLowerCase();
       const sortOrder = document.getElementById('sortOrder').value;
+      const includeReposted = repostedCheckbox.checked;
 
-      const filtered = q
-        ? items.filter(j =>
-            (j.title || '').toLowerCase().includes(q) ||
+      const filtered = items.filter(j => {
+        const matchesQuery = q
+          ? (j.title || '').toLowerCase().includes(q) ||
             (j.company || '').toLowerCase().includes(q) ||
             (j.loc || '').toLowerCase().includes(q)
-          )
-        : items;
+          : true;
+
+        const matchesReposted = includeReposted || !(j.posted_r || '').toLowerCase().includes('reposted');
+
+        return matchesQuery && matchesReposted;
+      });
 
       if (!filtered.length) {
         cardsContainer.innerHTML = '<div class="col-span-full text-center text-gray-500">No results found</div>';
@@ -180,11 +201,14 @@
               <h2 class="text-xl font-semibold mb-1">${job.title || ''}</h2>
               <div class="text-sm text-gray-600 mb-2">${job.company || ''} &mdash; ${job.loc || ''}</div>
               <div class="text-xs text-gray-500">Posted: ${posted}</div>
-              ${job.compatibility ? `<div class=\"mt-2 inline-block text-xs px-2 py-1 rounded bg-indigo-100 text-indigo-700\">${job.compatibility}</div>` : ''}
+              ${job.compatibility ? `<div class="mt-2 inline-block text-xs px-2 py-1 rounded bg-indigo-100 text-indigo-700">${job.compatibility}</div>` : ''}
             </a>`;
         })
         .join('');
     }
+
+    // Add event listener for reposted checkbox
+    repostedCheckbox.addEventListener('change', renderCards);
 
     // Event Listeners
     searchInput.addEventListener('input', renderCards);
