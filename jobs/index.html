@@ -315,9 +315,15 @@
         .map(job => {
           const categoryClass = getCategoryClass(job);
           const posted = safeDateWithDaysAgo(job.posted) || (job.posted_r || '');
+          const companyDomain = (job.company || '').toLowerCase().replace(/\s+/g, '') + '.com';
+          const logoUrl = `https://img.logo.dev/${companyDomain}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&size=100&format=png`;
+
           return `
             <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card block p-4 rounded-lg shadow-md hover:bg-gray-50 ${categoryClass}">
-              <h2 class="text-xl font-semibold mb-1">${job.title || ''}</h2>
+              <div class="flex items-center mb-2">
+                <img src="${logoUrl}" alt="${job.company || ''} logo" class="w-12 h-12 mr-4" />
+                <h2 class="text-xl font-semibold">${job.title || ''}</h2>
+              </div>
               <div class="text-sm text-gray-600 mb-2">${job.company || ''} &mdash; ${job.loc || ''}</div>
               <div class="text-xs text-gray-500">Posted: ${posted}</div>
               ${job.compatibility ? `<div class="mt-2 inline-block text-xs px-2 py-1 rounded bg-indigo-100 text-indigo-700">${job.compatibility}</div>` : ''}
@@ -325,6 +331,13 @@
         })
         .join('');
     }
+
+    // Add attribution for Logo.dev
+    const attribution = document.createElement('a');
+    attribution.href = 'https://logo.dev';
+    attribution.textContent = 'Logos provided by Logo.dev';
+    attribution.className = 'block text-center text-xs text-gray-500 mt-4';
+    document.body.appendChild(attribution);
 
     // Add event listener for reposted checkbox
     repostedCheckbox.addEventListener('change', renderCards);
