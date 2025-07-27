@@ -180,7 +180,9 @@
     const tableFilter = document.getElementById('tableFilter');
     const refreshBtn = document.getElementById('refresh');
 
+    // Add debugging logs to identify issues
     async function fetchTable(table) {
+      console.log('Fetching table:', table);
       const { data, error } = await db
         .from(table)
         .select('*')
@@ -192,11 +194,13 @@
         console.error(`Error fetching ${table}:`, error);
         dataStore[table] = [];
       } else {
+        console.log('Data fetched for table:', table, data);
         dataStore[table] = data || [];
       }
     }
 
     async function fetchTableGroup(group) {
+      console.log('Fetching table group:', group);
       const tableGroup = Array.isArray(group) ? group : tables[group];
       if (!tableGroup) {
         console.error(`Invalid table group: ${group}`);
@@ -221,6 +225,7 @@
         index === self.findIndex(j => j.title === job.title && j.company === job.company)
       );
 
+      console.log('Unique data fetched for group:', group, uniqueData);
       dataStore[group] = uniqueData;
     }
 
@@ -300,7 +305,10 @@
 
     // Render cards based on activeTable and search query
     function renderCards() {
+      console.log('Rendering cards for active table:', activeTable);
       const items = dataStore[activeTable] || [];
+      console.log('Items to render:', items);
+
       const q = searchInput.value.trim().toLowerCase();
       const sortOrder = document.getElementById('sortOrder').value;
       const includeReposted = repostedCheckbox.checked;
@@ -317,6 +325,8 @@
         return matchesQuery && matchesReposted;
       });
 
+      console.log('Filtered items:', filtered);
+
       if (!filtered.length) {
         cardsContainer.innerHTML = '<div class="col-span-full text-center text-gray-500">No results found</div>';
         return;
@@ -327,6 +337,8 @@
         const dateB = new Date(b.posted || b.posted_r || 0);
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
       });
+
+      console.log('Sorted items:', sorted);
 
       // Update the logo path generation logic to dynamically construct company domains
       // Update the logic to include the reposted tag next to x days ago
