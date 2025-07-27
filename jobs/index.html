@@ -315,7 +315,7 @@
         .map(job => {
           const categoryClass = getCategoryClass(job);
           const posted = safeDateWithDaysAgo(job.posted) || (job.posted_r || '');
-          const logoPath = `/logos/${(job.company || '').toLowerCase().replace(/\s+/g, '')}.png`;
+          const logoPath = `/jobs/logos/${(job.company || '').toLowerCase().replace(/\s+/g, '')}.png`;
 
           return `
             <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card block p-4 rounded-lg shadow-md hover:bg-gray-50 ${categoryClass}">
