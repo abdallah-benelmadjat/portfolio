@@ -161,11 +161,13 @@
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Tables to fetch. (Your schema says `internship`, but the brief also mentioned `internships`.)
+    // Add new database tables to the tables object
     const tables = {
-      all: ['alljobs', 'allinternships', 'jobs', 'internship'],
+      all: ['alljobs', 'allinternships', 'jobs', 'internship', 'anyjobs', 'anyinternships'],
       alljobs_internships: ['alljobs', 'allinternships'],
-      jobs_internships: ['jobs', 'internship']
+      jobs_internships: ['jobs', 'internship'],
+      high_level: ['alljobs', 'allinternships', 'jobs', 'internship'],
+      low_level: ['anyjobs', 'anyinternships']
     };
 
     // State
@@ -224,8 +226,33 @@
 
     // Fetch data for all tables
     async function fetchAll() {
-      cardsContainer.innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 loading">Loading...</div>';
-      await fetchTableGroup(activeTable);
+      const activeLevel = document.getElementById('levelFilter').value;
+      const tableGroup = tables[activeLevel];
+
+      if (!tableGroup) {
+        console.error(`Invalid table group: ${activeLevel}`);
+        dataStore[activeLevel] = [];
+        return;
+      }
+
+      const promises = tableGroup.map(table =>
+        db
+          .from(table)
+          .select('*')
+          .or(
+            `title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%`
+          )
+      );
+
+      const results = await Promise.all(promises);
+      const combinedData = results.flatMap(({ data }) => data || []);
+
+      // Remove duplicates based on job title and company
+      const uniqueData = combinedData.filter((job, index, self) =>
+        index === self.findIndex(j => j.title === job.title && j.company === job.company)
+      );
+
+      dataStore[activeLevel] = uniqueData;
       renderCards();
     }
 
@@ -295,6 +322,17 @@
     filtersContainer.appendChild(repostedCheckbox);
     filtersContainer.appendChild(repostedLabel);
 
+    // Add a new filter for high level, low level, and all
+    const levelFilter = document.createElement('select');
+    levelFilter.id = 'levelFilter';
+    levelFilter.innerHTML = `
+      <option value="high_level">High Level</option>
+      <option value="low_level">Low Level</option>
+      <option value="all">All</option>
+    `;
+    levelFilter.value = 'high_level'; // Set default to high level
+    filtersContainer.appendChild(levelFilter);
+
     // Render cards based on activeTable and search query
     function renderCards() {
       const items = dataStore[activeTable] || [];
@@ -361,6 +399,7 @@
 
     // Add event listener for reposted checkbox
     repostedCheckbox.addEventListener('change', renderCards);
+    levelFilter.addEventListener('change', fetchAll);
 
     // Event Listeners
     searchInput.addEventListener('input', renderCards);
