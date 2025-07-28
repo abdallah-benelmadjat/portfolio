@@ -57,6 +57,9 @@
             align-items: center;
             gap: 8px; /* Add spacing between text and emoji/icon */
         }
+        .hover\:avatar-hover:hover {
+    content: url('images/avatar2.png');
+  }
     </style>
 
     <!-- Header & Navigation -->
@@ -88,7 +91,7 @@
                     <!-- Profile Picture -->
                     <img src="images/avatar.png" 
                          alt="Abe Benelmadjat" 
-                         class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-slate-400 shadow-lg"
+                         class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-slate-400 shadow-lg hover:avatar-hover" 
                          onerror="this.onerror=null;this.src='https://placehold.co/400x400/0f172a/e2e8f0?text=Abe';">
                     
                     <!-- Hero Text -->
