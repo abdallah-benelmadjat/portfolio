@@ -170,7 +170,6 @@
       jobs_internships: ['jobs', 'internship'],
       low_level: ['anyjobs', 'anyinternships'],
       research: ['research']
-
     };
 
     // State
@@ -217,6 +216,12 @@
       );
 
       const results = await Promise.all(promises);
+
+      // Debugging: Log results for the research table
+      if (group === 'research') {
+        console.log('Research table results:', results);
+      }
+
       const combinedData = results.flatMap(({ data }) => data || []);
 
       // Remove duplicates based on job title and company
