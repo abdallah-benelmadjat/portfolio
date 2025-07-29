@@ -212,7 +212,7 @@
           .from(table)
           .select('*')
           .or(
-            `title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%title.ilike.%research assistant%,`
+            `title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%,title.ilike.%research%`
           )
       );
 
