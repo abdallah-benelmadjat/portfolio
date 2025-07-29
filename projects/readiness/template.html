@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><!-- SLOT: Report Title --> - Professional Report</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Times New Roman', serif;
+            color: #000;
+            line-height: 1.5;
+            padding: 20px;
+            background: #fff;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        header .report-meta {
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8em;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+        }
+
+        /* Main Content */
+        .report-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Section Headings */
+        h1, h2, h3 {
+            color: #000;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 3em;
+            text-align: center;
+            color: #4CAF50;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        h2 {
+            font-size: 2em;
+            color: #2196F3;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        h3 {
+            font-size: 1.5em;
+            color: #FF5722;
+            margin-bottom: 10px;
+        }
+
+        /* Metrics & Lists */
+        .metrics-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        .metrics-list li {
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .metric-label {
+            font-weight: bold;
+        }
+        .metric-value {
+            font-family: 'Courier New', Courier, monospace;
+            color: #FF5722;
+            font-size: 1.2em;
+            font-weight: bold;
+            background: rgba(255, 87, 34, 0.1);
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+
+        /* NEW: Table Styling */
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        .report-table th, .report-table td {
+            border: 1px solid #ccc;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        .report-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            color: #333;
+        }
+        .report-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .report-table ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        /* Graph Placeholders */
+        .graph-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+        .graph-placeholder {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
+            flex: 1 1 calc(50% - 20px);
+            min-height: 300px; /* Increased height */
+            background: #f9f9f9;
+        }
+        .graph-placeholder img {
+            max-width: 100%;
+            height: auto;
+        }
+        .full-width-graph {
+            flex-basis: 100%;
+        }
+
+        /* Top and Bottom Bars */
+        .top-bar, .bottom-bar {
+            position: fixed;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .top-bar {
+            top: 0;
+        }
+        .bottom-bar {
+            bottom: 0;
+        }
+
+        /* Remove Glow Effect */
+        .glow {
+            text-shadow: none;
+        }
+
+        /* Interactive Tooltips */
+        .tooltip {
+            position: relative;
+            cursor: pointer;
+        }
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            font-size: 0.8em;
+            z-index: 100;
+        }
+
+        /* Interactive Graphs */
+        .graph-placeholder {
+            position: relative;
+            overflow: hidden;
+            background: #f9f9f9;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .graph-placeholder:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Metric Explanations */
+        .metric-explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        /* Detailed Explanations Styling */
+        .detailed-explanation {
+            font-size: 0.9em;
+            color: #333;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">Data Maturity & Connectivity Report</div>
+
+    <header>
+        <div class="logo"><!-- SLOT: Company Name --></div>
+        <div class="report-meta">
+            <div><strong>Report Date:</strong> <!-- SLOT: Generation Date --></div>
+            <div><strong>Generated For:</strong> <!-- SLOT: Client Name --></div>
+        </div>
+    </header>
+
+    <main class="report-container">
+        <section>
+            <h1><!-- SLOT: Report Title --></h1>
+            <h2>Executive Summary</h2>
+            <p><!-- SLOT: Executive Summary --></p>
+        </section>
+
+        <section>
+            <h2>Key Performance Indicators (KPIs)</h2>
+            <p>This section provides a snapshot of the core metrics related to data quality, system state, and overall workload.</p>
+            <div class="graph-grid">
+                <div class="graph-placeholder tooltip" data-tooltip="Data Correctness Score">
+                    <h3>Data Correctness Score</h3>
+                    <!-- SLOT: Gauge Chart -->
+                </div>
+                <div class="graph-placeholder tooltip" data-tooltip="Overall Data State">
+                    <h3>Overall Data State</h3>
+                    <!-- SLOT: Pie Chart -->
+                </div>
+            </div>
+            <ul class="metrics-list">
+                <li>
+                    <span class="metric-label">Data Correctness Score:</span>
+                    <span class="metric-value"><!-- SLOT: Data Correctness --></span>
+                    <div class="metric-explanation">Measures the accuracy and reliability of the data. A higher score is better.</div>
+                </li>
+                <li>
+                    <span class="metric-label">Overall Data State:</span>
+                    <span class="metric-value"><!-- SLOT: Data State --></span>
+                    <div class="metric-explanation">Evaluates the quality, consistency, and completeness of data.</div>
+                </li>
+                <li>
+                    <span class="metric-label">System Workload (Collected Data Points):</span>
+                    <span class="metric-value"><!-- SLOT: System Workload --></span>
+                    <div class="metric-explanation">Tracks the volume of data processed by the system.</div>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Digitalization Analysis</h2>
+            <p>Analysis of digital maturity across departments, highlighting performance against strategic priorities and identifying key opportunities for improvement.</p>
+            <div class="graph-grid">
+                <div class="graph-placeholder full-width-graph tooltip" data-tooltip="Departmental Digitalization Levels">
+                    <h3>Departmental Digitalization</h3>
+                    <!-- SLOT: Radar Chart -->
+                </div>
+                <div class="graph-placeholder full-width-graph tooltip" data-tooltip="Gap between strategic priority and current performance">
+                    <h3>Priorities vs. Performance Gap</h3>
+                    <!-- SLOT: Gap Analysis Chart -->
+                </div>
+            </div>
+            <h3>Top 5 Digitalization Opportunities</h3>
+            <p>The following areas have been identified as having the highest potential for impactful digital transformation, based on the gap between their strategic priority and current performance.</p>
+            <!-- SLOT: Opportunities Table -->
+        </section>
+
+        <section>
+            <h2>Problem & Solution Analysis</h2>
+            <p>Based on the data provided, the following problems have been identified. Corresponding solutions are recommended to address these issues and improve performance.</p>
+            <h3>Identified Problems</h3>
+            <!-- SLOT: Problems List -->
+            <h3>Recommended Solutions & Impact</h3>
+            <!-- SLOT: Solutions Table -->
+        </section>
+
+        <section>
+            <h2>Growth & Financial Projections</h2>
+            <p>This section projects the potential financial growth based on the implementation of the recommended solutions. It includes a 5-year forecast comparing projected growth against a baseline.</p>
+            <h3>Projected Growth Summary</h3>
+            <!-- SLOT: Growth Summary -->
+            <div class="graph-grid">
+                <div class="graph-placeholder tooltip" data-tooltip="5-Year Projected Revenue Growth (Line Chart)">
+                    <h3>5-Year Growth Projection (Trend)</h3>
+                    <!-- SLOT: Projection Line Chart -->
+                </div>
+                <div class="graph-placeholder tooltip" data-tooltip="5-Year Projected Revenue Growth (Bar Chart)">
+                    <h3>5-Year Growth Projection (Annual)</h3>
+                    <!-- SLOT: Projection Bar Chart -->
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>System Connectivity</h2>
+            <p>Visual representation of the current data flows between systems and departments, contrasted with an idealized state that reflects improved integration and efficiency.</p>
+            <div class="graph-grid">
+                <div class="graph-placeholder tooltip" data-tooltip="Current data flow and connectivity">
+                    <h3>Current State Graph</h3>
+                    <!-- SLOT: Current State Graph -->
+                </div>
+                <div class="graph-placeholder tooltip" data-tooltip="Ideal data flow with recommended integrations">
+                    <h3>Ideal State Graph</h3>
+                    <!-- SLOT: Ideal State Graph -->
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Integrator Recommendations</h2>
+            <p>For implementing the recommended solutions, we suggest considering the following top-rated integration partners based on their expertise, reviews, and focus areas.</p>
+            <!-- SLOT: Integrators Table -->
+        </section>
+    </main>
+
+    <footer>
+        <div>Confidential & Proprietary &copy; <!-- SLOT: Current Year --> <!-- SLOT: Company Name --> - Page <!-- SLOT: Page Number --></div>
+    </footer>
+
+    <div class="bottom-bar">Confidential Report - All Rights Reserved</div>
+
+    <script>
+        // Script is not needed for the static report, but kept for potential future use.
+    </script>
+</body>
+</html>

@@ -29,11 +29,21 @@
     <!-- Top Navigation Bar -->
     <nav class="mb-10 bg-white border-b border-slate-200 shadow-sm">
         <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
-            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link">Industry 4.0 Platform</a>
-            <a href="questionnaire.html" class="nav-link">Questionnaire</a>
-            <a href="dashboard.html" class="nav-link">Dashboard</a>
-            <a href="learn.html" class="nav-link">Learn about Digitilization</a>
-            <a href="case-studies.html" class="nav-link font-semibold text-sky-700">Case Studies</a>
+            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link border border-sky-600 px-3 py-2">
+                Industry 4.0 Platform
+            </a>
+            <a href="questionnaire.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Questionnaire
+            </a>
+            <a href="dashboard.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Dashboard
+            </a>
+            <a href="learn.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Learn about Digitilization
+            </a>
+            <a href="case-studies.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition active">
+                Case Studies
+            </a>
         </div>
     </nav>
     <main class="flex-grow max-w-6xl mx-auto px-4 py-8">
@@ -41,15 +51,18 @@
         <p class="text-lg text-slate-600 mb-8 text-center">Explore real-world digital transformation journeys across manufacturing, retail, healthcare, and more.</p>
         <!-- Pareto Chart Section -->
         <div class="mb-8">
+            <div id="chart-filters" class="flex justify-center flex-wrap gap-4 mb-4"></div>
             <canvas id="paretoChart" width="400" height="200"></canvas>
         </div>
         <!-- Search Bar and Results Section -->
         <div id="search-container" class="p-4 bg-gray-100 border-b">
+            <p class="text-sm text-slate-600 mb-2">Filter by popular topics:</p>
+            <div id="preset-filters" class="flex flex-wrap gap-2 mb-4"></div>
             <input id="search-bar" type="text" placeholder="Search case studies..." class="w-full p-2 border rounded mb-4">
             <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <div id="pagination-controls" class="flex justify-center items-center gap-4 mt-6"></div>
         </div>
         <!-- Case Studies Container -->
-        <div id="case-studies-root"></div>
     </main>
     <!-- Modal for full case study -->
     <div id="modal-bg" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center">
@@ -64,7 +77,7 @@
     <script type="module">
         // --- CASE STUDY DATA ---
         // Each entry: { category, title, summary, content }
-        const caseStudies = [
+        const internalCaseStudies = [
             {
                 category: "Manufacturing",
                 title: "MacDon: A Digital Transformation with Legacy Solutions",
@@ -292,54 +305,6 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
             }
         ];
 
-        // --- RENDERING LOGIC ---
-        function groupByCategory(data) {
-            const map = {};
-            data.forEach(cs => {
-                if (!map[cs.category]) map[cs.category] = [];
-                map[cs.category].push(cs);
-            });
-            return map;
-        }
-
-        function renderCaseStudies() {
-            const grouped = groupByCategory(caseStudies);
-            const root = document.getElementById('case-studies-root');
-            root.innerHTML = '';
-            Object.keys(grouped).forEach(category => {
-                // Category Title
-                const catTitle = document.createElement('div');
-                catTitle.className = 'text-2xl font-bold text-sky-700 mt-12 mb-4 tracking-tight';
-                catTitle.textContent = category;
-                root.appendChild(catTitle);
-
-                // Case List
-                const list = document.createElement('div');
-                list.className = 'case-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8';
-                grouped[category].forEach((cs, idx) => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white rounded-2xl shadow-lg border border-slate-200 p-6 flex flex-col transition hover:shadow-2xl hover:border-sky-400 cursor-pointer relative overflow-hidden group';
-                    card.tabIndex = 0;
-                    card.setAttribute('role', 'button');
-                    card.setAttribute('aria-label', cs.title);
-
-                    // Add badge for category (on card)
-                    card.innerHTML = `
-                        <span class="absolute top-4 right-4 bg-sky-100 text-sky-700 text-xs font-bold px-3 py-1 rounded-full shadow">${category}</span>
-                        <div class="text-lg font-bold text-slate-900 mb-2 leading-tight group-hover:text-sky-700">${cs.title}</div>
-                        <div class="text-slate-600 mb-4">${cs.summary}</div>
-                        <div class="text-sky-600 underline text-sm font-semibold mt-auto pt-2 group-hover:text-sky-800">Read More &rarr;</div>
-                    `;
-                    card.addEventListener('click', () => showModal(cs));
-                    card.addEventListener('keydown', e => {
-                        if (e.key === 'Enter' || e.key === ' ') showModal(cs);
-                    });
-                    list.appendChild(card);
-                });
-                root.appendChild(list);
-            });
-        }
-
         function showModal(cs) {
             document.getElementById('modal-body').innerHTML = `
                 <h2 class="text-2xl font-bold mb-2 text-sky-700">${cs.title}</h2>
@@ -361,17 +326,28 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
             if (e.key === 'Escape') closeModal();
         });
 
-        // Search functionality
+        // --- SEARCH, FILTERS, AND PAGINATION ---
         const searchInput = document.getElementById('search-bar');
         const searchResults = document.getElementById('search-results');
+        const paginationControls = document.getElementById('pagination-controls');
+        const filtersContainer = document.getElementById('preset-filters');
+
+        let allCaseStudies = [];
+        let currentFilteredStudies = [];
+        let currentPage = 1;
+        const itemsPerPage = 20;
+        const presetKeywords = ["Maintenance", "Lean", "Data", "Digital Transformation", "IOT", "Industry 4.0", "Quality"];
 
         searchInput.addEventListener('input', (e) => {
+            currentPage = 1; // Reset to first page on new search
             const query = e.target.value.toLowerCase();
-            const filteredStudies = caseStudies.filter(cs =>
+            currentFilteredStudies = allCaseStudies.filter(cs =>
                 cs.title.toLowerCase().includes(query) ||
-                cs.summary.toLowerCase().includes(query)
+                cs.summary.toLowerCase().includes(query) ||
+                (cs.content && cs.content.toLowerCase().includes(query))
             );
-            renderSearchResults(filteredStudies);
+            renderSearchResults();
+            renderPagination();
         });
 
         async function fetchExternalCaseStudies() {
@@ -381,27 +357,36 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
                 title: cs.Title,
                 summary: cs.Scenario,
                 link: cs.Link,
-                category: cs.Category || 'Undefined'
+                category: cs.Category || 'Undefined',
+                content: cs.Scenario // Use Scenario as content for searching
             }));
         }
 
         async function initializeCaseStudies() {
             const externalCaseStudies = await fetchExternalCaseStudies();
-            caseStudies.push(...externalCaseStudies);
-            renderSearchResults(caseStudies);
-            renderCaseStudies();
+            // Combine internal and external studies
+            allCaseStudies = [...internalCaseStudies, ...externalCaseStudies];
+            currentFilteredStudies = [...allCaseStudies];
+            
+            renderPresetFilters();
+            renderSearchResults();
+            renderPagination();
         }
 
         initializeCaseStudies();
 
-        function renderSearchResults(studies) {
+        function renderSearchResults() {
             searchResults.innerHTML = '';
-            if (studies.length === 0) {
-                searchResults.innerHTML = '<p class="text-center text-gray-500">No results found.</p>';
+            if (currentFilteredStudies.length === 0) {
+                searchResults.innerHTML = '<p class="text-center text-gray-500 col-span-full">No results found.</p>';
                 return;
             }
 
-            studies.forEach(cs => {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageStudies = currentFilteredStudies.slice(startIndex, endIndex);
+
+            pageStudies.forEach(cs => {
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded shadow p-4 border hover:shadow-lg transition flex flex-col';
 
@@ -417,18 +402,17 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
                 link.className = 'text-sky-600 hover:underline mt-auto pt-2 text-sm font-semibold';
                 link.textContent = 'Read More →';
 
-                if (cs.content) {
+                if (cs.content && !cs.link) { // Internal case study
                     link.href = '#';
                     link.onclick = (e) => {
                         e.preventDefault();
                         showModal(cs);
                     };
-                } else if (cs.link) {
+                } else if (cs.link) { // External case study
                     link.href = cs.link;
-                    link.target = '_blank'; // Open external links in a new tab
+                    link.target = '_blank';
                 } else {
-                    link.href = '#';
-                    link.style.display = 'none'; // Hide link if no content or link
+                    link.style.display = 'none';
                 }
 
                 card.appendChild(title);
@@ -439,9 +423,102 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
             });
         }
 
-        async function fetchTagData() {
+        function renderPagination() {
+            paginationControls.innerHTML = '';
+            const totalPages = Math.ceil(currentFilteredStudies.length / itemsPerPage);
+
+            if (totalPages <= 1) return;
+
+            // Previous Button
+            const prevButton = document.createElement('button');
+            prevButton.textContent = '← Previous';
+            prevButton.className = 'px-4 py-2 bg-white border rounded shadow-sm hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed';
+            prevButton.disabled = currentPage === 1;
+            prevButton.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderSearchResults();
+                    renderPagination();
+                }
+            };
+            paginationControls.appendChild(prevButton);
+
+            // Page Info
+            const pageInfo = document.createElement('span');
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            pageInfo.className = 'text-sm text-slate-600';
+            paginationControls.appendChild(pageInfo);
+
+            // Next Button
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next →';
+            nextButton.className = 'px-4 py-2 bg-white border rounded shadow-sm hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderSearchResults();
+                    renderPagination();
+                }
+            };
+            paginationControls.appendChild(nextButton);
+        }
+
+        function renderPresetFilters() {
+            filtersContainer.innerHTML = '';
+            presetKeywords.forEach(keyword => {
+                const button = document.createElement('button');
+                button.className = 'bg-slate-200 text-slate-800 px-3 py-1 rounded text-sm font-medium hover:bg-slate-300 transition';
+                button.textContent = keyword;
+                button.onclick = () => {
+                    searchInput.value = keyword;
+                    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                };
+                filtersContainer.appendChild(button);
+            });
+        }
+
+        let paretoChartInstance = null;
+        const chartKeywords = ['Safety', 'Quality', 'Delivery', 'Cost', 'Inventory'];
+
+        function setupChartFilters() {
+            const container = document.getElementById('chart-filters');
+            container.innerHTML = '';
+            chartKeywords.forEach(keyword => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center gap-2 text-sm text-slate-700 cursor-pointer';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'form-checkbox h-4 w-4 rounded text-sky-600 focus:ring-sky-500';
+                checkbox.value = keyword;
+                checkbox.checked = true; // Default to checked
+                checkbox.addEventListener('change', renderParetoChart);
+
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(keyword));
+                container.appendChild(label);
+            });
+        }
+
+        async function fetchTagData(selectedKeywords) {
             const response = await fetch('Case_studies.json');
-            const caseStudies = await response.json();
+            let caseStudies = await response.json();
+
+            // Filter for manufacturing-related case studies based on selected keywords
+            if (selectedKeywords.length > 0) {
+                const lowercasedKeywords = selectedKeywords.map(k => k.toLowerCase());
+                caseStudies = caseStudies.filter(cs => {
+                    const tag = (cs.Tag || '').toLowerCase();
+                    const title = (cs.Title || '').toLowerCase();
+                    const scenario = (cs.Scenario || '').toLowerCase();
+                    return lowercasedKeywords.some(keyword =>
+                        tag.includes(keyword) ||
+                        title.includes(keyword) ||
+                        scenario.includes(keyword)
+                    );
+                });
+            }
 
             // Count occurrences of each tag
             const tagCounts = {};
@@ -465,15 +542,21 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
         }
 
         async function renderParetoChart() {
-            const { labels, data, cumulativeData } = await fetchTagData();
+            const selectedKeywords = Array.from(document.querySelectorAll('#chart-filters input:checked')).map(cb => cb.value);
+            const { labels, data, cumulativeData } = await fetchTagData(selectedKeywords);
 
             // Find the x-axis value where cumulative percentage reaches or exceeds 80%
-            const total = cumulativeData[cumulativeData.length - 1];
-            const targetIndex = cumulativeData.findIndex(value => (value / total) * 100 >= 78.8);
-            const targetLabel = labels[targetIndex];
+            const total = cumulativeData.length > 0 ? cumulativeData[cumulativeData.length - 1] : 0;
+            const targetIndex = total > 0 ? cumulativeData.findIndex(value => (value / total) * 100 >= 78.8) : -1;
+            const targetLabel = targetIndex !== -1 ? labels[targetIndex] : null;
 
             const ctx = document.getElementById('paretoChart').getContext('2d');
-            new Chart(ctx, {
+            
+            if (paretoChartInstance) {
+                paretoChartInstance.destroy();
+            }
+
+            paretoChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -543,7 +626,8 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
                                         content: targetLabel,
                                         enabled: true,
                                         position: 'start'
-                                    }
+                                    },
+                                    display: !!targetLabel
                                 }
                             }
                         }
@@ -552,7 +636,10 @@ IPG’s digital transformation journey showcases how a strategic focus on Manufa
             });
         }
 
-        document.addEventListener('DOMContentLoaded', renderParetoChart);
+        document.addEventListener('DOMContentLoaded', () => {
+            setupChartFilters();
+            renderParetoChart();
+        });
     </script>
 </body>
 </html>

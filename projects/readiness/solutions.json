@@ -1,0 +1,932 @@
+{
+
+  "Safety": [
+    {
+      "problem": "Moving parts are not properly guarded",
+      "data_source": "machine-guard-audits data",
+      "solutions": [
+        "Install fixed or interlocked guards that fully enclose pinch, shear and nip points; verify compliance with ANSI B11 and OSHA 1910.212 standards.",
+        "Implement a pre‑startup safety checklist and periodic audits to ensure guards remain in place after maintenance or changeovers.",
+        "Train operators and maintenance staff on machine‑guarding hazards, including a ‘no‑guard‑no‑run’ policy with disciplinary escalation."
+      ],
+      "metric": {
+        "Throughput": 2,
+        "OEE": 1,
+        "LaborProductivity": 2,
+        "RevenuePerProductionHour": 2,
+        "CapacityUtilizationRate": 1,
+        "Downtime": -10
+      },
+      "Cost": 25000
+    },
+    {
+      "problem": "Lockout‑tagout rules not followed during maintenance",
+      "data_source": "loto-compliance data",
+      "solutions": [
+        "Create written LOTO procedures for every energy source, color‑code tags/locks, and post schematic diagrams at the machine.",
+        "Run hands‑on LOTO drills each quarter; certify every employee annually and track completion in the learning‑management system.",
+        "Install energy‑isolation devices (e.g., valve lock‑boxes, circuit lock hasps) that physically prevent restart until all locks are removed."
+      ],
+      "metric": {
+        "Throughput": 4,
+        "OEE": 2,
+        "LaborProductivity": 3,
+        "RevenuePerProductionHour": 3,
+        "CapacityUtilizationRate": 1,
+        "Downtime": -15
+      },
+      "Cost": 10000
+    },
+    {
+      "problem": "Workers skip or misuse personal protective equipment",
+      "data_source": "ppe-compliance data",
+      "solutions": [
+        "Conduct a task‑based PPE hazard assessment, select comfortable gear (e.g., vented goggles, cut‑level gloves) and stock it at point‑of‑use stations.",
+        "Launch a ‘PPE compliance champion’ program—peer observers give instant feedback and log misses in a dashboard visible to supervisors.",
+        "Tie PPE compliance to daily tier‑meeting metrics; supervisors coach repeat offenders and escalate after three violations."
+      ],
+      "metric": {
+        "Throughput": 1,
+        "OEE": 1,
+        "LaborProductivity": 2,
+        "RevenuePerProductionHour": 2,
+        "CapacityUtilizationRate": 0,
+        "Downtime": -7
+      },
+      "Cost": 5000
+    },
+    {
+      "problem": "Floors are slippery or cluttered causing trips and falls",
+      "data_source": "safety-incidents data",
+      "solutions": [
+        "Introduce 5S housekeeping with hourly zone audits; post red‑tag counts and trend charts on the safety board.",
+        "Apply high‑traction epoxy or anti‑slip tape in wet areas; install proper drainage and squeegees with shadow boards.",
+        "Mark pedestrian lanes and keep them clear with floor tape and bollards; enforce ‘nothing on yellow lines’ rule."
+      ],
+      "metric": {
+        "Throughput": 2,
+        "OEE": 1,
+        "LaborProductivity": 2,
+        "RevenuePerProductionHour": 2,
+        "CapacityUtilizationRate": 0,
+        "Downtime": -7
+      },
+      "Cost": 12000
+    },
+    {
+      "problem": "Heavy lifting and awkward postures strain backs and joints",
+      "data_source": "ergonomic-assessments data",
+      "solutions": [
+        "Add lift‑assist devices (vacuum lifters, balancers) and adjustable work tables to keep parts in the power zone (knee to chest height).",
+        "Rotate operators through varied tasks and schedule micro‑stretch breaks using timer prompts every 60 minutes.",
+        "Provide ergonomic training that teaches safe lifting, neutral stance, and early reporting of discomfort for rapid intervention."
+      ],
+      "metric": {
+        "Throughput": 2,
+        "OEE": 1,
+        "LaborProductivity": 3,
+        "RevenuePerProductionHour": 3,
+        "CapacityUtilizationRate": 1,
+        "Downtime": -6
+      },
+      "Cost": 30000
+    },
+    {
+      "problem": "Forklifts or vehicles collide with people or racks",
+      "data_source": "safety-incidents data",
+      "solutions": [
+        "Designate one‑way traffic aisles and separate pedestrian walkways with guardrails and painted zebra crossings.",
+        "Outfit forklifts with blue‑spot lights, proximity sensors and speed‑limit governors; inspect and calibrate monthly.",
+        "Issue driver certifications, run refresher courses semi‑annually, and track near‑miss incidents in a fleet‑safety database."
+      ],
+      "metric": {
+        "Throughput": 3,
+        "OEE": 1,
+        "LaborProductivity": 3,
+        "RevenuePerProductionHour": 3,
+        "CapacityUtilizationRate": 1,
+        "Downtime": -12
+      },
+      "Cost": 20000
+    },
+    {
+      "problem": "Electrical wires are damaged or exposed",
+      "data_source": "safety-incidents data",
+      "solutions": [
+        "Conduct an NFPA‑70E audit; replace damaged cords with industrial‑grade cable, strain reliefs and proper conduit.",
+        "Implement scheduled infrared thermography scans to detect hot spots in panels and junction boxes twice a year.",
+        "Install GFCI protection and maintain arc‑flash labels; keep an up‑to‑date single‑line diagram posted in the MCC room."
+      ],
+      "metric": {
+        "Throughput": 2,
+        "OEE": 1,
+        "LaborProductivity": 2,
+        "RevenuePerProductionHour": 2,
+        "CapacityUtilizationRate": 1,
+        "Downtime": -7
+      },
+      "Cost": 15000
+    },
+    {
+      "problem": "Fire or explosion risk from dust or flammable liquids",
+      "data_source": "chemical-inventory data",
+      "solutions": [
+        "Install dust‑collection with NFPA‑compliant spark arrestors and burst panels; test airflow and differential pressure weekly.",
+        "Separate Class I/II flammable‑liquid storage in FM‑approved cabinets; bond/ground containers during transfer.",
+        "Implement a hot‑work permit system with gas monitoring and one‑hour fire watch after job completion."
+      ],
+      "metric": {
+        "Throughput": 1,
+        "OEE": 2,
+        "LaborProductivity": 2,
+        "RevenuePerProductionHour": 2,
+        "CapacityUtilizationRate": 1,
+        "Downtime": -40
+      },
+      "Cost": 100000
+    },
+    {
+      "problem": "Chemical spills or fumes harm workers",
+      "data_source": "air-monitor data",
+      "solutions": [
+        "Create secondary containment and closed‑loop transfer systems; keep spill kits and neutralizers within 15 m of use areas.",
+        "Install local exhaust ventilation with capture hoods at emission points; validate airflow ≥100 fpm face velocity.",
+        "Provide HazCom/SDS training and run annual spill‑response drills with scenario‑based evaluations."
+      ],
+      "metric": {
+        "Throughput": 2,
+        "OEE": 1,
+        "LaborProductivity": 2,
+        "RevenuePerProductionHour": 2,
+        "CapacityUtilizationRate": 1,
+        "Downtime": -8
+      },
+      "Cost": 25000
+    },
+    {
+      "problem": "Excessive noise can damage hearing",
+      "data_source": "noise-exposure data",
+      "solutions": [
+        "Enclose loud machinery or add acoustic barriers and dampening materials to reduce dBA at source.",
+        "Rotate staff out of high‑noise zones and enforce mandatory hearing protection when levels exceed 85 dBA TWA.",
+        "Conduct annual audiometric testing and trend threshold shifts; trigger engineering controls if >10 dB shift detected."
+      ],
+      "metric": {
+        "Throughput": 1,
+        "OEE": 0,
+        "LaborProductivity": 1,
+        "RevenuePerProductionHour": 1,
+        "CapacityUtilizationRate": 0,
+        "Downtime": -2
+      },
+      "Cost": 8000
+    },
+    {
+      "problem": "Working at height without fall protection",
+      "data_source": "near-misses data",
+      "solutions": [
+        "Install fixed platforms with guardrails and toe boards; eliminate ladders where feasible.",
+        "Provide certified anchor points and self‑retracting lifelines; inspect harnesses and lanyards before each use.",
+        "Train workers on fall‑protection plans; enforce 100 % tie‑off policy above 1.8 m and use spot audits to ensure compliance."
+      ],
+      "metric": {
+        "Throughput": 1,
+        "OEE": 1,
+        "LaborProductivity": 2,
+        "RevenuePerProductionHour": 2,
+        "CapacityUtilizationRate": 0,
+        "Downtime": -12
+      },
+      "Cost": 18000
+    },
+    {
+      "problem": "Confined spaces entered without gas tests or rescue plan",
+      "data_source": "confined-space-permits data",
+      "solutions": [
+        "Classify all confined spaces, post entry permits listing hazards, isolation steps, and required PPE.",
+        "Use calibrated gas meters to test O₂, LEL and toxic gases before and during entry; log readings every 15 min.",
+        "Stage a trained rescue team with retrieval equipment and non‑entry rescue procedures for each permit."
+      ],
+      "metric": {
+        "Throughput": 1,
+        "OEE": 1,
+        "LaborProductivity": 2,
+        "RevenuePerProductionHour": 2,
+        "CapacityUtilizationRate": 0,
+        "Downtime": -12
+      },
+      "Cost": 15000
+    },
+    {
+      "problem": "Emergency plans and drills are outdated or missing",
+      "data_source": "emergency-drills data",
+      "solutions": [
+        "Update the Emergency Action Plan annually, covering fire, chemical release, severe weather, and medical response.",
+        "Run evacuation and spill‑response drills twice a year; debrief and assign corrective actions within 48 hours.",
+        "Install visual evacuation maps and ensure alarm systems, strobes, and PA are tested monthly."
+      ],
+      "metric": {
+        "Throughput": 1,
+        "OEE": 0,
+        "LaborProductivity": 1,
+        "RevenuePerProductionHour": 1,
+        "CapacityUtilizationRate": 0,
+        "Downtime": -4
+      },
+      "Cost": 5000
+    }
+  ],
+
+  "Quality": [
+  {
+    "problem": "Parts go out of tolerance and become scrap",
+    "data_source": "spc-charts data",
+    "solutions": [
+      "Implement Statistical Process Control (SPC) with real‑time alarms when trends approach control limits.",
+      "Perform capability studies on critical processes; redesign tooling or settings to reach Cp/Cpk ≥1.33.",
+      "Install mistake‑proofing (poka‑yoke) such as go/no‑go gauges and automatic shutoffs when tolerances drift."
+    ],
+    "metric": {
+      "Throughput": 12,
+      "OEE": 8,
+      "LaborProductivity": 12,
+      "RevenuePerProductionHour": 12,
+      "CapacityUtilizationRate": 5,
+      "Downtime": -3
+    },
+    "Cost": 50000
+  },
+  {
+    "problem": "Manual inspection misses defects",
+    "data_source": "inspection-results data",
+    "solutions": [
+      "Introduce automated vision systems or laser‑scanners for 100 % inspection of key features.",
+      "Standardize visual‑defect criteria with photo samples and lighting booths to reduce subjectivity.",
+      "Rotate inspectors and use job‑instruction training to prevent attention fatigue and drift."
+    ],
+    "metric": {
+      "Throughput": 6,
+      "OEE": 4,
+      "LaborProductivity": 6,
+      "RevenuePerProductionHour": 6,
+      "CapacityUtilizationRate": 3,
+      "Downtime": -2
+    },
+    "Cost": 100000
+  },
+  {
+    "problem": "Measuring tools are out of calibration",
+    "data_source": "calibration-status data",
+    "solutions": [
+      "Establish a gage‑calibration schedule in a CMMS, with alerts before due dates.",
+      "Use gage‑control software linking each measurement to the tool’s serial number and calibration status.",
+      "Store precision instruments in a controlled environment and provide operator training on proper handling."
+    ],
+    "metric": {
+      "Throughput": 3,
+      "OEE": 2,
+      "LaborProductivity": 3,
+      "RevenuePerProductionHour": 3,
+      "CapacityUtilizationRate": 2,
+      "Downtime": -2
+    },
+    "Cost": 25000
+  },
+  {
+    "problem": "Wrong materials or components used by mistake",
+    "data_source": "material-certs data",
+    "solutions": [
+      "Adopt barcode or RFID scanning at kitting and line‑side to verify part numbers before use.",
+      "Color‑code bins and kanban cards by part family; lock incompatible bins out of the station during changeovers.",
+      "Run incoming‑material verification (alloy, hardness tests) and quarantine mismatches immediately."
+    ],
+    "metric": {
+      "Throughput": 4,
+      "OEE": 3,
+      "LaborProductivity": 4,
+      "RevenuePerProductionHour": 4,
+      "CapacityUtilizationRate": 2,
+      "Downtime": -2
+    },
+    "Cost": 30000
+  },
+  {
+    "problem": "Supplier parts arrive with defects",
+    "data_source": "supplier-ppap data",
+    "solutions": [
+      "Deploy supplier PPAP and scorecards; escalate chronic offenders to corrective‑action plans and on‑site audits.",
+      "Use receiving inspection sampling plans with tightened AQL when defect trends rise.",
+      "Share real‑time quality data and drawings via supplier portal to clarify specifications."
+    ],
+    "metric": {
+      "Throughput": 3,
+      "OEE": 2,
+      "LaborProductivity": 3,
+      "RevenuePerProductionHour": 3,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -2
+    },
+    "Cost": 20000
+  },
+  {
+    "problem": "Paper records delay finding the root cause",
+    "data_source": "audit-findings data",
+    "solutions": [
+      "Digitize inspection data with tablets feeding directly into the MES/ERP quality module.",
+      "Implement e‑signatures and automated timestamping to secure data integrity.",
+      "Provide dashboards that trigger instant alerts to quality engineers when non‑conformances occur."
+    ],
+    "metric": {
+      "Throughput": 2,
+      "OEE": 1,
+      "LaborProductivity": 2,
+      "RevenuePerProductionHour": 2,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -2
+    },
+    "Cost": 15000
+  },
+  {
+    "problem": "Poor traceability—can’t track lots or serial numbers",
+    "data_source": "traceability data",
+    "solutions": [
+      "Introduce lot‑level barcoding or laser‑marking and capture IDs at every process step.",
+      "Link traceability data to an electronic traveler that follows each batch through production.",
+      "Run recall‑readiness drills to verify that affected lots can be identified and contained within 2 hours."
+    ],
+    "metric": {
+      "Throughput": 2,
+      "OEE": 1,
+      "LaborProductivity": 2,
+      "RevenuePerProductionHour": 2,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -2
+    },
+    "Cost": 40000
+  },
+  {
+    "problem": "Design is hard to manufacture and causes errors",
+    "data_source": "capa-actions data",
+    "solutions": [
+      "Hold cross‑functional DFM/A reviews early in the design stage to simplify features and tolerances.",
+      "Create manufacturing feedback loops—operators log design pain‑points that feed into engineering changes.",
+      "Use simulation and 3D‑printed prototypes to validate assembly fit before tooling commitment."
+    ],
+    "metric": {
+      "Throughput": 6,
+      "OEE": 3,
+      "LaborProductivity": 6,
+      "RevenuePerProductionHour": 6,
+      "CapacityUtilizationRate": 3,
+      "Downtime": -2
+    },
+    "Cost": 10000
+  },
+  {
+    "problem": "Contamination (oil, dust, moisture) spoils product",
+    "data_source": "environmental-contamination data",
+    "solutions": [
+      "Install clean‑room curtains or positive‑pressure zones where surface cleanliness is critical.",
+      "Implement regular cleaning schedules using validated solvents and lint‑free wipes; audit with particle counts.",
+      "Introduce final‑rinse or pass‑through washers with water‑quality monitoring and automatic chemical dosing."
+    ],
+    "metric": {
+      "Throughput": 8,
+      "OEE": 4,
+      "LaborProductivity": 8,
+      "RevenuePerProductionHour": 8,
+      "CapacityUtilizationRate": 3,
+      "Downtime": -3
+    },
+    "Cost": 60000
+  },
+  {
+    "problem": "Late defects reach customers and cause returns",
+    "data_source": "field-returns data",
+    "solutions": [
+      "Add end‑of‑line functional tests with pass/fail gating; block shipment until all tests pass.",
+      "Perform warranty‑failure analysis; feed lessons learned back to FMEA and control plans.",
+      "Offer customers digital traceability reports and encourage early‑field‑failure reporting for rapid containment."
+    ],
+    "metric": {
+      "Throughput": 2,
+      "OEE": 1,
+      "LaborProductivity": 2,
+      "RevenuePerProductionHour": 2,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -2
+    },
+    "Cost": 35000
+  }
+],
+"Delivery": [
+  {
+    "problem": "Equipment breaks down and stops the line",
+    "data_source": "downtime-events data",
+    "solutions": [
+      "Implement a predictive‑maintenance program using vibration and oil‑analysis sensors with CMMS alerts.",
+      "Stock critical spares and create a rapid‑response repair team with clear MTTR targets.",
+      "Track OEE daily; run Kaizen events on chronic downtime causes to eliminate root issues."
+    ],
+    "metric": {
+      "Throughput": 8,
+      "OEE": 6,
+      "LaborProductivity": 8,
+      "RevenuePerProductionHour": 8,
+      "CapacityUtilizationRate": 4,
+      "Downtime": -40
+    },
+    "Cost": 120000
+  },
+  {
+    "problem": "Long changeovers slow production",
+    "data_source": "changeover-duration data",
+    "solutions": [
+      "Apply SMED methodology to separate internal and external setup steps; target <10‑minute changeovers.",
+      "Use quick‑release clamps, preset tooling carts, and color‑coded fixture kits to speed swaps.",
+      "Schedule similar product families back‑to‑back to minimize adjustments and cleaning."
+    ],
+    "metric": {
+      "Throughput": 15,
+      "OEE": 12,
+      "LaborProductivity": 15,
+      "RevenuePerProductionHour": 15,
+      "CapacityUtilizationRate": 8,
+      "Downtime": -80
+    },
+    "Cost": 60000
+  },
+  {
+    "problem": "Production schedule does not match real shop‑floor status",
+    "data_source": "production-schedule-adherence data",
+    "solutions": [
+      "Integrate MES with ERP/MRP so machine status updates in real time and replans automatically.",
+      "Hold hourly Gemba walks or digital tier‑boards to adjust priorities based on actual progress.",
+      "Use finite‑capacity scheduling software that factors constraints and maintenance windows."
+    ],
+    "metric": {
+      "Throughput": 4,
+      "OEE": 2,
+      "LaborProductivity": 4,
+      "RevenuePerProductionHour": 4,
+      "CapacityUtilizationRate": 2,
+      "Downtime": -5
+    },
+    "Cost": 80000
+  },
+  {
+    "problem": "Supplier shipments arrive late",
+    "data_source": "lead-time data",
+    "solutions": [
+      "Establish dual sourcing and consignment inventory for high‑risk materials.",
+      "Share rolling forecasts and ASN requirements; penalize missed OTIF in supplier contracts.",
+      "Implement vendor‑managed inventory (VMI) or local hub warehouses for critical commodities."
+    ],
+    "metric": {
+      "Throughput": 2,
+      "OEE": 1,
+      "LaborProductivity": 2,
+      "RevenuePerProductionHour": 2,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -1
+    },
+    "Cost": 20000
+  },
+  {
+    "problem": "Transport or customs delays hold finished goods",
+    "data_source": "logistics-status data",
+    "solutions": [
+      "Use multiple logistics providers and real‑time GPS tracking to reroute shipments proactively.",
+      "Pre‑clear customs with accurate HS codes and electronic documentation submitted in advance.",
+      "Maintain buffer stock at regional distribution centers to absorb transit variability."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 0,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": -1
+    },
+    "Cost": 15000
+  },
+  {
+    "problem": "Not enough skilled workers or high absenteeism",
+    "data_source": "labor-availability data",
+    "solutions": [
+      "Cross‑train employees and maintain a skills matrix to plug gaps quickly.",
+      "Introduce attendance incentives and flexible scheduling to reduce unscheduled absences.",
+      "Partner with technical colleges to create apprenticeship pipelines and internship programs."
+    ],
+    "metric": {
+      "Throughput": 3,
+      "OEE": 2,
+      "LaborProductivity": 4,
+      "RevenuePerProductionHour": 3,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -2
+    },
+    "Cost": 30000
+  },
+  {
+    "problem": "Engineering changes released too late",
+    "data_source": "expedite-orders data",
+    "solutions": [
+      "Adopt an ECN stage‑gate process with clear cut‑off dates linked to production cycles.",
+      "Use PLM software to synchronize BOM revisions across design, purchasing and production instantly.",
+      "Run change‑impact assessments and pilot runs before full release to minimize disruption."
+    ],
+    "metric": {
+      "Throughput": 2,
+      "OEE": 1,
+      "LaborProductivity": 2,
+      "RevenuePerProductionHour": 2,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -1
+    },
+    "Cost": 40000
+  },
+  {
+    "problem": "Bottlenecks create unfinished work piles",
+    "data_source": "queue-length data",
+    "solutions": [
+      "Map value stream and rebalance line takt time; add parallel machines or overtime at the constraint.",
+      "Implement Kanban limits to cap WIP in front of bottleneck operations.",
+      "Use theory‑of‑constraints drum‑buffer‑rope scheduling to protect the gating process."
+    ],
+    "metric": {
+      "Throughput": 5,
+      "OEE": 3,
+      "LaborProductivity": 5,
+      "RevenuePerProductionHour": 5,
+      "CapacityUtilizationRate": 3,
+      "Downtime": -2
+    },
+    "Cost": 70000
+  }
+],
+"Cost": [
+  {
+    "problem": "High scrap and rework drives up expense",
+    "data_source": "scrap-cost data",
+    "solutions": [
+      "Run DMAIC projects targeting top scrap codes; install error‑proofing for each root cause.",
+      "Track first‑pass yield (FPY) by process and post cost of quality metrics on shop‑floor boards.",
+      "Offer operator quality bonuses tied to scrap‑rate reduction and sustained performance."
+    ],
+    "metric": {
+      "Throughput": 10,
+      "OEE": 6,
+      "LaborProductivity": 10,
+      "RevenuePerProductionHour": 10,
+      "CapacityUtilizationRate": 4,
+      "Downtime": -3
+    },
+    "Cost": 40000
+  },
+  {
+    "problem": "Excess overtime due to poor planning",
+    "data_source": "overtime-cost data",
+    "solutions": [
+      "Use demand‑driven MRP to level load and release work orders closer to actual need.",
+      "Introduce flexible work cells and part‑time pools to handle demand peaks without overtime.",
+      "Analyze historical forecast error and adjust safety capacity instead of relying on last‑minute OT."
+    ],
+    "metric": {
+      "Throughput": 3,
+      "OEE": 1,
+      "LaborProductivity": 5,
+      "RevenuePerProductionHour": 4,
+      "CapacityUtilizationRate": 2,
+      "Downtime": -1
+    },
+    "Cost": 20000
+  },
+  {
+    "problem": "Low machine efficiency (OEE) wastes money",
+    "data_source": "oee-loss data",
+    "solutions": [
+      "Install real‑time OEE monitoring dashboards; trigger maintenance or kaizen when availability <90 %.",
+      "Reduce minor stops by standardizing work instructions and using automatic part ejection/feeding.",
+      "Schedule preventive maintenance during planned changeovers or night shift to cut planned stops."
+    ],
+    "metric": {
+      "Throughput": 6,
+      "OEE": 8,
+      "LaborProductivity": 6,
+      "RevenuePerProductionHour": 6,
+      "CapacityUtilizationRate": 4,
+      "Downtime": -15
+    },
+    "Cost": 50000
+  },
+  {
+    "problem": "Reactive maintenance costs more than planned maintenance",
+    "data_source": "maintenance-cost data",
+    "solutions": [
+      "Shift to time‑based and condition‑based PM tasks, using CMMS to enforce compliance >95 %.",
+      "Analyze MTBF/MTTR data and stock spares based on criticality and lead time.",
+      "Conduct root‑cause failure analysis (RCFA) on catastrophic failures and implement permanent fixes."
+    ],
+    "metric": {
+      "Throughput": 4,
+      "OEE": 4,
+      "LaborProductivity": 4,
+      "RevenuePerProductionHour": 4,
+      "CapacityUtilizationRate": 2,
+      "Downtime": -25
+    },
+    "Cost": 60000
+  },
+  {
+    "problem": "Old machines use too much energy",
+    "data_source": "energy-consumption data",
+    "solutions": [
+      "Install VFDs on motors, upgrade to high‑efficiency lighting and compressed‑air systems.",
+      "Perform energy audits and track kWh per unit; set reduction targets and publish progress monthly.",
+      "Apply ISO 50001 energy‑management system to institutionalize continuous energy improvement."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 1,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": 0
+    },
+    "Cost": 100000
+  },
+  {
+    "problem": "Tooling wears out faster than expected",
+    "data_source": "consumable-usage data",
+    "solutions": [
+      "Implement tool‑life monitoring and swap tools at optimal change points instead of catastrophic failure.",
+      "Use coated or higher‑grade tool materials and optimize cutting parameters (speed, feed, coolant).",
+      "Log tool history in CMMS and conduct supplier‑led tooling‑improvement workshops."
+    ],
+    "metric": {
+      "Throughput": 3,
+      "OEE": 2,
+      "LaborProductivity": 3,
+      "RevenuePerProductionHour": 3,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -2
+    },
+    "Cost": 25000
+  },
+  {
+    "problem": "Warranty claims and recalls are expensive",
+    "data_source": "warranty-cost data",
+    "solutions": [
+      "Perform accelerated life testing and FMEA to catch failure modes before launch.",
+      "Create a closed‑loop warranty database feeding Pareto charts back to design and production.",
+      "Offer field‑service training and quick‑response containment teams to minimize customer impact."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 1,
+      "LaborProductivity": 2,
+      "RevenuePerProductionHour": 2,
+      "CapacityUtilizationRate": 0,
+      "Downtime": 0
+    },
+    "Cost": 30000
+  },
+  {
+    "problem": "Regulatory fines from safety or quality failures",
+    "data_source": "regulatory-fine data",
+    "solutions": [
+      "Maintain compliance calendars and internal audits for OSHA, EPA, FDA, etc.; close findings on time.",
+      "Use document‑control software to ensure procedures and SDS are current and accessible.",
+      "Engage third‑party auditors annually to benchmark compliance and identify blind spots."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 1,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": -3
+    },
+    "Cost": 15000
+  },
+  {
+    "problem": "Premium freight and expediting fees add up",
+    "data_source": "premium-freight-cost data",
+    "solutions": [
+      "Improve forecast accuracy and safety‑stock calculations to cut emergency shipments.",
+      "Negotiate standing carrier capacity with volume discounts and penalty clauses for delays.",
+      "Implement milk‑run logistics and route optimization to consolidate loads."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 0,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": 0
+    },
+    "Cost": 10000
+  },
+  {
+    "problem": "Too much capital tied up in idle equipment",
+    "data_source": "capital-tied-up data",
+    "solutions": [
+      "Conduct asset‑utilization studies and sell or redeploy under‑used machines.",
+      "Use overall resource effectiveness (ORE) metrics to justify capex only when utilization >80 %.",
+      "Lease or rent specialized equipment for short runs instead of purchasing outright."
+    ],
+    "metric": {
+      "Throughput": 2,
+      "OEE": 1,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 2,
+      "Downtime": 0
+    },
+    "Cost": 15000
+  }
+],
+"Inventory": [
+  {
+    "problem": "Running out of parts stops production",
+    "data_source": "stockout-events data",
+    "solutions": [
+      "Implement Kanban pull signals with two‑bin systems and automatic reorder.",
+      "Set safety‑stock levels based on demand variability and supplier lead time; review quarterly.",
+      "Use real‑time inventory dashboards and alerts for low‑stock thresholds."
+    ],
+    "metric": {
+      "Throughput": 3,
+      "OEE": 2,
+      "LaborProductivity": 3,
+      "RevenuePerProductionHour": 3,
+      "CapacityUtilizationRate": 2,
+      "Downtime": -8
+    },
+    "Cost": 15000
+  },
+  {
+    "problem": "Too much stock ties up cash and space",
+    "data_source": "inventory-turns data",
+    "solutions": [
+      "Apply ABC/XYZ analysis and reduce order quantities on low‑runner SKUs.",
+      "Negotiate vendor‑managed inventory or consignment agreements to shift ownership.",
+      "Introduce sales & operations planning (S&OP) to align inventory with forecasted demand."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 0,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": 0
+    },
+    "Cost": 10000
+  },
+  {
+    "problem": "Old or obsolete items pile up in storage",
+    "data_source": "obsolescence data",
+    "solutions": [
+      "Run monthly slow‑moving inventory reports and discount, donate, or scrap obsolete stock.",
+      "Link engineering change notices to automatic quarantine of superseded parts.",
+      "Analyze demand trends and phase‑out plans to time final buys and avoid leftovers."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 0,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": 0
+    },
+    "Cost": 5000
+  },
+  {
+    "problem": "Inventory records do not match the physical count",
+    "data_source": "cycle-count-accuracy data",
+    "solutions": [
+      "Institute daily cycle counting with variance root‑cause analysis and rapid correction.",
+      "Use mobile scanners and real‑time ERP updates for every material movement.",
+      "Restrict inventory adjustments to authorized personnel and audit transaction logs monthly."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 1,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -2
+    },
+    "Cost": 25000
+  },
+  {
+    "problem": "Work‑in‑process builds up between steps",
+    "data_source": "wip-balance data",
+    "solutions": [
+      "Establish WIP caps (CONWIP) and signal flow using visual boards or electronic cards.",
+      "Synchronize process cycle times through line balancing and smaller batch sizes.",
+      "Apply pull production or cellular manufacturing to streamline flow."
+    ],
+    "metric": {
+      "Throughput": 4,
+      "OEE": 2,
+      "LaborProductivity": 4,
+      "RevenuePerProductionHour": 4,
+      "CapacityUtilizationRate": 2,
+      "Downtime": -1
+    },
+    "Cost": 30000
+  },
+  {
+    "problem": "First‑in‑first‑out not followed; items expire",
+    "data_source": "shelf-life-expiry data",
+    "solutions": [
+      "Label pallets with clear FIFO dates and use gravity‑flow racks for automatic rotation.",
+      "Configure warehouse management system to enforce FEFO for date‑coded materials.",
+      "Train operators and warehouse staff on FIFO importance and perform audits."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 0,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": -1
+    },
+    "Cost": 8000
+  },
+  {
+    "problem": "Damage occurs while storing or moving material",
+    "data_source": "warehouse-space-utilisation data",
+    "solutions": [
+      "Provide proper dunnage, stretch‑wrap, and corner protectors; inspect incoming pallets.",
+      "Train forklift drivers on safe handling and maintain racking systems per ANSI/RMI standards.",
+      "Use shock and tilt indicators on sensitive packages and review damage incidents monthly."
+    ],
+    "metric": {
+      "Throughput": 2,
+      "OEE": 1,
+      "LaborProductivity": 2,
+      "RevenuePerProductionHour": 2,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -2
+    },
+    "Cost": 20000
+  },
+  {
+    "problem": "Long lead times force high safety stock",
+    "data_source": "raw-stock-level data",
+    "solutions": [
+      "Work with suppliers to shorten lead times through local sourcing or shared forecasts.",
+      "Adopt postponement or kitting strategies to keep generic inventory and delay final config.",
+      "Use statistical safety‑stock formulas that factor actual variability, revising quarterly."
+    ],
+    "metric": {
+      "Throughput": 2,
+      "OEE": 1,
+      "LaborProductivity": 2,
+      "RevenuePerProductionHour": 2,
+      "CapacityUtilizationRate": 1,
+      "Downtime": -1
+    },
+    "Cost": 10000
+  },
+  {
+    "problem": "Barcodes or RFID systems fail to track items",
+    "data_source": "inbound-asn data",
+    "solutions": [
+      "Upgrade to rugged scanners and verify label print quality and placement guidelines.",
+      "Conduct quarterly system health checks, replacing damaged tags and recalibrating readers.",
+      "Implement dual‑validation scans (pick and pack) to catch mis‑scans in real time."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 1,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": -1
+    },
+    "Cost": 15000
+  },
+  {
+    "problem": "Reorder points not updated for real demand",
+    "data_source": "item-master data",
+    "solutions": [
+      "Integrate ERP with real‑time sales and consumption data; recalculate reorder points monthly.",
+      "Use demand‑driven MRP with adaptive buffers that self‑adjust to volatility.",
+      "Hold cross‑functional inventory review meetings each month to adjust parameters."
+    ],
+    "metric": {
+      "Throughput": 1,
+      "OEE": 0,
+      "LaborProductivity": 1,
+      "RevenuePerProductionHour": 1,
+      "CapacityUtilizationRate": 0,
+      "Downtime": 0
+    },
+    "Cost": 20000
+  }
+]
+}

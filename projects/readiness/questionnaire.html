@@ -13,11 +13,21 @@
     <!-- Navigation Bar -->
     <nav class="mb-10 bg-white border-b border-slate-200 shadow-sm">
         <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
-            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link">Industry 4.0 Platform</a>
-            <a href="questionnaire.html" class="nav-link font-semibold text-sky-700">Questionnaire</a>
-            <a href="dashboard.html" class="nav-link">Dashboard</a>
-            <a href="learn.html" class="nav-link">Learn about Digitilization</a>
-            <a href="case-studies.html" class="nav-link">Case Studies</a>
+            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link border border-sky-600 px-3 py-2">
+                Industry 4.0 Platform
+            </a>
+            <a href="questionnaire.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition active">
+                Questionnaire
+            </a>
+            <a href="dashboard.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Dashboard
+            </a>
+            <a href="learn.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Learn about Digitilization
+            </a>
+            <a href="case-studies.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Case Studies
+            </a>
         </div>
     </nav>
 
@@ -36,11 +46,57 @@
 
         <form id="connectivityForm" class="space-y-12">
 
-            <!-- Form Sections will be injected here by JavaScript -->
-            <div id="form-container"></div>
+            <!-- Company Details Section -->
+            <div id="company-details-section" class="space-y-8 bg-white p-6 sm:p-8 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-200 pb-4 mb-6">Enter Your Company Name</h2>
+                <div class="relative">
+                    <input id="company-name" name="company-name" placeholder="Enter your company name" class="w-full bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    <ul id="autocomplete-list" class="absolute z-10 w-full bg-white border border-slate-200 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                        <!-- Suggestions will be dynamically populated here -->
+                    </ul>
+                </div>
+                <p id="company-error" class="text-red-500 text-sm mt-2 hidden">Company not found. Please enter a valid company name.</p>
+                <div id="company-details" class="hidden bg-slate-50 border border-slate-200 rounded-lg p-4">
+                    <h3 class="text-lg font-semibold text-slate-700 mb-4">Company Details</h3>
+                    <ul id="company-details-list" class="space-y-2 text-slate-600">
+                        <!-- Company details will be dynamically populated here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Phase 1: Initial Questions -->
+            <div id="initial-questions" class="space-y-8 bg-white p-6 sm:p-8 rounded-xl shadow-md hidden">
+                <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-200 pb-4 mb-6">First, let's understand your priorities.</h2>
+                
+                <!-- Priority Ranking -->
+                <div>
+                    <label class="block mb-3 font-medium text-slate-700">Rank these areas in order of importance for your business (1 = most important).</label>
+                    <div id="priority-ranking" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Ranking dropdowns will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Biggest Challenges -->
+                <div>
+                    <label class="block mb-3 font-medium text-slate-700">What are your top 3 biggest challenges right now?</label>
+                    <div id="challenges-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        <!-- Challenge checkboxes will be injected here -->
+                    </div>
+                    <p id="challenge-error" class="text-red-500 text-sm mt-2 hidden">Please select up to 3 challenges.</p>
+                </div>
+
+                <div class="text-center pt-4">
+                    <button type="button" id="next-button" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sky-300">
+                        Continue to Audit →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Phase 2: Form Sections will be injected here by JavaScript -->
+            <div id="form-container" class="hidden"></div>
 
             <!-- Submission Button -->
-            <div class="mt-12 text-center">
+            <div id="submit-container" class="mt-12 text-center hidden">
                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300">
                     Generate Connectivity Report
                 </button>
@@ -56,313 +112,549 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const questions = {
-    "Production & Operations": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M2 7v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M20 7v10"></path><path d="M16 7v10"></path><path d="M12 7v10"></path><path d="M8 7v10"></path></svg>`,
+            const companyInput = document.getElementById('company-name');
+            const autocompleteList = document.getElementById('autocomplete-list');
+            const companyError = document.getElementById('company-error');
+            const companyDetails = document.getElementById('company-details');
+            const companyDetailsList = document.getElementById('company-details-list');
+            const initialQuestionsContainer = document.getElementById('initial-questions'); // Declare only once
+
+            // Load industry data
+            let industryData = [];
+            fetch('industrydata.json')
+                .then(response => response.json())
+                .then(data => {
+                    industryData = data;
+                })
+                .catch(error => console.error('Error loading industry data:', error));
+
+            // Show suggestions only when at least 3 characters are typed
+            companyInput.addEventListener('input', () => {
+                const query = companyInput.value.trim().toLowerCase();
+                autocompleteList.innerHTML = '';
+                if (query.length >= 3) {
+                    const suggestions = industryData.filter(company => company.Company && company.Company.toLowerCase().includes(query));
+                    if (suggestions.length > 0) {
+                        suggestions.forEach(company => {
+                            const li = document.createElement('li');
+                            li.textContent = company.Company;
+                            li.className = 'px-4 py-2 cursor-pointer hover:bg-slate-100';
+                            li.addEventListener('click', () => {
+                                companyInput.value = company.Company;
+                                autocompleteList.classList.add('hidden');
+                                companyInput.dispatchEvent(new Event('input')); // Trigger input event for further processing
+                            });
+                            autocompleteList.appendChild(li);
+                        });
+                        autocompleteList.classList.remove('hidden');
+                    } else {
+                        autocompleteList.classList.add('hidden');
+                    }
+                } else {
+                    autocompleteList.classList.add('hidden');
+                }
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!autocompleteList.contains(e.target) && e.target !== companyInput) {
+                    autocompleteList.classList.add('hidden');
+                }
+            });
+
+            // Search for company details
+            companyInput.addEventListener('input', () => {
+                const companyName = companyInput.value.trim().toLowerCase();
+                const company = industryData.find(c => c.Company && c.Company.toLowerCase() === companyName);
+
+                if (company) {
+                    companyError.classList.add('hidden');
+                    companyDetails.classList.remove('hidden');
+                    companyDetailsList.innerHTML = `
+                        <li><strong>Company ID:</strong> ${company['Company ID']}</li>
+                        <li><strong>Address:</strong> ${company['Physical Address']}, ${company['Physical City']}, ${company['Physical State']} ${company['Physical Zip']}</li>
+                        <li><strong>Phone:</strong> ${company['Phone']}</li>
+                        <li><strong>Website:</strong> <a href="https://${company['Website']}" target="_blank" class="text-sky-600 underline">${company['Website']}</a></li>
+                        <li><strong>Employees:</strong> ${company['Employees']}</li>
+                        <li><strong>Total Employees:</strong> ${company['Total Employees'] || 'N/A'}</li>
+                        <li><strong>Annual Sales:</strong> ${company['Annual Sales']}</li>
+                        <li><strong>Year Established:</strong> ${company['Year Established']}</li>
+                        <li><strong>Ownership:</strong> ${company['Ownership']}</li>
+                        <li><strong>Business Description:</strong> ${company['Business Description']}</li>
+                        <li><strong>Primary SIC Code:</strong> ${company['Primary SIC Code']} (${company['Primary SIC Code Description']})</li>
+                        <li><strong>NAICS Code:</strong> ${company['NAICS Code']} (${company['NAICS Code Description']})</li>
+                    `;
+                    initialQuestionsContainer.classList.remove('hidden');
+                } else {
+                    companyError.classList.remove('hidden');
+                    companyDetails.classList.add('hidden');
+                    initialQuestionsContainer.classList.add('hidden');
+                }
+            });
+
+            /* ------------------------------------------------------------------
+ * SQDCI QUESTION SET
+ * ----------------------------------------------------------------*/
+const questions = {
+  /* ==========================  S — SAFETY  ========================== */
+  "Safety": {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+    subCategories: {
+      "Mechanical & Energy Hazards": {
         items: {
-            "production_schedule": {
-                label: "Production Schedule",
-                systems: ["MES", "ERP", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "dispatch_list": {
-                label: "Dispatch List",
-                systems: ["MES", "ERP", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "line_speed_setpoint": {
-                label: "Line Speed Setpoint",
-                systems: ["MES", "SCADA", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "piece_counts": {
-                label: "Piece Counts",
-                systems: ["MES", "SCADA", "ERP", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "scrap_reasons": {
-                label: "Scrap Reasons",
-                systems: ["MES", "ERP", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "cycle_time": {
-                label: "Cycle Time",
-                systems: ["MES", "SCADA", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "downtime_events": {
-                label: "Downtime Events",
-                systems: ["MES", "SCADA", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "change_overs": {
-                label: "Change-overs",
-                systems: ["MES", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "first_pass_yield": {
-                label: "First Pass Yield",
-                systems: ["MES", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "batch_step": {
-                label: "Batch Step Data",
-                systems: ["MES", "SCADA", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "operator_logbook": {
-                label: "Operator Logbook",
-                systems: ["MES", "Whiteboard", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
+          machine_guard_audits: { label: "Machine-Guard Audits", systems: ["QMS","MES","Spreadsheet","Paper","Legacy / Other"], rationale: "Tracks if physical barriers are in place to prevent contact with moving parts, pinch points, or ejected materials.", prompt: "How are guard audits performed and documented?" },
+          loto_compliance:      { label: "LOTO Compliance",      systems: ["QMS","MES","Spreadsheet","Paper","Legacy / Other"], rationale: "Monitors the proper use of Lock-Out/Tag-Out procedures to de-energize equipment during service, preventing unexpected startups.", prompt: "How is LOTO compliance verified on the floor?" }
         }
-    },
-    "Maintenance & Equipment Health": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
+      },
+      "Electrical & Thermal": {
         items: {
-            "run_hours": {
-                label: "Run Hours",
-                systems: ["CMMS", "MES", "SCADA", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "vibration_trend": {
-                label: "Vibration Trend",
-                systems: ["SCADA", "MES", "CMMS", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "temperature_trend": {
-                label: "Temperature Trend",
-                systems: ["SCADA", "MES", "CMMS", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "lubrication_usage": {
-                label: "Lubrication Usage",
-                systems: ["CMMS", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "maintenance_work_orders": {
-                label: "Maintenance Work Orders",
-                systems: ["CMMS", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "failure_modes": {
-                label: "Failure Modes",
-                systems: ["CMMS", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "parts_usage": {
-                label: "Parts Usage",
-                systems: ["CMMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "calibration_schedule": {
-                label: "Calibration Schedule",
-                systems: ["CMMS", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "warranty_claims_asset": {
-                label: "Asset Warranty Claims",
-                systems: ["CMMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "service_contracts": {
-                label: "Service Contracts",
-                systems: ["CMMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
+          arc_flash_settings: { label: "Arc-Flash Settings", systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Ensures electrical systems are correctly configured and labeled to protect workers from dangerous arc-flash events.", prompt: "How are arc-flash settings managed and updated?" },
+          hot_work_permits:   { label: "Hot-Work Permits",   systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Manages and tracks work like welding or grinding near flammable materials to prevent fires and explosions.", prompt: "Describe your hot-work permit process." }
         }
-    },
-    "Quality": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
+      },
+      "Chemical & Biological": {
         items: {
-            "spc_charts": {
-                label: "SPC Charts",
-                systems: ["QMS", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "inspection_results": {
-                label: "Inspection Results",
-                systems: ["QMS", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "vision_inspection": {
-                label: "Vision Inspection Data",
-                systems: ["MES", "QMS", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "deviation_tickets": {
-                label: "Deviation Tickets",
-                systems: ["QMS", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "rework_logs": {
-                label: "Rework Logs",
-                systems: ["QMS", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "audit_compliance": {
-                label: "Audit & Compliance",
-                systems: ["QMS", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "gauge_rr": {
-                label: "Gauge R&R Studies",
-                systems: ["QMS", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "customer_return_quality": {
-                label: "Customer Returns (Quality)",
-                systems: ["QMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "emissions": {
-                label: "Emissions Data",
-                systems: ["MES", "QMS", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "safety_incidents": {
-                label: "Safety Incidents",
-                systems: ["QMS", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
+          chemical_inventory: { label: "Chemical Inventory", systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Tracks all hazardous chemicals on-site, ensuring proper storage, labeling (HazCom), and availability of Safety Data Sheets (SDS).", prompt: "How is your chemical inventory managed and updated?" },
+          air_monitor:        { label: "Air-Monitor Data",   systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Measures airborne contaminants to ensure they are below permissible exposure limits, protecting respiratory health.", prompt: "How is air-monitoring data collected and analyzed?" }
         }
-    },
-    "Inventory & Flow": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>`,
+      },
+      "Physical Agents & Ergonomics": {
         items: {
-            "item_master": {
-                label: "Item Master",
-                systems: ["WMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "wip_balance": {
-                label: "WIP Balance",
-                systems: ["MES", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "finished_goods_location": {
-                label: "Finished Goods Location",
-                systems: ["WMS", "ERP", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "cycle_counts": {
-                label: "Cycle Counts",
-                systems: ["WMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "shelf_life": {
-                label: "Shelf Life Data",
-                systems: ["WMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "inbound_asn": {
-                label: "Inbound ASNs",
-                systems: ["WMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "outbound_shipments": {
-                label: "Outbound Shipments",
-                systems: ["WMS", "ERP", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "reorder_points": {
-                label: "Reorder Points",
-                systems: ["WMS", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
+          ppe_compliance:        { label: "PPE Compliance",        systems: ["QMS","MES","Spreadsheet","Paper","Legacy / Other"], rationale: "Audits the correct use of Personal Protective Equipment (e.g., glasses, gloves, hearing protection) for specific tasks.", prompt: "How is PPE compliance tracked and enforced?" },
+          ergonomic_assessments: { label: "Ergonomic Assessments", systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Identifies and mitigates risks from repetitive strain, awkward postures, or heavy lifting to prevent musculoskeletal injuries.", prompt: "How are ergonomic assessments conducted and documented?" },
+          noise_exposure:        { label: "Noise Exposure",        systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Monitors noise levels in work areas to prevent long-term hearing damage among employees.", prompt: "How is noise exposure monitored and controlled?" }
         }
-    },
-    "Energy & Utilities": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>`,
+      },
+      "Human Factors & Culture": {
         items: {
-            "energy_meter": {
-                label: "Main Energy Meter",
-                systems: ["SCADA", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "sub_meter": {
-                label: "Sub-meter Data",
-                systems: ["SCADA", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "compressed_air": {
-                label: "Compressed Air Usage",
-                systems: ["SCADA", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "steam_flow": {
-                label: "Steam Flow",
-                systems: ["SCADA", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "hvac_runtime": {
-                label: "HVAC Runtime",
-                systems: ["SCADA", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
+          safety_incidents:        { label: "Safety Incidents",        systems: ["QMS","MES","Spreadsheet","Paper","Legacy / Other"], rationale: "The primary lagging indicator of safety performance, used for root cause analysis and corrective action.", prompt: "How are safety incidents reported and analyzed?" },
+          near_misses:             { label: "Near-Miss Reports",       systems: ["QMS","MES","Spreadsheet","Paper","Legacy / Other"], rationale: "A leading indicator that captures events that could have caused harm, allowing for proactive risk mitigation.", prompt: "How are near-miss reports collected and reviewed?" },
+          safety_training_records: { label: "Safety-Training Records", systems: ["QMS","MES","Spreadsheet","Paper","Legacy / Other"], rationale: "Tracks completion and recertification dates for all required safety training, ensuring a competent workforce.", prompt: "How are safety-training records maintained and updated?" },
+          emergency_drills:        { label: "Emergency Drills",        systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Documents the execution and outcomes of fire, spill, or other emergency drills to test preparedness.", prompt: "How are emergency drills planned and evaluated?" }
         }
-    },
-    "People / Labour": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
+      },
+      "Cyber-Physical Systems": {
         items: {
-            "time_clock": {
-                label: "Time Clock Data",
-                systems: ["ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "overtime_hours": {
-                label: "Overtime Hours",
-                systems: ["ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "skill_matrix": {
-                label: "Skill Matrix",
-                systems: ["ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
+          cyber_incidents: { 
+            label: "Cyber Incidents", 
+            systems: ["SCADA","MES","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Tracks security incidents that could impact operational technology and data integrity.", 
+            prompt: "How are cyber incidents tracked and mitigated?" 
+          }
         }
-    },
-    "Customer & Service": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><line x1="8" x2="8" y1="2" y2="4"></line><line x1="16" x2="16" y1="2" y2="4"></line></svg>`,
-        items: {
-            "customer_orders": {
-                label: "Customer Orders",
-                systems: ["CRM", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "customer_forecasts": {
-                label: "Customer Forecasts",
-                systems: ["CRM", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "warranty_claims_field": {
-                label: "Field Warranty Claims",
-                systems: ["CRM", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "customer_feedback": {
-                label: "Customer Feedback",
-                systems: ["CRM", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "service_tickets": {
-                label: "Service Tickets",
-                systems: ["CRM", "ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
-        }
-    },
-    "IT / OT Reliability": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`,
-        items: {
-            "scada_alarms": {
-                label: "SCADA Alarms",
-                systems: ["SCADA", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "opc_heartbeats": {
-                label: "OPC Heartbeats",
-                systems: ["SCADA", "MES", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
-        }
-    },
-    "Finance / Cost Linkers": {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 text-indigo-500"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`,
-        items: {
-            "cost_variances": {
-                label: "Cost Variances",
-                systems: ["ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            },
-            "energy_ledger": {
-                label: "Energy Ledger",
-                systems: ["ERP", "Spreadsheet", "Paper", "Legacy / Other"]
-            }
-        }
+      }
     }
+  },
+
+  /* ==========================  Q — QUALITY  ========================= */
+  "Quality": {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    subCategories: {
+      "Materials & Suppliers": {
+        items: {
+          supplier_ppap:  { label: "Supplier PPAP",  systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Verifies that suppliers can meet product specifications before full production begins.", prompt: "Describe your PPAP submission and approval process." },
+          material_certs: { label: "Material Certs", systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Confirms that incoming raw materials meet required chemical and physical properties.", prompt: "How are material certs received and verified?" }
+        }
+      },
+      "Process Capability & Control": {
+        items: {
+          spc_charts:         { label: "SPC Charts",         systems: ["QMS","MES","Spreadsheet","Paper","Legacy / Other"], rationale: "Uses statistical methods to monitor and control a process, ensuring it operates within its expected capability.", prompt: "How are SPC charts generated and reviewed?" },
+          first_pass_yield:   { label: "First-Pass Yield",   systems: ["MES","QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Measures the percentage of units that complete a process and meet quality standards without being scrapped or reworked.", prompt: "How is first-pass yield calculated and tracked?" },
+          defect_codes:       { label: "Defect Codes",       systems: ["MES","QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Categorizes failures to identify trends and prioritize problem-solving efforts (Pareto analysis).", prompt: "How are defect codes assigned and analyzed?" },
+          calibration_status: { label: "Calibration Status", systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Tracks whether measurement and test equipment is within its calibration interval to ensure accuracy.", prompt: "How is calibration status monitored and updated?" }
+        }
+      },
+      "Documentation & Data Integrity": {
+        items: {
+          traceability:   { label: "Traceability",   systems: ["MES","QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Enables the tracking of parts, batches, and materials from supplier to finished product, crucial for recalls and analysis.", prompt: "How is traceability ensured across the supply chain?" },
+          audit_findings: { label: "Audit Findings", systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Tracks non-conformances found during internal or external audits for systemic improvement.", prompt: "How are audit findings documented and resolved?" },
+          capa_actions:   { label: "CAPA Actions",   systems: ["QMS","Spreadsheet","Paper","Legacy / Other"], rationale: "Manages Corrective and Preventive Actions to ensure that root causes of issues are resolved and do not recur.", prompt: "How are CAPA actions tracked and implemented?" }
+        }
+      },
+      "Field Performance": {
+        items: {
+          field_returns:         { label: "Field Returns",           systems: ["CRM","ERP","Spreadsheet","Paper","Legacy / Other"], rationale: "Tracks products returned from customers, providing direct feedback on quality and reliability issues.", prompt: "How are field returns tracked and analyzed?" },
+          warranty_claims_field: { label: "Warranty Claims (Field)", systems: ["CRM","ERP","Spreadsheet","Paper","Legacy / Other"], rationale: "Monitors the cost and frequency of warranty claims, which is a key indicator of the cost of poor quality.", prompt: "How are warranty claims processed and reviewed?" }
+        }
+      }
+    }
+  },
+
+  /* ==========================  D — DELIVERY  ======================== */
+  "Delivery": {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3z"/><path d="M3 13h18v8H3z"/><path d="M5 9h4v4H5z"/><path d="M15 9h4v4h-4z"/></svg>`,
+    subCategories: {
+      "Production & Inventory": {
+        items: {
+          production_schedule_adherence: { label: "Schedule Adherence", systems: ["MES","ERP","Spreadsheet","Paper","Legacy / Other"], rationale: "Compares actual production output to the planned schedule to identify delays or advancements.", prompt: "How is schedule adherence monitored and reported?" },
+          dispatch_list:                { label: "Dispatch List",      systems: ["MES","ERP","Spreadsheet","Paper","Legacy / Other"], rationale: "Lists all orders due for shipment, ensuring timely delivery to customers.", prompt: "How is the dispatch list managed and updated?" },
+          inventory_turns:             { label: "Inventory Turns",    systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], rationale: "Calculates how often inventory is sold and replaced over a period, indicating inventory management efficiency.", prompt: "How are inventory turns calculated and optimized?" },
+          stockout_events:             { label: "Stock-out Events",   systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], rationale: "Tracks instances where items are out of stock, impacting order fulfillment and customer satisfaction.", prompt: "How are stock-out events tracked and mitigated?" },
+          shelf_life_expiry:           { label: "Shelf-Life Expiry",  systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], rationale: "Monitors products for approaching expiration dates to reduce waste and ensure quality." },
+          obsolescence:                { label: "Obsolescence",       systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], rationale: "Identifies slow-moving or obsolete inventory to optimize stock levels and reduce carrying costs." }
+        }
+      },
+      "Logistics & Distribution": {
+        items: {
+          on_time_delivery: { 
+            label: "On-Time Delivery", 
+            systems: ["ERP","MES","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Measures the percentage of orders delivered on or before the promised date.", 
+            prompt: "How is on-time delivery performance tracked and improved?" 
+          },
+          asn_accuracy: { 
+            label: "ASN Accuracy", 
+            systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Compares Advanced Shipping Notice details with actual receipts to identify discrepancies.", 
+            prompt: "How is ASN accuracy monitored and verified?" 
+          },
+          logistics_status: { 
+            label: "Logistics Status", 
+            systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Provides real-time visibility into the status of shipments and deliveries.", 
+            prompt: "How is logistics status tracked and communicated?" 
+          },
+          expedite_orders: { 
+            label: "Expedite Orders", 
+            systems: ["ERP","MES","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Tracks orders that are prioritized for faster processing and delivery.", 
+            prompt: "How are expedite orders tracked and managed?" 
+          },
+          regulatory_holds: { 
+            label: "Regulatory Holds", 
+            systems: ["QMS","MES","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Monitors orders or shipments held up due to regulatory compliance issues.", 
+            prompt: "How are regulatory holds tracked and resolved?" 
+          }
+        }
+      },
+      "Labor & Resources": {
+        items: {
+          labor_availability: { 
+            label: "Labor Availability", 
+            systems: ["MES","ERP","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Monitors the availability of labor resources to meet production and operational needs.", 
+            prompt: "How is labor availability tracked and managed?" 
+          },
+          overtime_cost: { 
+            label: "Overtime Cost", 
+            systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Tracks costs associated with overtime labor, indicating potential labor shortages or scheduling inefficiencies.", 
+            prompt: "How are overtime costs monitored and controlled?" 
+          },
+          training_recruitment_cost: { 
+            label: "Training / Recruitment", 
+            systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+            rationale: "Monitors expenses related to training new hires and ongoing employee development.", 
+            prompt: "How are training and recruitment costs tracked?" 
+          }
+        }
+      }
+    }
+  },
+
+  /* ==========================  C — COST  ============================ */
+  "Cost": {
+    items: {
+      scrap_cost: { 
+        label: "Scrap Cost", 
+        systems: ["ERP","MES","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the cost of scrapped materials, which is a key indicator of waste.", 
+        prompt: "How is scrap cost calculated and minimized?" 
+      },
+      rework_hours: { 
+        label: "Rework Hours", 
+        systems: ["MES","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the time spent reworking defective products, which impacts efficiency.", 
+        prompt: "How are rework hours tracked and reduced?" 
+      },
+      oee_loss: { 
+        label: "OEE Loss ($)", 
+        systems: ["MES","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Calculates the financial impact of Overall Equipment Effectiveness (OEE) losses.", 
+        prompt: "How is OEE loss calculated and addressed?" 
+      },
+      consumable_usage: { 
+        label: "Consumable Usage", 
+        systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the consumption of materials like lubricants, tools, and other consumables.", 
+        prompt: "How is consumable usage monitored and optimized?" 
+      },
+      energy_consumption: { 
+        label: "Energy Consumption", 
+        systems: ["SCADA","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Monitors energy usage to identify inefficiencies and reduce costs.", 
+        prompt: "How is energy consumption tracked and reduced?" 
+      },
+      demand_charge: { 
+        label: "Demand Charge", 
+        systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks peak energy demand charges to optimize energy usage.", 
+        prompt: "How are demand charges monitored and managed?" 
+      },
+      maintenance_cost: { 
+        label: "Maintenance Cost", 
+        systems: ["CMMS","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the cost of maintaining equipment to ensure reliability.", 
+        prompt: "How are maintenance costs tracked and optimized?" 
+      },
+      premium_freight_cost: { 
+        label: "Premium Freight Cost", 
+        systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the cost of expedited shipping to meet urgent demands.", 
+        prompt: "How are premium freight costs monitored and minimized?" 
+      },
+      warranty_cost: { 
+        label: "Warranty Cost", 
+        systems: ["ERP","CRM","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the cost of warranty claims, which reflects product quality.", 
+        prompt: "How are warranty costs tracked and reduced?" 
+      },
+      regulatory_fine: { 
+        label: "Regulatory Fine", 
+        systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks fines incurred due to non-compliance with regulations.", 
+        prompt: "How are regulatory fines tracked and prevented?" 
+      },
+      carrying_cost: { 
+        label: "Carrying Cost", 
+        systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the cost of holding inventory, including storage and insurance.", 
+        prompt: "How are carrying costs calculated and reduced?" 
+      },
+      capital_tied_up: { 
+        label: "Capital Tied-Up", 
+        systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the capital tied up in inventory and other assets.", 
+        prompt: "How is capital tied up in inventory monitored?" 
+      },
+      insurance_claim: { 
+        label: "Insurance Claims", 
+        systems: ["ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks claims filed for damages or losses to recover costs.", 
+        prompt: "How are insurance claims tracked and managed?" 
+      }
+    }
+  },
+
+  /* ==========================  I — INVENTORY  ======================= */
+  "Inventory": {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>`,
+    items: {
+      item_master: { 
+        label: "Item Master", 
+        systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Maintains a centralized record of all inventory items.", 
+        prompt: "How is the item master maintained and updated?" 
+      },
+      raw_stock_level: { 
+        label: "Raw Stock Level", 
+        systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the quantity of raw materials available for production.", 
+        prompt: "How are raw stock levels monitored and replenished?" 
+      },
+      wip_balance: { 
+        label: "WIP Balance", 
+        systems: ["WMS","MES","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the value and quantity of work-in-progress inventory.", 
+        prompt: "How is WIP inventory tracked and managed?" 
+      },
+      finished_goods_quantity: { 
+        label: "Finished Goods Qty", 
+        systems: ["WMS","ERP","MES","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the quantity of finished goods ready for shipment.", 
+        prompt: "How are finished goods quantities tracked and updated?" 
+      },
+      cycle_count_accuracy: { 
+        label: "Cycle-Count Accuracy", 
+        systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Measures the accuracy of inventory counts during cycle counts.", 
+        prompt: "How is cycle-count accuracy measured and improved?" 
+      },
+      kanban_card: { 
+        label: "Kanban Card Status", 
+        systems: ["MES","WMS","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks the status of Kanban cards to manage inventory flow.", 
+        prompt: "How is Kanban card status monitored and updated?" 
+      },
+      consignment_inventory: { 
+        label: "Consignment Inventory", 
+        systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks inventory owned by suppliers but stored on-site.", 
+        prompt: "How is consignment inventory tracked and reconciled?" 
+      },
+      warehouse_space_utilisation: { 
+        label: "Warehouse Utilisation", 
+        systems: ["WMS","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Measures the utilization of warehouse space to optimize storage.", 
+        prompt: "How is warehouse space utilization monitored and optimized?" 
+      },
+      inbound_asn: { 
+        label: "Inbound ASNs", 
+        systems: ["WMS","ERP","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks Advanced Shipping Notices for incoming shipments.", 
+        prompt: "How are inbound ASNs tracked and verified?" 
+      },
+      outbound_shipments: { 
+        label: "Outbound Shipments", 
+        systems: ["WMS","ERP","MES","Spreadsheet","Paper","Legacy / Other"], 
+        rationale: "Tracks shipments leaving the warehouse to ensure timely delivery.", 
+        prompt: "How are outbound shipments tracked and managed?" 
+      }
+    }
+  }
 };
 
+const challenges = [
+    { text: "Unplanned Downtime", emoji: "⏱️" },
+    { text: "High Scrap / Rework", emoji: "🗑️" },
+    { text: "Poor On-time Delivery", emoji: "🚚" },
+    { text: "Inaccurate Inventory", emoji: "📦" },
+    { text: "High Maintenance Costs", emoji: "💸" },
+    { text: "Safety Incidents", emoji: "⚠️" },
+    { text: "Low OEE", emoji: "📉" },
+    { text: "Long Changeover Times", emoji: "🔄" },
+    { text: "Supply Chain Delays", emoji: "🔗" }
+];
+
             const formContainer = document.getElementById('form-container');
+            const nextButton = document.getElementById('next-button');
+            const submitContainer = document.getElementById('submit-container');
             let totalQuestions = 0;
-            
-            Object.keys(questions).forEach(category => {
-                totalQuestions += Object.keys(questions[category].items).length;
-            });
+            let userPriorities = {};
 
-            // Generate form sections
-            Object.entries(questions).forEach(([category, data], index) => {
-                const section = document.createElement('div');
-                section.className = 'question-section bg-white p-6 sm:p-8 rounded-xl shadow-md';
-                section.style.animationDelay = `${index * 100}ms`;
+            // --- Phase 1: Setup Initial Questions ---
+            function setupInitialQuestions() {
+                const priorityContainer = document.getElementById('priority-ranking');
+                const categories = Object.keys(questions);
+                priorityContainer.innerHTML = categories.map(category => `
+                    <div class="flex items-center gap-3">
+                        <select name="prio_${category}" class="w-20 bg-slate-100 border-2 border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">-</option>
+                            ${categories.map((_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
+                            <option value="99">N/A</option>
+                        </select>
+                        <label class="font-medium text-slate-700">${category}</label>
+                    </div>
+                `).join('');
 
-                let sectionHtml = `<h2 class="text-2xl font-bold text-slate-800 border-b border-slate-200 pb-4 mb-6 flex items-center">${data.icon} ${category}</h2>`;
-                sectionHtml += '<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">';
+                const challengesContainer = document.getElementById('challenges-list');
+                challengesContainer.innerHTML = challenges.map(challenge => `
+                    <div class="flex items-center">
+                        <input type="checkbox" id="ch_${challenge.text.replace(/\s+/g, '')}" name="challenge" value="${challenge.text}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <label for="ch_${challenge.text.replace(/\s+/g, '')}" class="ml-2 block text-sm text-slate-600">${challenge.emoji} ${challenge.text}</label>
+                    </div>
+                `).join('');
 
-                Object.entries(data.items).forEach(([qid, { label, systems }]) => {
-                    sectionHtml += `
-                        <div class="flex flex-col">
-                            <label for="${qid}" class="mb-2 font-medium text-slate-700">${label}</label>
-                            <select id="${qid}" name="${qid}" class="w-full bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-                                <option value="" selected disabled>Select system...</option>
-                                <option value="Not Collected">Not Collected</option>
-                                <option value="" disabled class="text-slate-400">────────────────</option>`;
-                    systems.forEach(system => {
-                        sectionHtml += `<option value="${system}">${system}</option>`;
-                    });
-                    sectionHtml += `</select>
-                        </div>`;
+                // Challenge checkbox validation
+                challengesContainer.addEventListener('change', () => {
+                    const checked = challengesContainer.querySelectorAll('input[type="checkbox"]:checked');
+                    const errorEl = document.getElementById('challenge-error');
+                    if (checked.length > 3) {
+                        errorEl.classList.remove('hidden');
+                        checked.forEach((c, i) => { if (i > 2) c.checked = false; });
+                    } else {
+                        errorEl.classList.add('hidden');
+                    }
+                });
+            }
+
+            // --- Phase 2: Generate Detailed Form ---
+            function generateDetailedForm(orderedCategories) {
+                orderedCategories.forEach((category, index) => {
+                    const categoryData = questions[category];
+                    // Handle both structures: with and without subCategories
+                    const hasSubCategories = categoryData.subCategories && Object.keys(categoryData.subCategories).length > 0;
+
+                    const section = document.createElement('div');
+                    section.className = 'question-section bg-white p-6 sm:p-8 rounded-xl shadow-md';
+                    section.style.animationDelay = `${index * 100}ms`;
+
+                    let sectionHtml = `<h2 class="text-2xl font-bold text-slate-800 border-b border-slate-200 pb-4 mb-6 flex items-center">${categoryData.icon} ${category}</h2>`;
+                    
+                    const processItems = (items) => {
+                        let html = '<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">';
+                        Object.entries(items).forEach(([qid, { label, systems, rationale, prompt }]) => {
+                            totalQuestions++;
+                            html += `
+                                <div class="flex flex-col space-y-3">
+                                    <label for="${qid}" class="font-medium text-slate-700 flex items-center">
+                                        ${label}
+                                        ${rationale ? `
+                                        <span class="group relative ml-2">
+                                            <span class="text-sky-600 cursor-help">&#9432;</span>
+                                            <span class="absolute bottom-full left-1/2 -translate-x-1/2 w-64 p-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                                                ${rationale}
+                                            </span>
+                                        </span>` : ''}
+                                    </label>
+                                    ${prompt ? `<p class="text-sm text-slate-500">${prompt}</p>` : ''}
+                                    <input type="text" name="${qid}_details" placeholder="Provide additional details here" class="w-full bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
+                                    <select id="${qid}" name="${qid}" class="w-full bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                        <option value="" selected disabled>Where is this data stored?</option>
+                                        <option value="Not Collected">Not Collected</option>
+                                        <option value="" disabled class="text-slate-400">────────────────</option>
+                                        ${systems.map(system => `<option value="${system}">${system}</option>`).join('')}
+                                    </select>
+                                </div>`;
+                        });
+                        html += '</div>';
+                        return html;
+                    };
+
+                    if (hasSubCategories) {
+                        Object.entries(categoryData.subCategories).forEach(([subCatName, subCatData]) => {
+                            sectionHtml += `<h3 class="text-lg font-semibold text-slate-700 mt-6 mb-4 border-b border-slate-200 pb-2">${subCatName}</h3>`;
+                            sectionHtml += processItems(subCatData.items);
+                        });
+                    } else if (categoryData.items) {
+                        sectionHtml += processItems(categoryData.items);
+                    }
+
+                    section.innerHTML = sectionHtml;
+                    formContainer.appendChild(section);
+                });
+                updateProgress(); // Initial progress for the detailed form
+            }
+
+            nextButton.addEventListener('click', () => {
+                const prioritySelects = document.querySelectorAll('#priority-ranking select');
+                const priorities = {};
+                const rankedPriorities = {};
+                let isValid = true;
+
+                prioritySelects.forEach(select => {
+                    const category = select.name.replace('prio_', '');
+                    const value = select.value;
+                    if (!value) {
+                        isValid = false;
+                    }
+                    priorities[category] = value;
+                    // Only include categories that have a rank (i.e., not 'N/A')
+                    if (value && value !== '99') {
+                        rankedPriorities[category] = parseInt(value, 10);
+                    }
                 });
 
-                sectionHtml += '</div>';
-                section.innerHTML = sectionHtml;
-                formContainer.appendChild(section);
+                if (!isValid) {
+                    alert('Please rank all priority areas.');
+                    return;
+                }
+                
+                userPriorities.ranking = priorities;
+                userPriorities.challenges = Array.from(document.querySelectorAll('input[name="challenge"]:checked')).map(cb => cb.value);
+
+                const orderedCategories = Object.keys(rankedPriorities).sort((a, b) => rankedPriorities[a] - rankedPriorities[b]);
+
+                initialQuestionsContainer.classList.add('hidden');
+                formContainer.classList.remove('hidden');
+                submitContainer.classList.remove('hidden');
+                
+                generateDetailedForm(orderedCategories);
             });
+            
+            // Initialize Phase 1
+            setupInitialQuestions();
 
             const form = document.getElementById('connectivityForm');
             const progressBar = document.getElementById('progressBar');
@@ -384,10 +676,11 @@
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(form);
-                const responses = {};
+                const detailedResponses = {};
                 let hasError = false;
+
                 // Highlight unfilled selects in red
-                form.querySelectorAll('select').forEach(select => {
+                form.querySelectorAll('select[id]').forEach(select => {
                     if (!select.value) {
                         select.classList.add('border-red-500', 'bg-red-100');
                         hasError = true;
@@ -396,20 +689,65 @@
                     }
                 });
                 for (let [key, value] of formData.entries()) {
-                    responses[key] = value;
+                    if (!key.startsWith('prio_') && key !== 'challenge' && !key.endsWith('_details')) {
+                        detailedResponses[key] = value;
+                    }
                 }
-                if (Object.keys(responses).length < totalQuestions || hasError) {
-                    alert('Please answer all questions before generating the report.');
+                if (Object.keys(detailedResponses).length < totalQuestions || hasError) {
+                    alert('Please answer all questions in the audit before generating the report.');
                     return;
                 }
+
+                const finalReport = {
+                    priorities: userPriorities,
+                    responses: detailedResponses
+                };
+
                 // Save to localStorage and redirect
-                localStorage.setItem('responses', JSON.stringify(responses));
+                localStorage.setItem('responses', JSON.stringify(finalReport));
                 window.location.href = 'dashboard.html';
             });
             
-            // Initial progress update
+            // Initial progress update (will be 0)
             updateProgress();
         });
+    </script>
+    <script type="module">
+        // ... your existing questionnaire.html script ...
+
+        // --- NEW: Function to save selected company data ---
+        // This function should be called when a user selects a company from the search results.
+        // You will need to integrate this call into your existing company selection logic.
+        // For example, if you have a function that runs when a company `div` is clicked:
+        /*
+            function handleCompanySelection(companyDataObject) {
+                saveCompanyData(companyDataObject);
+                // ... any other logic you have ...
+            }
+        */
+        function saveCompanyData(company) {
+            if (company && typeof company === 'object') {
+                localStorage.setItem('companyData', JSON.stringify(company));
+                console.log('Saved company data to localStorage:', company);
+            }
+        }
+
+        // Example of how you might integrate this.
+        // If your search results are in a container with id="search-results",
+        // you could use event delegation.
+        const searchResultsContainer = document.getElementById('search-results'); // Use the actual ID of your results container
+        if (searchResultsContainer) {
+            searchResultsContainer.addEventListener('click', (event) => {
+                const companyElement = event.target.closest('.company-result-item'); // Use the actual class for a single company item
+                if (companyElement && companyElement.dataset.company) {
+                    const companyData = JSON.parse(companyElement.dataset.company);
+                    saveCompanyData(companyData);
+                    // You might want to add a visual confirmation here
+                    console.log(`Selected and saved: ${companyData.Company}`);
+                }
+            });
+        }
+
     </script>
 </body>
 </html>

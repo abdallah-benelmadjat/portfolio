@@ -89,59 +89,126 @@
     <!-- Navigation Bar -->
     <nav class="mb-10 bg-white border-b border-slate-200 shadow-sm">
         <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
-            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link">Industry 4.0 Platform</a>
-            <a href="questionnaire.html" class="nav-link">Questionnaire</a>
-            <a href="dashboard.html" class="nav-link font-semibold text-sky-700">Dashboard</a>
-            <a href="learn.html" class="nav-link">Learn about Digitilization</a>
-            <a href="case-studies.html" class="nav-link">Case Studies</a>
+            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link border border-sky-600 px-3 py-2">
+                Industry 4.0 Platform
+            </a>
+            <a href="questionnaire.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Questionnaire
+            </a>
+            <a href="dashboard.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition active">
+                Dashboard
+            </a>
+            <a href="learn.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Learn about Digitilization
+            </a>
+            <a href="case-studies.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Case Studies
+            </a>
         </div>
     </nav>
     <div class="max-w-7xl mx-auto">
         <header class="text-center mb-6">
             <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Data Maturity & Connectivity Dashboard</h1>
             <p class="mt-2 text-lg text-slate-600">Actionable intelligence on your digital landscape.</p>
-            <div class="mt-2">
+            <div class="mt-4 flex justify-center items-center gap-4">
                 <a href="questionnaire.html" class="text-sky-600 underline hover:text-sky-800 text-base">← Back to Questionnaire</a>
+                <button id="create-report-btn" class="px-4 py-2 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-75 transition-colors">Create Report</button>
             </div>
         </header>
         <div id="no-data-message" class="text-center text-slate-400 text-lg my-12 hidden">
             No responses found. Please complete the <a href="questionnaire.html" class="text-sky-600 underline">questionnaire</a> first.
         </div>
+        <div id="error-message" class="text-center text-red-500 bg-red-100 border border-red-400 rounded p-4 text-lg my-12 hidden">
+            There was an error processing your data. This might be due to incomplete or outdated responses. Please <a href="questionnaire.html" class="text-sky-600 underline">retake the questionnaire</a>.
+        </div>
         <!-- Main View Tabs -->
         <div class="flex justify-center space-x-2 mb-6">
-            <button id="tab-dashboard" class="tab tab-active">Metrics Dashboard</button>
+            <button id="tab-dashboard" class="tab tab-active">Dashboard</button>
             <button id="tab-graph" class="tab">Graph Explorer</button>
         </div>
+
         <!-- Dashboard View -->
-        <main id="view-dashboard" class="view view-active grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Dashboard content from previous version -->
-            <div class="lg:col-span-1 xl:col-span-1 flex flex-col gap-6">
-                <div class="metric-card">
-                    <h2 class="card-title">Correctness Score</h2>
-                    <div id="gauge-chart" style="width: 100%; height: 250px;"></div>
-                </div>
-                <div class="metric-card flex-grow">
-                    <h2 class="card-title">Top 5 Actionable Opportunities</h2>
-                    <ul id="opportunities-list" class="space-y-3"></ul>
+        <main id="view-dashboard" class="view view-active grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Correctness Score -->
+            <div class="metric-card lg:col-span-1 xl:col-span-1">
+                <h3 class="card-title">Data Correctness Score</h3>
+                <div id="gauge-chart" class="w-full h-48"></div>
+            </div>
+            <!-- Data State -->
+            <div class="metric-card lg:col-span-1 xl:col-span-1">
+                <h3 class="card-title">Overall Data State</h3>
+                <div id="pie-chart" class="w-full h-48"></div>
+            </div>
+            <!-- Departmental Digitalization -->
+            <div class="metric-card lg:col-span-1 xl:col-span-2">
+                <h3 class="card-title">Departmental Digitalization</h3>
+                <div id="radar-chart" class="w-full h-48"></div>
+            </div>
+
+            <!-- RE-ORDERED and RE-SIZED CARDS START HERE -->
+
+            <!-- Top Opportunities -->
+            <div class="metric-card lg:col-span-1 xl:col-span-1">
+                <h3 class="card-title">Top 5 Digitalization Opportunities</h3>
+                <div id="opportunities-list" class="space-y-3 px-2"></div>
+            </div>
+
+            <!-- System Workload (resized) -->
+            <div class="metric-card lg:col-span-2 xl:col-span-2">
+                <h3 class="card-title">System Workload (Collected Data Points)</h3>
+                <div id="bar-chart" class="w-full h-72"></div>
+            </div>
+
+            <!-- Top Integrators Card (moved here) -->
+            <div class="metric-card lg:col-span-1 xl:col-span-1 lg:row-span-2">
+                <h3 class="card-title">Top Rated Integrators</h3>
+                <div id="integrators-list" class="space-y-4">
+                    <!-- Integrators will be injected here -->
                 </div>
             </div>
-            <div class="lg:col-span-2 xl:col-span-3 flex flex-col gap-6">
-                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                    <div class="metric-card xl:col-span-1">
-                        <h2 class="card-title">Overall Data State</h2>
-                        <div id="pie-chart" class="chart-container flex items-start" style="height: 370px; align-items: flex-start; padding-top: 12px;"></div>
-                    </div>
-                    <div class="metric-card xl:col-span-2">
-                        <h2 class="card-title">Departmental Digitalization</h2>
-                         <div id="radar-chart" class="chart-container" style="height: 300px;"></div>
+
+            <!-- Priorities vs. Performance Gap Analysis Card (resized) -->
+            <div class="metric-card lg:col-span-3 xl:col-span-3">
+                <h3 class="card-title">Priorities vs. Performance Gap</h3>
+                <div id="gap-analysis-chart" class="w-full h-72"></div>
+            </div>
+
+            <!-- NEW: Identified Problems Card -->
+            <div class="metric-card lg:col-span-3 xl:col-span-4">
+                <h3 class="card-title">Identified Problems (Based on your data)</h3>
+                <div id="problems-list" class="space-y-4 text-sm text-slate-600">
+                    <!-- Problems will be injected here -->
+                </div>
+            </div>
+
+            <!-- NEW: Recommended Solutions Card -->
+            <div class="metric-card lg:col-span-3 xl:col-span-4">
+                <h3 class="card-title">Recommended Solutions</h3>
+                <div id="solutions-list" class="space-y-6">
+                    <!-- Solutions will be injected here -->
+                </div>
+                <!-- NEW: Total Impact Summary -->
+                <div id="total-impact-summary" class="mt-8 pt-6 border-t border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-800 mb-4 text-center">Total Expected Impact</h4>
+                    <div id="total-impact-metrics" class="flex flex-wrap justify-center gap-3">
+                        <p class="text-slate-500">Select solutions above to calculate the combined metric impact.</p>
                     </div>
                 </div>
-                <div class="metric-card">
-                    <h2 class="card-title">System Workload (Collected Data Points)</h2>
-                    <div id="bar-chart" class="chart-container" style="height: 300px;"></div>
+                <!-- NEW: Projected Growth Calculator -->
+                <div id="projected-growth" class="mt-8 pt-6 border-t border-slate-200">
+                     <h4 class="text-lg font-semibold text-slate-800 mb-4 text-center">Projected Growth</h4>
+                     <div id="growth-calculator-output" class="text-center bg-slate-100 p-6 rounded-lg">
+                        <p class="text-slate-500">Select solutions to see the projected financial impact.</p>
+                     </div>
+                     <!-- NEW: 5-Year Projection Chart Container -->
+                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                        <div id="projection-chart" class="w-full h-80"></div>
+                        <div id="projection-bar-chart" class="w-full h-80"></div>
+                     </div>
                 </div>
             </div>
         </main>
+
         <!-- Graph Explorer View -->
         <main id="view-graph" class="view grid-cols-1 gap-6">
             <div class="flex justify-center space-x-2 mb-4">
@@ -168,6 +235,7 @@
             currentEdges: [],
             idealEdges: []
         };
+        let dataLoadError = false;
 
         function hasResponses() {
             try {
@@ -180,11 +248,22 @@
 
         function loadDashboardData() {
             try {
-                const responses = JSON.parse(localStorage.getItem('responses'));
-                if (!responses) return false;
-                dashboardData = computeDataMap(responses);
+                const finalReport = JSON.parse(localStorage.getItem('responses'));
+                console.log("1. Raw data from localStorage:", finalReport); // <-- Add this
+
+                if (!finalReport || !finalReport.responses || !finalReport.priorities) {
+                    console.error("Aborting: finalReport, responses, or priorities is missing."); // <-- Add this
+                    return false;
+                }
+                
+                console.log("2. Data being passed to computeDataMap:", finalReport.responses, finalReport.priorities); // <-- Add this
+                dashboardData = computeDataMap(finalReport.responses, finalReport.priorities);
+                console.log("3. Result from computeDataMap:", dashboardData); // <-- Add this
+
                 return true;
-            } catch {
+            } catch (error) {
+                console.error("Error loading or computing dashboard data:", error);
+                dataLoadError = true;
                 return false;
             }
         }
@@ -287,6 +366,88 @@
                     itemStyle: { color: '#3b82f6' }
                 }]
             });
+
+            // NEW: Render Gap Analysis Chart
+            console.log("8. [Dashboard] Attempting to render Gap Analysis Chart. Data:", dashboardData.gapAnalysisData);
+            if (dashboardData.gapAnalysisData && dashboardData.gapAnalysisData.length > 0) {
+                console.log("9. [Dashboard] Data is valid. Initializing chart.");
+                const gapAnalysisChart = echarts.init(document.getElementById('gap-analysis-chart'));
+                gapAnalysisChart.setOption({
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' },
+                        backgroundColor: '#fff',
+                        borderColor: '#e5e7eb',
+                        textStyle: { color: '#334155' },
+                        formatter: function (params) {
+                            const category = params[0].name;
+                            const scoreParam = params.find(p => p.seriesName === 'Digitalization Score');
+                            const priorityParam = params.find(p => p.seriesName === 'Priority Rank');
+                            
+                            // FIX: Access the priority from the 'data' object where we stored it.
+                            const priorityValue = priorityParam.data.priority; 
+
+                            return `${category}<br/>Priority: #${priorityValue}<br/>Digitalization Score: ${scoreParam.value}%`;
+                        }
+                    },
+                    legend: {
+                        data: ['Digitalization Score', 'Priority Rank'],
+                        bottom: 0,
+                        textStyle: { color: '#334155' }
+                    },
+                    grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
+                    xAxis: {
+                        type: 'value',
+                        max: 100, // Score is a percentage
+                        axisLabel: { color: '#334155' },
+                        splitLine: { lineStyle: { color: '#e5e7eb' } }
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: dashboardData.gapAnalysisData.map(d => d.name),
+                        axisLabel: { color: '#334155' }
+                    },
+                    series: [
+                        {
+                            name: 'Digitalization Score',
+                            type: 'bar',
+                            label: {
+                                show: true,
+                                position: 'right',
+                                formatter: '{c}%',
+                                color: '#334155'
+                            },
+                            data: dashboardData.gapAnalysisData.map(d => d.score),
+                            itemStyle: { color: '#3b82f6' }
+                        },
+                        {
+                            name: 'Priority Rank',
+                            type: 'bar',
+                            barWidth: '20%',
+                            barGap: '-100%',
+                            label: {
+                                show: true,
+                                position: 'insideLeft',
+                                // FIX: Access the priority directly from the data item for the label.
+                                formatter: (params) => `P${params.data.priority}`,
+                                color: '#ffffff',
+                                fontWeight: 'bold',
+                            },
+                            itemStyle: {
+                                color: 'rgba(249, 115, 22, 0.8)' // orange-500 with some transparency
+                            },
+                            // FIX: Store the priority directly in the data item for easy access.
+                            data: dashboardData.gapAnalysisData.map(d => ({
+                                value: 0, 
+                                priority: d.priority
+                            })),
+                        }
+                    ]
+                });
+            } else {
+                console.warn("10. [Dashboard] No data for Gap Analysis chart. Skipping render.");
+                document.getElementById('gap-analysis-chart').innerHTML = '<p class="text-center text-slate-400 p-8">Could not generate the Priorities vs. Performance chart. Please ensure priorities were ranked in the questionnaire.</p>';
+            }
         }
 
         // --- Graph Explorer Logic ---
@@ -306,12 +467,7 @@
             const departmentColorMap = {};
             departmentNames.forEach((name, i) => { departmentColorMap[name] = departmentColors[(i + 1) % departmentColors.length]; });
 
-            function getDepartment(nodeName) {
-                for (const dep of departmentNames) {
-                    if (nodeName.toLowerCase().includes(dep.split(' ')[0].toLowerCase())) return dep;
-                }
-                return null;
-            }
+            // REMOVED the old getDepartment function
 
             function renderForceGraph(containerEl, title, graphNodes, graphLinks) {
                 const categories = [
@@ -323,10 +479,16 @@
                 ];
                 const formattedNodes = graphNodes.map(nodeName => {
                     const isSystem = systemNodesSet.has(nodeName);
-                    let category = 0;
+                    let category = 0; // Default to 'System' category
                     if (!isSystem) {
-                        const dep = getDepartment(nodeName);
-                        if (dep) category = 1 + departmentNames.indexOf(dep);
+                        // NEW: Use the direct map to find the department
+                        const dep = dashboardData.dataPointToCategoryMap[nodeName];
+                        if (dep) {
+                            const depIndex = departmentNames.indexOf(dep);
+                            if (depIndex !== -1) {
+                                category = 1 + depIndex;
+                            }
+                        }
                     }
                     return {
                         id: nodeName,
@@ -441,6 +603,659 @@
             }
         }
 
+        // --- NEW: Standalone helper function for rendering stars ---
+        function renderStars(rating) {
+            let starsHtml = '';
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+            for (let i = 0; i < fullStars; i++) {
+                starsHtml += `<svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>`;
+            }
+            if (halfStar) {
+                starsHtml += `<svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8-2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292zM10 15.118V4.882a1 1 0 00-.951-.69H5.588l2.8 2.034a1 1 0 00.364 1.118l-1.07 3.292c-.3.921.755 1.688 1.54 1.118l1.777-1.288z" clip-rule="evenodd"></path></svg>`;
+            }
+            for (let i = 0; i < emptyStars; i++) {
+                starsHtml += `<svg class="w-4 h-4 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>`;
+            }
+            return starsHtml;
+        }
+
+        // --- Populate Integrators List ---
+        async function updateIntegratorsList() {
+            const listEl = document.getElementById('integrators-list');
+            listEl.innerHTML = ''; // Clear previous
+            console.log("1. [Integrators] Starting function.");
+
+            try {
+                const response = await fetch('./itcompanies.json');
+                console.log("2. [Integrators] Fetch response received:", response);
+                if (!response.ok) {
+                    console.error("3. [Integrators] Fetch failed. Status:", response.status);
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                const companies = await response.json();
+                console.log("4. [Integrators] Parsed data from itcompanies.json:", companies);
+
+                // FIX: Use capitalized 'Reviews' for sorting
+                const topCompanies = companies.sort((a, b) => b.Reviews - a.Reviews).slice(0, 5);
+                console.log("5. [Integrators] Top 5 sorted companies:", topCompanies);
+
+
+                topCompanies.forEach((company, index) => {
+                    console.log(`6. [Integrators] Processing company #${index + 1}:`, company);
+                    const div = document.createElement('div');
+                    div.className = 'p-3 bg-slate-50 border border-slate-200 rounded-md';
+                    // FIX: Use capitalized property names to match the JSON file
+                    // UPDATED: Add Website and Rate to the display
+                    div.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <p class="font-semibold text-slate-800">${company.Company}</p>
+                            <div class="flex items-center flex-shrink-0 ml-2">${renderStars(company.Stars)}</div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">${company.Location}</p>
+                        <a href="${company.Website}" target="_blank" rel="noopener noreferrer" class="text-xs text-sky-600 hover:underline break-all">${company.Website}</a>
+                        <p class="text-sm text-slate-700 my-2"><strong>Focus:</strong> ${company.Focus}</p>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-xs text-slate-500">(${company.Reviews} reviews)</span>
+                            <span class="text-sm font-semibold text-slate-800 bg-slate-200 px-2 py-1 rounded">${company.Rate}</span>
+                        </div>
+                    `;
+                    listEl.appendChild(div);
+                });
+                console.log("7. [Integrators] Finished processing companies.");
+
+            } catch (error) {
+                console.error("8. [Integrators] An error occurred in the function:", error);
+                listEl.innerHTML = `<p class="text-center text-red-500">Could not load suggestions due to an error.</p>`;
+            }
+        }
+
+        // --- NEW: Populate Problems and Solutions ---
+        async function updateProblemsAndSolutions() {
+            const problemsList = document.getElementById('problems-list');
+            const solutionsList = document.getElementById('solutions-list');
+            problemsList.innerHTML = ''; // Clear previous content
+            solutionsList.innerHTML = ''; // Clear previous content
+
+            // NEW: Add listener to the list for delegated checkbox events
+            solutionsList.addEventListener('change', calculateTotalImpact);
+
+            try {
+                const response = await fetch('./solutions.json');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const solutionsData = await response.json();
+
+                const problematicSources = dashboardData.problematicDataPoints || [];
+                if (problematicSources.length === 0) {
+                    problemsList.innerHTML = `<p class="text-center text-slate-400">No specific problems identified based on the data provided.</p>`;
+                    solutionsList.innerHTML = `<p class="text-center text-slate-400">No solutions to recommend.</p>`;
+                    return;
+                }
+
+                let allPossibleProblems = [];
+                for (const category in solutionsData) {
+                    solutionsData[category].forEach(problem => {
+                        if (problematicSources.includes(problem.data_source)) {
+                            allPossibleProblems.push(problem);
+                        }
+                    });
+                }
+
+                // Shuffle and pick up to 8 problems
+                const selectedProblems = allPossibleProblems.sort(() => 0.5 - Math.random()).slice(0, 8);
+
+                if (selectedProblems.length === 0) {
+                    problemsList.innerHTML = `<p class="text-center text-slate-400">No matching problems found for the identified data points.</p>`;
+                    solutionsList.innerHTML = `<p class="text-center text-slate-400">No solutions to recommend.</p>`;
+                    return;
+                }
+
+                // Populate Problems Card
+                const problemsHtml = selectedProblems.map(p => `
+                    <div class="flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 mt-0.5 text-amber-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 3.001-1.742 3.001H4.42c-1.53 0-2.493-1.667-1.743-3.001l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                        <span>${p.problem}</span>
+                    </div>
+                `).join('');
+                problemsList.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">${problemsHtml}</div>`;
+
+
+                // --- Helper function for metric colors ---
+                const getMetricStyle = (metricName, value) => {
+                    const isInverse = ['Downtime'].includes(metricName);
+                    const effectiveValue = isInverse ? -value : value;
+                    let bgColor = 'bg-slate-200';
+                    let textColor = 'text-slate-800';
+
+                    if (effectiveValue > 8) { bgColor = 'bg-green-600'; textColor = 'text-white'; }
+                    else if (effectiveValue > 5) { bgColor = 'bg-green-500'; textColor = 'text-white'; }
+                    else if (effectiveValue > 2) { bgColor = 'bg-green-400'; textColor = 'text-green-900'; }
+                    else if (effectiveValue > 0) { bgColor = 'bg-green-200'; textColor = 'text-green-800'; }
+                    else if (effectiveValue < 0) { bgColor = 'bg-red-200'; textColor = 'text-red-800'; }
+                    
+                    return { bgColor, textColor };
+                };
+
+                // Populate Solutions Card
+                selectedProblems.forEach((p, index) => {
+                    const solutionItem = document.createElement('div');
+                    // Add a class for easier selection and update grid columns
+                    solutionItem.className = 'solution-item p-4 border rounded-lg bg-slate-50/50 grid grid-cols-1 lg:grid-cols-6 gap-6 items-center';
+                    
+                    const solutionsHtml = p.solutions.map(s => `
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-3 mt-1 text-blue-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>${s}</span>
+                        </li>`).join('');
+
+                    const metricsHtml = Object.entries(p.metric).map(([name, value]) => {
+                        const { bgColor, textColor } = getMetricStyle(name, value);
+                        const formattedValue = value > 0 ? `+${value}` : value;
+                        const formattedName = name.replace(/([A-Z])/g, ' $1').trim(); // Add spaces for readability
+                        return `<div class="inline-flex items-center text-xs font-medium bg-slate-200 text-slate-700 rounded-full overflow-hidden">
+                                    <span class="pl-2 pr-1 py-1">${formattedName}:</span>
+                                    <span class="${bgColor} ${textColor} px-1.5 py-1">${formattedValue}%</span>
+                                </div>`;
+                    }).join('');
+                    
+                    // Store metrics and cost as data attributes on the checkbox
+                    const metricsData = JSON.stringify(p.metric);
+                    // FIX: Check for both 'cost' and 'Cost' to handle case-sensitivity from the JSON file.
+                    const cost = p.cost || p.Cost || 0;
+
+                    solutionItem.innerHTML = `
+                        <!-- Column 1: Problem & Solutions -->
+                        <div class="lg:col-span-3">
+                            <h4 class="font-semibold text-slate-800 mb-2">${p.problem}</h4>
+                            <ul class="space-y-2 text-sm text-slate-700">${solutionsHtml}</ul>
+                        </div>
+
+                        <!-- Column 2: Expected Impact Metrics -->
+                        <div class="lg:col-span-2 p-2 border-l border-slate-200">
+                             <h5 class="font-semibold text-slate-700 text-sm mb-3 text-center">Expected Impact</h5>
+                             <div class="flex flex-wrap gap-2 justify-center">
+                                ${metricsHtml}
+                             </div>
+                        </div>
+
+                        <!-- Column 3: Implement Button -->
+                        <div class="lg:col-span-1 flex flex-col justify-center items-center text-center p-2 border-l border-slate-200">
+                             <h5 class="font-semibold text-slate-700 text-sm mb-3">Implement?</h5>
+                             <label for="solution-check-${index}" class="cursor-pointer">
+                                <input type="checkbox" id="solution-check-${index}" class="hidden peer" data-metrics='${metricsData}' data-cost="${cost}">
+                                <div class="w-24 py-2 px-4 rounded-lg bg-slate-200 text-slate-600 font-semibold transition-all peer-checked:bg-sky-600 peer-checked:text-white">
+                                    Select
+                                </div>
+                             </label>
+                             <div class="text-xs text-slate-500 mt-2 font-semibold">
+                                Cost: <span class="font-bold text-red-600 text-sm">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(cost)}</span>
+                             </div>
+                        </div>
+                    `;
+                    solutionsList.appendChild(solutionItem);
+                });
+
+            } catch (error) {
+                console.error("Error loading or processing solutions:", error);
+                problemsList.innerHTML = `<p class="text-center text-red-500">Could not load solutions data.</p>`;
+            }
+        }
+
+        // --- NEW: Function to parse Annual Sales string into a number ---
+        function parseSalesString(salesStr) {
+            console.log(`[DEBUG] parseSalesString: Received input -> "${salesStr}"`);
+            if (!salesStr || typeof salesStr !== 'string') {
+                console.log('[DEBUG] parseSalesString: Input is invalid. Returning 0.');
+                return 0;
+            }
+
+            let str = salesStr.toLowerCase().replace(/,/g, '').replace('$', '').replace('(est)', '').trim();
+            console.log(`[DEBUG] parseSalesString: Cleaned string -> "${str}"`);
+            
+            const parseValue = (val) => {
+                let num = parseFloat(val);
+                if (val.includes('bil')) num *= 1e9;
+                if (val.includes('mil')) num *= 1e6;
+                return num;
+            };
+
+            let result;
+            if (str.includes('-')) {
+                console.log('[DEBUG] parseSalesString: Detected a range.');
+                const parts = str.split('-');
+                const val1 = parseValue(parts[0]);
+                const val2 = parseValue(parts[1]);
+                result = (val1 + val2) / 2; // Average of the range
+            } else {
+                console.log('[DEBUG] parseSalesString: Detected a single value.');
+                str = str.replace('over', '').replace('under', '').trim();
+                result = parseValue(str);
+            }
+            console.log(`[DEBUG] parseSalesString: Returning -> ${result}`);
+            return result;
+        }
+
+        // --- NEW: Calculate and display projected growth ---
+        function calculateProjectedGrowth(currentSales, totalMetrics) {
+            console.log('%c[DEBUG] calculateProjectedGrowth: Function called.', 'color: blue; font-weight: bold;');
+            console.log('[DEBUG] calculateProjectedGrowth: Received currentSales ->', currentSales);
+            console.log('[DEBUG] calculateProjectedGrowth: Received totalMetrics ->', JSON.parse(JSON.stringify(totalMetrics)));
+
+            const container = document.getElementById('growth-calculator-output');
+            if (Object.keys(totalMetrics).length === 0 || !currentSales) {
+                 container.innerHTML = `<p class="text-slate-500">Select solutions to see the projected financial impact.</p>`;
+                 console.log('[DEBUG] calculateProjectedGrowth: Aborting, not enough data. currentSales:', currentSales, 'totalMetrics empty:', Object.keys(totalMetrics).length === 0);
+                 return;
+            }
+
+            // Get metric values, default to 0 if not present
+            const throughput = (totalMetrics.Throughput || 0) / 100;
+            const revPerProdHour = (totalMetrics.RevenuePerProductionHour || 0) / 100;
+            const downtime = (totalMetrics.Downtime || 0) / 100;
+            const capacityUtil = (totalMetrics.CapacityUtilizationRate || 0) / 100;
+            console.log(`[DEBUG] calculateProjectedGrowth: Calculated metric factors -> throughput: ${throughput}, revPerProdHour: ${revPerProdHour}, downtime: ${downtime}, capacityUtil: ${capacityUtil}`);
+
+            // Downtime is negative, so we invert it for the formula
+            const downtimeCut = -downtime; 
+            console.log(`[DEBUG] calculateProjectedGrowth: Calculated downtimeCut -> ${downtimeCut}`);
+
+            // The formula provided by the user
+            const growthFactor = 1 + (0.20 * throughput) + (0.21 * revPerProdHour) + (0.001 * downtimeCut) + (0.05 * capacityUtil);
+            const nextYearSales = currentSales * growthFactor;
+            const growthAmount = nextYearSales - currentSales;
+            const percentageGrowth = (growthFactor - 1) * 100;
+            console.log(`[DEBUG] calculateProjectedGrowth: Calculated growthFactor -> ${growthFactor}`);
+            console.log(`[DEBUG] calculateProjectedGrowth: Final values -> nextYearSales: ${nextYearSales}, growthAmount: ${growthAmount}, percentageGrowth: ${percentageGrowth}`);
+
+            const formatCurrency = (num) => {
+                if (num >= 1e9) return `$${(num / 1e9).toFixed(2)} Billion`;
+                if (num >= 1e6) return `$${(num / 1e6).toFixed(2)} Million`;
+                if (num >= 1e3) return `$${(num / 1e3).toFixed(2)} Thousand`;
+                return `$${num.toFixed(2)}`;
+            };
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">Current Annual Sales</p>
+                        <p class="text-2xl font-bold text-slate-700">${formatCurrency(currentSales)}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">Projected Next Year Sales</p>
+                        <p class="text-2xl font-bold text-sky-600">${formatCurrency(nextYearSales)}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">Estimated Growth</p>
+                        <p class="text-2xl font-bold text-green-600">
+                            +${formatCurrency(growthAmount)}
+                            <span class="block text-base font-semibold text-green-500">(${percentageGrowth.toFixed(1)}%)</span>
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            // --- NEW: Render the 5-year projection chart ---
+            renderProjectionChart(currentSales, growthAmount);
+            renderProjectionBarChart(currentSales, growthAmount);
+        }
+
+        // --- NEW: Render 5-Year Projection Chart ---
+        function renderProjectionChart(startSales, annualGrowthAmount) {
+            const chartContainer = document.getElementById('projection-chart');
+            const projectionChart = echarts.init(chartContainer);
+
+            if (!startSales || !annualGrowthAmount) {
+                chartContainer.innerHTML = ''; // Clear chart if no data
+                projectionChart.dispose(); // Dispose of the instance
+                return;
+            }
+
+            const years = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+            const baselineData = [];
+            const projectedData = [];
+            
+            let lastBaseline = startSales;
+            let lastProjected = startSales;
+
+            for (let i = 0; i < 5; i++) {
+                lastBaseline *= 1.03; // 3% baseline growth (compounded)
+                lastProjected += annualGrowthAmount; // Linear growth
+                baselineData.push(lastBaseline.toFixed(0));
+                projectedData.push(lastProjected.toFixed(0));
+            }
+
+            const formatCurrencyLabel = (num) => {
+                if (num >= 1e9) return `$${(num / 1e9).toFixed(1)}B`;
+                if (num >= 1e6) return `$${(num / 1e6).toFixed(1)}M`;
+                if (num >= 1e3) return `$${(num / 1e3).toFixed(1)}K`;
+                return `$${num}`;
+            };
+
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: (params) => {
+                        let tooltipHtml = `${params[0].name}<br/>`;
+                        params.forEach(param => {
+                            tooltipHtml += `${param.marker} ${param.seriesName}: <strong>${formatCurrencyLabel(param.value)}</strong><br/>`;
+                        });
+                        return tooltipHtml;
+                    }
+                },
+                legend: {
+                    data: ['Projected Growth', 'Baseline (3%)'],
+                    bottom: 0,
+                    textStyle: { color: '#334155' }
+                },
+                grid: { left: '3%', right: '4%', bottom: '12%', containLabel: true },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: years,
+                    axisLabel: { color: '#334155' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: { 
+                        formatter: (value) => formatCurrencyLabel(value),
+                        color: '#334155' 
+                    },
+                    splitLine: { lineStyle: { color: '#e5e7eb' } }
+                },
+                series: [
+                    {
+                        name: 'Projected Growth',
+                        type: 'line',
+                        data: projectedData,
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        lineStyle: { width: 3, color: '#22c55e' }, // green-500
+                        itemStyle: { color: '#22c55e' },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: 'rgba(34, 197, 94, 0.3)'
+                            }, {
+                                offset: 1,
+                                color: 'rgba(34, 197, 94, 0)'
+                            }])
+                        }
+                    },
+                    {
+                        name: 'Baseline (3%)',
+                        type: 'line',
+                        data: baselineData,
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        lineStyle: { width: 3, color: '#64748b' }, // slate-500
+                        itemStyle: { color: '#64748b' }
+                    }
+                ]
+            };
+            projectionChart.setOption(option);
+        }
+
+        // --- NEW: Render 5-Year Projection Bar Chart ---
+        function renderProjectionBarChart(startSales, annualGrowthAmount) {
+            const chartContainer = document.getElementById('projection-bar-chart');
+            const projectionBarChart = echarts.init(chartContainer);
+
+            if (!startSales || !annualGrowthAmount) {
+                chartContainer.innerHTML = '';
+                projectionBarChart.dispose();
+                return;
+            }
+
+            const years = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+            const baselineData = [];
+            const projectedData = [];
+            
+            let lastBaseline = startSales;
+            let lastProjected = startSales;
+
+            for (let i = 0; i < 5; i++) {
+                lastBaseline *= 1.03; // 3% baseline growth (compounded)
+                lastProjected += annualGrowthAmount; // Linear growth
+                baselineData.push(lastBaseline.toFixed(0));
+                projectedData.push(lastProjected.toFixed(0));
+            }
+
+            const formatCurrencyLabel = (num) => {
+                if (num >= 1e9) return `$${(num / 1e9).toFixed(1)}B`;
+                if (num >= 1e6) return `$${(num / 1e6).toFixed(1)}M`;
+                if (num >= 1e3) return `$${(num / 1e3).toFixed(1)}K`;
+                return `$${num}`;
+            };
+
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' },
+                    formatter: (params) => {
+                        let tooltipHtml = `${params[0].name}<br/>`;
+                        params.forEach(param => {
+                            tooltipHtml += `${param.marker} ${param.seriesName}: <strong>${formatCurrencyLabel(param.value)}</strong><br/>`;
+                        });
+                        return tooltipHtml;
+                    }
+                },
+                legend: {
+                    data: ['Projected Growth', 'Baseline (3%)'],
+                    bottom: 0,
+                    textStyle: { color: '#334155' }
+                },
+                grid: { left: '3%', right: '4%', bottom: '12%', containLabel: true },
+                xAxis: {
+                    type: 'category',
+                    data: years,
+                    axisLabel: { color: '#334155' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: { 
+                        formatter: (value) => formatCurrencyLabel(value),
+                        color: '#334155' 
+                    },
+                    splitLine: { lineStyle: { color: '#e5e7eb' } }
+                },
+                series: [
+                    {
+                        name: 'Baseline (3%)',
+                        type: 'bar',
+                        data: baselineData,
+                        itemStyle: { color: '#64748b' } // slate-500
+                    },
+                    {
+                        name: 'Projected Growth',
+                        type: 'bar',
+                        data: projectedData,
+                        itemStyle: { color: '#22c55e' } // green-500
+                    }
+                ]
+            };
+            projectionBarChart.setOption(option);
+        }
+
+        // --- NEW: Calculate and display total metric impact ---
+        function calculateTotalImpact() {
+            const totalMetrics = {};
+            let totalCost = 0;
+            const checkedSolutions = document.querySelectorAll('#solutions-list input[type="checkbox"]:checked');
+            
+            const getMetricStyle = (metricName, value) => {
+                const isInverse = ['Downtime'].includes(metricName);
+                const effectiveValue = isInverse ? -value : value;
+                let bgColor = 'bg-slate-200';
+                let textColor = 'text-slate-800';
+                if (effectiveValue > 8) { bgColor = 'bg-green-600'; textColor = 'text-white'; }
+                else if (effectiveValue > 5) { bgColor = 'bg-green-500'; textColor = 'text-white'; }
+                else if (effectiveValue > 2) { bgColor = 'bg-green-400'; textColor = 'text-green-900'; }
+                else if (effectiveValue > 0) { bgColor = 'bg-green-200'; textColor = 'text-green-800'; }
+                else if (effectiveValue < 0) { bgColor = 'bg-red-200'; textColor = 'text-red-800'; }
+                return { bgColor, textColor };
+            };
+
+            checkedSolutions.forEach(checkbox => {
+                const metrics = JSON.parse(checkbox.dataset.metrics);
+                for (const [name, value] of Object.entries(metrics)) {
+                    if (totalMetrics[name]) {
+                        totalMetrics[name] += value;
+                    } else {
+                        totalMetrics[name] = value;
+                    }
+                }
+                totalCost += parseFloat(checkbox.dataset.cost || 0);
+            });
+
+            const container = document.getElementById('total-impact-metrics');
+            container.innerHTML = '';
+
+            if (Object.keys(totalMetrics).length === 0) {
+                container.innerHTML = `<p class="text-slate-500">Select solutions above to calculate the combined metric impact.</p>`;
+                // DO NOT return here, so growth calculation can run
+            } else {
+                const sortedMetrics = Object.entries(totalMetrics).sort((a, b) => b[1] - a[1]);
+
+                for (const [name, value] of sortedMetrics) {
+                    const { bgColor, textColor } = getMetricStyle(name, value);
+                    const formattedValue = value > 0 ? `+${value.toFixed(0)}` : value.toFixed(0);
+                    const formattedName = name.replace(/([A-Z])/g, ' $1').trim();
+                    const pill = document.createElement('div');
+                    pill.className = `inline-flex items-center text-sm font-bold bg-slate-200 text-slate-800 rounded-full shadow-sm overflow-hidden`;
+                    pill.innerHTML = `
+                        <span class="pl-3 pr-1.5 py-1.5">${formattedName}:</span>
+                        <span class="${bgColor} ${textColor} px-2 py-1.5">${formattedValue}%</span>
+                    `;
+                    container.appendChild(pill);
+                }
+            }
+
+            // --- NEW: Display Total Cost ---
+            const summaryContainer = document.getElementById('total-impact-summary');
+            let costDiv = document.getElementById('total-cost-display');
+            if (!costDiv) {
+                costDiv = document.createElement('div');
+                costDiv.id = 'total-cost-display';
+                costDiv.className = 'text-center mt-4';
+                summaryContainer.appendChild(costDiv);
+            }
+
+            if (totalCost > 0) {
+                costDiv.innerHTML = `
+                    <div class="inline-flex items-center text-sm font-bold bg-slate-200 text-slate-800 rounded-full shadow-sm overflow-hidden">
+                        <span class="pl-3 pr-1.5 py-1.5">Total Implementation Cost:</span>
+                        <span class="bg-red-600 text-white px-2 py-1.5">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(totalCost)}</span>
+                    </div>
+                `;
+            } else {
+                costDiv.innerHTML = '';
+            }
+
+            // --- Trigger growth calculation after metrics are updated ---
+            console.log('%c[DEBUG] calculateTotalImpact: --- Triggering Growth Calculation ---', 'color: green; font-weight: bold;');
+            // This function will now handle fetching the full company data and then calculating growth.
+            calculateGrowthFromCompanyName(totalMetrics);
+        }
+
+        // --- NEW: Function to load full company data and trigger growth calculation ---
+        async function calculateGrowthFromCompanyName(totalMetrics) {
+            try {
+                // 1. Get the stored responses which include the company name
+                const reportData = JSON.parse(localStorage.getItem('responses'));
+                const companyName = reportData?.responses?.['company-name'];
+
+                if (!companyName) {
+                    console.warn('[DEBUG] No company name found in localStorage. Cannot fetch sales data.');
+                    calculateProjectedGrowth(0, totalMetrics); // Show default message
+                    return;
+                }
+                console.log(`[DEBUG] Found company name: "${companyName}"`);
+
+                // 2. Fetch the full industry map
+                const response = await fetch('./industrymap.json');
+                if (!response.ok) throw new Error('Failed to fetch industrymap.json');
+                const industryMap = await response.json();
+
+                // 3. Find the matching company in the map
+                const companyData = industryMap.find(company => company.Company === companyName);
+
+                if (companyData) {
+                    console.log('[DEBUG] Found full company data from industrymap.json:', companyData);
+                    const currentSales = parseSalesString(companyData['Annual Sales']);
+                    console.log(`[DEBUG] Parsed current sales -> ${currentSales}`);
+                    calculateProjectedGrowth(currentSales, totalMetrics);
+                } else {
+                    console.warn(`[DEBUG] Could not find company "${companyName}" in industrymap.json.`);
+                    calculateProjectedGrowth(0, totalMetrics); // Show default message
+                }
+            } catch (error) {
+                console.error('[DEBUG] Error in calculateGrowthFromCompanyName:', error);
+                calculateProjectedGrowth(0, totalMetrics); // Show default on error
+            }
+        }
+
+        // --- NEW: Report Generation Logic ---
+        async function createReport() {
+            const btn = document.getElementById('create-report-btn');
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+
+            try {
+                const response = await fetch('./template.html');
+                if (!response.ok) throw new Error('Failed to load report template.');
+                let reportHtml = await response.text();
+
+                // --- Helper function for formatting list data ---
+                const formatList = (items) => items.length > 0 ? `<ul>${items.map(item => `<li>${item}</li>`).join('')}</ul>` : 'N/A';
+
+                // --- Replace simple slots ---
+                reportHtml = reportHtml.replace(/<!-- SLOT: Report Title -->/g, 'Data Maturity & Connectivity Report');
+                reportHtml = reportHtml.replace(/<!-- SLOT: Company Logo\/Name -->/g, 'Company Name');
+                reportHtml = reportHtml.replace(/<!-- SLOT: Client Name -->/g, 'Client Name');
+                reportHtml = reportHtml.replace(/<!-- SLOT: Generation Date -->/g, new Date().toLocaleDateString());
+                reportHtml = reportHtml.replace(/<!-- SLOT: Executive Summary -->/g, "This report provides a comprehensive analysis of the organization's data maturity, system connectivity, and digital transformation opportunities based on the latest questionnaire responses.");
+                reportHtml = reportHtml.replace(/<!-- SLOT: Current Year -->/g, new Date().getFullYear());
+                reportHtml = reportHtml.replace(/<!-- SLOT: Page Number -->/g, '1');                // --- Replace metric slots ---
+                reportHtml = reportHtml.replace('<!-- SLOT: Total Users -->', 'N/A'); // Placeholder
+                reportHtml = reportHtml.replace('<!-- SLOT: Revenue -->', 'N/A'); // Placeholder
+                reportHtml = reportHtml.replace('<!-- SLOT: Data Correctness -->', `${dashboardData.correctnessScore}%`);
+                reportHtml = reportHtml.replace('<!-- SLOT: Data State -->', dashboardData.fourStateData.map(d => `${d.name}: ${d.value}`).join(', '));
+                reportHtml = reportHtml.replace('<!-- SLOT: Digitalization -->', dashboardData.departmentalScoresData.map(d => `${d.name}: ${d.value.toFixed(1)}%`).join(', '));
+                reportHtml = reportHtml.replace('<!-- SLOT: Digitalization Opportunities -->', formatList(dashboardData.topOpportunitiesData.map(o => `${o.name} (Target: ${o.target})`)));
+                reportHtml = reportHtml.replace('<!-- SLOT: System Workload -->', `${dashboardData.systemWorkloadData.reduce((sum, d) => sum + d.value, 0)} data points`);
+                reportHtml = reportHtml.replace('<!-- SLOT: Integrators -->', 'Top 5 suggested based on ratings');
+                reportHtml = reportHtml.replace('<!-- SLOT: Priorities Gap -->', `${dashboardData.gapAnalysisData.length} areas analyzed`);
+                reportHtml = reportHtml.replace('<!-- SLOT: Problems -->', formatList(Array.from(document.querySelectorAll('#problems-list span')).map(el => el.textContent)));
+                reportHtml = reportHtml.replace('<!-- SLOT: Solutions -->', formatList(Array.from(document.querySelectorAll('#solutions-list h4')).map(el => el.textContent)));
+
+                // --- Replace graph slots with images ---
+                const getChartImg = (id) => {
+                    const chart = echarts.getInstanceByDom(document.getElementById(id));
+                    return chart ? `<img src="${chart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#fff' })}" style="width:100%; height:auto;" />` : 'Graph not available.';
+                };
+                reportHtml = reportHtml.replace('<!-- SLOT: Graph 1 -->', getChartImg('gauge-chart'));
+                reportHtml = reportHtml.replace('<!-- SLOT: Graph 2 -->', getChartImg('pie-chart'));
+                reportHtml = reportHtml.replace('<!-- SLOT: Graph 3 -->', getChartImg('radar-chart'));
+                reportHtml = reportHtml.replace('<!-- SLOT: Graph 4 -->', getChartImg('gap-analysis-chart'));
+
+                // --- Open report in new tab ---
+                const reportWindow = window.open('', '_blank');
+                reportWindow.document.write(reportHtml);
+                reportWindow.document.close();
+
+            } catch (error) {
+                console.error('Error creating report:', error);
+                alert('Could not create the report. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create Report';
+            }
+        }
+
         function renderAllCharts() {
             renderDashboardCharts();
             renderGraphCharts();
@@ -448,10 +1263,18 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const noDataMsg = document.getElementById('no-data-message');
-            if (!hasResponses() || !loadDashboardData()) {
-                noDataMsg.classList.remove('hidden');
+            const errorMsg = document.getElementById('error-message');
+
+            if (!loadDashboardData()) {
+                if (dataLoadError) {
+                    errorMsg.classList.remove('hidden');
+                } else {
+                    noDataMsg.classList.remove('hidden');
+                }
                 document.getElementById('view-dashboard').style.display = 'none';
                 document.getElementById('view-graph').style.display = 'none';
+                document.querySelector('.flex.justify-center.space-x-2.mb-6').style.display = 'none'; // Hide tabs
+                document.getElementById('create-report-btn').style.display = 'none'; // Hide button
                 return;
             }
 
@@ -475,15 +1298,23 @@
                 renderGraphCharts();
             });
 
+            // --- NEW: Add event listener for report button ---
+            document.getElementById('create-report-btn').addEventListener('click', createReport);
+
             // Initial render (with loaded data)
             renderAllCharts();
             updateOpportunitiesList();
+            updateProblemsAndSolutions();
+            updateIntegratorsList();
+            calculateTotalImpact(); // <-- ADD THIS LINE
 
             // Resize charts on window resize
             window.addEventListener('resize', () => {
                 setTimeout(() => {
                     const allCharts = [
                         'gauge-chart', 'pie-chart', 'radar-chart', 'bar-chart',
+                        'gap-analysis-chart',
+                        'projection-chart', 'projection-bar-chart', // <-- Add projection bar chart
                         'currentGraph', 'idealGraph'
                     ].map(id => echarts.getInstanceByDom(document.getElementById(id))).filter(Boolean);
                     allCharts.forEach(chart => chart.resize());

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wisconsin Industry Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.Default.css" />
+</head>
+<body>
+    <header>
+        <h1>Wisconsin Industry Map</h1>
+    </header>
+
+    <div class="content-wrapper">
+        <div id="map"></div>
+        <div class="sidebar">
+            <div class="controls">
+                <input type="text" id="search-bar" placeholder="Search by company name...">
+                <select id="industry-filter">
+                    <option value="">Filter by Industry</option>
+                </select>
+                <select id="employee-filter">
+                    <option value="">All Employee Sizes</option>
+                    <option value="1-19">Less than 20</option>
+                    <option value="20-99">20 - 99</option>
+                    <option value="100-499">100 - 499</option>
+                    <option value="500-999">500 - 999</option>
+                    <option value="1000-4999">1000 - 4999</option>
+                    <option value="5000+">5000 or more</option>
+                </select>
+                <select id="major-category-filter">
+                    <option value="">Filter by Major Category</option>
+                </select>
+                <label>
+                    <input type="checkbox" id="highway-filter">
+                    Only show companies near major highways
+                </label>
+                <div id="filtered-company-count">Showing 0 companies</div> <!-- Moved here -->
+            </div>
+            <div id="cards-container"></div>
+            <div id="results-summary">
+                Showing <span id="company-count">0</span> companies
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.1/dist/leaflet.markercluster.js"></script>
+    <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+</body>
+</html>

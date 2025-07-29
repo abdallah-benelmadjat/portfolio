@@ -1,0 +1,62 @@
+[
+  {
+    "Company": "Mile Marker",
+    "Website": "https://www.milemarker.io",
+    "Location": "Madison, WI",
+    "Employees": "Under 49",
+    "Rate": "$100/hr",
+    "Focus": "Custom software, startup tech (likely includes IoT)",
+    "Stars": 4.3,
+    "Reviews": 1
+  },
+  {
+    "Company": "Ramam Tech",
+    "Website": "https://ramamtech.com",
+    "Location": "Wyoming, WI",
+    "Employees": "50 - 99",
+    "Rate": "$25/hr",
+    "Focus": "AI-driven RPA & automation",
+    "Stars": 4.7,
+    "Reviews": 5
+  },
+  {
+    "Company": "Xorbix Technologies, Inc.",
+    "Website": "https://xorbix.com",
+    "Location": "Hartland, WI",
+    "Employees": "Nov-49",
+    "Rate": "$150 - $199/hr",
+    "Focus": "AI Dev, Big Data, Custom Software",
+    "Stars": 5,
+    "Reviews": 3
+  },
+  {
+    "Company": "StellarBlue.ai",
+    "Website": "https://stellarblue.ai",
+    "Location": "Appleton, WI",
+    "Employees": "Dec-49",
+    "Rate": "$150 - $199/hr",
+    "Focus": "Web Design, AI Consulting & Marketing",
+    "Stars": 4.9,
+    "Reviews": 7
+  },
+  {
+    "Company": "Octavian Technology Group, LLC",
+    "Website": "",
+    "Location": "Brookfield, WI",
+    "Employees": "9-Feb",
+    "Rate": "$150 - $199/hr",
+    "Focus": "DevOps, AI/ML, Cloud Consulting",
+    "Stars": 4.9,
+    "Reviews": 6
+  },
+  {
+    "Company": "madebynorth",
+    "Website": "https://madebynorthdigital.com madebynorthdigital.com",
+    "Location": "Muskego, WI",
+    "Employees": "9-Feb",
+    "Rate": "$100 - $149/hr",
+    "Focus": "E-Commerce, Web Dev, IoT",
+    "Stars": 5,
+    "Reviews": 5
+  }
+]

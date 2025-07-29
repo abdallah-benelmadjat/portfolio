@@ -12,11 +12,21 @@
     <!-- Navigation Bar -->
     <nav class="mb-10 bg-white border-b border-slate-200 shadow-sm">
         <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
-            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link active">Industry 4.0 Platform</a>
-            <a href="questionnaire.html" class="nav-link">Questionnaire</a>
-            <a href="dashboard.html" class="nav-link">Dashboard</a>
-            <a href="learn.html" class="nav-link">Learn about Digitilization</a>
-            <a href="case-studies.html" class="nav-link">Case Studies</a>
+            <a href="index.html" class="text-xl font-extrabold text-sky-600 hover:text-sky-800 transition nav-link active border border-sky-600 px-3 py-2">
+                Industry 4.0 Platform
+            </a>
+            <a href="questionnaire.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Questionnaire
+            </a>
+            <a href="dashboard.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Dashboard
+            </a>
+            <a href="learn.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Learn about Digitilization
+            </a>
+            <a href="case-studies.html" class="nav-link border border-slate-300 px-3 py-2 hover:border-sky-600 transition">
+                Case Studies
+            </a>
         </div>
     </nav>
     <div class="max-w-5xl mx-auto px-4 py-10">
@@ -33,126 +43,65 @@
                 <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-6 py-3 rounded-lg shadow transition">View Dashboard</a>
                 <a href="learn.html" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition">Learn about Digitilization</a>
                 <a href="case-studies.html" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition">Case Studies</a>
+                <a href="industrymap.html" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition">
+                    View Wisconsin Manufacturers Map
+                </a>
             </div>
         </header>
+
         <section class="mb-12">
-            <h2 class="text-2xl font-bold section-title mb-4">Project Progress</h2>
-            <div class="space-y-8">
-                <!-- PLANNING & QUESTIONNAIRE -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-slate-700">Planning & Questionnaire</span>
-                        <span class="text-sm text-slate-500">80%</span>
-                    </div>
-                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
-                        <div class="h-3 rounded bg-indigo-600 progress-bar-fill" style="width:80%"></div>
-                    </div>
-                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
-                        <li class="line-through">Define audit scope + master list of data objects</li>
-                        <li class="line-through">Write JSON schema for categories / items / system options</li>
-                        <li class="line-through">Code questionnaire UI (HTML + Tailwind) from schema</li>
-                        <li class="line-through">Add progress bar & “all questions answered” validation</li>
-                        <li>Add weight dropdown (1-5) to every select</li>
-                    </ul>
+            <h2 class="text-2xl font-bold section-title mb-6 text-center">Why Digitalization Matters</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Metric 1 -->
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center hover:scale-105 transition transform">
+                    <div class="text-5xl font-extrabold text-sky-600 mb-2">30%</div>
+                    <p class="font-semibold text-slate-700">Cost Reduction</p>
+                    <p class="text-sm text-slate-500 mt-2">
+                        Companies implementing IoT and digitalization report up to a 30% reduction in operational costs.
+                    </p>
                 </div>
-                <!-- RAW DATA CAPTURE -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-slate-700">Raw Data Capture</span>
-                        <span class="text-sm text-slate-500">33%</span>
-                    </div>
-                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
-                        <div class="h-3 rounded bg-sky-400 progress-bar-fill" style="width:33%"></div>
-                    </div>
-                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
-                        <li>Implement download of responses.json</li>
-                        <li>Create /data_txt/ folder convention + sample txt files</li>
-                        <li>Build text-file harvester → merges into responses dict</li>
-                    </ul>
+                <!-- Metric 2 -->
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center hover:scale-105 transition transform">
+                    <div class="text-5xl font-extrabold text-green-600 mb-2">40%</div>
+                    <p class="font-semibold text-slate-700">Productivity Increase</p>
+                    <p class="text-sm text-slate-500 mt-2">
+                        Digital transformation can boost productivity by up to 40% through automation and data-driven insights.
+                    </p>
                 </div>
-                <!-- PARSER / CORE LOGIC -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-slate-700">Parser / Core Logic</span>
-                        <span class="text-sm text-slate-500">50%</span>
-                    </div>
-                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
-                        <div class="h-3 rounded bg-amber-400 progress-bar-fill" style="width:50%"></div>
-                    </div>
-                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
-                        <li class="line-through">Draft datamap.py skeleton</li>
-                        <li class="line-through">Parse responses.json → current-state nodes & edges</li>
-                        <li>Build ideal_mapping & categories dictionary</li>
-                        <li>Extend parser to use weights for edge value & scores</li>
-                        <li>Add “Disconnected vs Legacy vs Misaligned” weighting rules</li>
-                        <li>Compute new metrics: Productivity & Operability formulas</li>
-                    </ul>
+                <!-- Metric 3 -->
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center hover:scale-105 transition transform">
+                    <div class="text-5xl font-extrabold text-amber-500 mb-2">50%</div>
+                    <p class="font-semibold text-slate-700">Faster Decision-Making</p>
+                    <p class="text-sm text-slate-500 mt-2">
+                        Real-time data and analytics enable businesses to make decisions 50% faster, improving agility and responsiveness.
+                    </p>
                 </div>
-                <!-- TEMPLATE & DASHBOARD -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-slate-700">Template & Dashboard</span>
-                        <span class="text-sm text-slate-500">50%</span>
-                    </div>
-                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
-                        <div class="h-3 rounded bg-green-400 progress-bar-fill" style="width:50%"></div>
-                    </div>
-                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
-                        <li class="line-through">Create template.html with Tailwind + ECharts stubs</li>
-                        <li class="line-through">Inject current vs. ideal graph data into template</li>
-                        <li>Render basic charts (gauge, pie, radar, bar)</li>
-                        <li>Visualise edge weight (thickness / opacity) in Graph Explorer</li>
-                        <li>Add tooltips: show data object, system, weight, gap reason</li>
-                        <li>Insert new gauges for Productivity & Operability</li>
-                    </ul>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold section-title mb-6 text-center">Interactive Features</h2>
+            <div class="flex flex-col md:flex-row gap-8 items-center justify-center">
+                <!-- Interactive Feature 1 -->
+                <div class="relative group">
+                    <div class="w-40 h-40 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-full shadow-lg group-hover:scale-110 transition transform"></div>
+                    <p class="absolute inset-0 flex items-center justify-center text-white font-bold text-lg opacity-0 group-hover:opacity-100 transition">
+                        Real-Time Insights
+                    </p>
                 </div>
-                <!-- POLISH & UX -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-slate-700">Polish & UX</span>
-                        <span class="text-sm text-slate-500">0%</span>
-                    </div>
-                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
-                        <div class="h-3 rounded bg-slate-300 progress-bar-fill" style="width:0%"></div>
-                    </div>
-                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
-                        <li>Dark-mode friendly selects / inputs</li>
-                        <li>Sticky sidebar to jump between questionnaire sections</li>
-                        <li>Keyboard-only form navigation QA</li>
-                        <li>Copy-to-clipboard button for top opportunities list</li>
-                    </ul>
+                <!-- Interactive Feature 2 -->
+                <div class="relative group">
+                    <div class="w-40 h-40 bg-gradient-to-r from-green-500 to-teal-500 rounded-full shadow-lg group-hover:scale-110 transition transform"></div>
+                    <p class="absolute inset-0 flex items-center justify-center text-white font-bold text-lg opacity-0 group-hover:opacity-100 transition">
+                        Custom Dashboards
+                    </p>
                 </div>
-                <!-- DEV-OPS / PACKAGING -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-slate-700">Dev-Ops / Packaging</span>
-                        <span class="text-sm text-slate-500">0%</span>
-                    </div>
-                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
-                        <div class="h-3 rounded bg-slate-300 progress-bar-fill" style="width:0%"></div>
-                    </div>
-                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
-                        <li>Wrap code as CLI: python -m datamap &lt;responses.json&gt;</li>
-                        <li>Bundle static assets to /dist with hash versioning</li>
-                        <li>GitHub Actions: lint → pytest → build → artefact upload</li>
-                        <li>Write README quick-start + animated GIF demo</li>
-                    </ul>
-                </div>
-                <!-- STRETCH GOALS -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-slate-700">Stretch Goals</span>
-                        <span class="text-sm text-slate-500">0%</span>
-                    </div>
-                    <div class="w-full h-3 rounded progress-bar-bg mb-2">
-                        <div class="h-3 rounded bg-slate-300 progress-bar-fill" style="width:0%"></div>
-                    </div>
-                    <ul class="list-disc list-inside text-slate-600 text-sm ml-4">
-                        <li>Multi-facility overlay comparison</li>
-                        <li>Time-series audits (track maturity over months)</li>
-                        <li>Export graph to Neo4j for advanced queries</li>
-                        <li>Optional login & SQLite storage of past questionnaires</li>
-                    </ul>
+                <!-- Interactive Feature 3 -->
+                <div class="relative group">
+                    <div class="w-40 h-40 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full shadow-lg group-hover:scale-110 transition transform"></div>
+                    <p class="absolute inset-0 flex items-center justify-center text-white font-bold text-lg opacity-0 group-hover:opacity-100 transition">
+                        Predictive Analytics
+                    </p>
                 </div>
             </div>
         </section>
