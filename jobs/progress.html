@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Application Progress</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      background-color: #f9fafb;
+      font-family: 'Inter', sans-serif;
+    }
+    .status-to_apply { background-color: #e0f7fa; }
+    .status-applied { background-color: #e8f5e9; }
+    .status-in_progress { background-color: #fff3e0; }
+    .status-interview { background-color: #e3f2fd; }
+    .status-hired { background-color: #dcedc8; }
+    .status-rejected { background-color: #ffebee; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="max-w-7xl mx-auto p-8">
+    <h1 class="text-2xl font-bold mb-6">Job Application Progress</h1>
+
+    <table class="table-auto w-full border-collapse border border-gray-300">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="border border-gray-300 px-4 py-2">Job</th>
+          <th class="border border-gray-300 px-4 py-2">Company</th>
+          <th class="border border-gray-300 px-4 py-2">Location</th>
+          <th class="border border-gray-300 px-4 py-2">Pay Range</th>
+          <th class="border border-gray-300 px-4 py-2">Deadline</th>
+          <th class="border border-gray-300 px-4 py-2">Source</th>
+          <th class="border border-gray-300 px-4 py-2">Status</th>
+          <th class="border border-gray-300 px-4 py-2">Notes</th>
+          <th class="border border-gray-300 px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="progressTableBody">
+        <!-- Rows will be dynamically populated -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://qdcxtfnuezcznygvpvsc.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY3h0Zm51ZXpjem55Z3ZwdnNjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDA0NjEzMiwiZXhwIjoyMDY1NjIyMTMyfQ.-W9Ii2b8PT5lFzBDT7J2NYCDIRdvIABfWuZ76gasWv8';
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function fetchProgress() {
+      const { data, error } = await db.from('progress').select('*');
+      if (error) {
+        console.error('Error fetching progress:', error);
+        return;
+      }
+
+      const tableBody = document.getElementById('progressTableBody');
+      tableBody.innerHTML = '';
+
+      data.forEach(entry => {
+        const row = document.createElement('tr');
+        row.className = `status-${entry.status}`;
+
+        row.innerHTML = `
+          <td class="border border-gray-300 px-4 py-2">${entry.job}</td>
+          <td class="border border-gray-300 px-4 py-2">${entry.company}</td>
+          <td class="border border-gray-300 px-4 py-2">${entry.lo || ''}</td>
+          <td class="border border-gray-300 px-4 py-2">${entry.pay_range || ''}</td>
+          <td class="border border-gray-300 px-4 py-2">${entry.deadline || ''}</td>
+          <td class="border border-gray-300 px-4 py-2">${entry.source || ''}</td>
+          <td class="border border-gray-300 px-4 py-2">${entry.status}</td>
+          <td class="border border-gray-300 px-4 py-2">${entry.notes || ''}</td>
+          <td class="border border-gray-300 px-4 py-2">
+            <button onclick="updateStatus('${entry.id}', 'applied')" class="px-2 py-1 bg-blue-500 text-white rounded">Apply</button>
+            <button onclick="updateStatus('${entry.id}', 'in_progress')" class="px-2 py-1 bg-yellow-500 text-white rounded">In Progress</button>
+            <button onclick="updateStatus('${entry.id}', 'interview')" class="px-2 py-1 bg-green-500 text-white rounded">Interview</button>
+            <button onclick="updateStatus('${entry.id}', 'hired')" class="px-2 py-1 bg-indigo-500 text-white rounded">Hired</button>
+            <button onclick="deleteEntry('${entry.id}')" class="px-2 py-1 bg-red-500 text-white rounded">Remove</button>
+          </td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    async function updateStatus(id, status) {
+      const { error } = await db.from('progress').update({ status }).eq('id', id);
+      if (error) {
+        console.error('Error updating status:', error);
+        return;
+      }
+      fetchProgress();
+    }
+
+    async function deleteEntry(id) {
+      const { error } = await db.from('progress').delete().eq('id', id);
+      if (error) {
+        console.error('Error deleting entry:', error);
+        return;
+      }
+      fetchProgress();
+    }
+
+    fetchProgress();
+  </script>
+</body>
+</html>
