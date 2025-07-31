@@ -332,25 +332,6 @@
       return sortedWords.map(([word, count]) => ({ word, count }));
     }
 
-    async function addToProgress(job) {
-      const { error } = await db.from('progress').insert({
-        job: job.title,
-        company: job.company,
-        link: job.link,
-        lo: job.loc,
-        created_at: new Date().toISOString(),
-        status: 'to_apply'
-      });
-
-      if (error) {
-        console.error('Error adding to progress:', error);
-        alert('Failed to add job to progress.');
-        return;
-      }
-
-      alert('Job added to progress successfully!');
-    }
-
     // Render cards based on activeTable and search query
     function renderCards() {
       const items = dataStore[activeTable] || [];
@@ -409,7 +390,6 @@
               <div class="text-xs text-gray-500">Posted: ${posted}</div>
               ${job.compatibility ? `<div class="mt-2 inline-block text-xs px-2 py-1 rounded bg-indigo-100 text-indigo-700">${job.compatibility}</div>` : ''}
               <div class="mt-2 text-xs text-gray-500">Keywords: ${keywordsHtml}</div>
-              <button onclick="addToProgress(${JSON.stringify(job)})" class="mt-2 px-2 py-1 bg-blue-500 text-white rounded">Add to Progress</button>
             </a>`;
         })
         .join('');
