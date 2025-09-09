@@ -362,3 +362,18 @@ th.desc::after { content: " ▼"; }
   white-space:nowrap;
 }
 
+#gps-button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  z-index: 2000; /* Ensure it appears above other elements */
+  box-shadow: var(--shadow);
+}
+
+#gps-button:hover {
+  background: var(--primary-hover);
+}
+
