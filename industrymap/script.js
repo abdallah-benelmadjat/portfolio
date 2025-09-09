@@ -818,33 +818,3 @@ industryStatsDiv.style.display = 'none';
   }
   window.updateConnectionsFiltered = updateConnectionsFiltered;
 })();
-
-// Adding a GPS button to the map
-const gpsButton = document.createElement('button');
-gpsButton.id = 'gps-button';
-gpsButton.textContent = '📍 GPS';
-gpsButton.style.position = 'absolute';
-gpsButton.style.top = '10px';
-gpsButton.style.right = '10px';
-gpsButton.style.zIndex = '1000';
-document.body.appendChild(gpsButton);
-
-// Adding event listener to the GPS button
-gpsButton.addEventListener('click', () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        map.setView([latitude, longitude], 13);
-        L.marker([latitude, longitude]).addTo(map).bindPopup('You are here!').openPopup();
-      },
-      (error) => {
-        alert('Unable to retrieve your location. Please ensure GPS is enabled.');
-      }
-    );
-  } else {
-    alert('Geolocation is not supported by your browser.');
-  }
-});
-// Ensure all brackets are properly closed
-
