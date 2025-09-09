@@ -236,13 +236,7 @@ const CLUSTER_PX = {
         <p><strong>Business Description:</strong> ${d['Business Description'] ?? ''}</p>
         <p><strong>SIC Description:</strong> ${d['Primary SIC Code Description'] ?? ''}</p>`;
       if (d.Latitude && d.Longitude) {
-        const m = L.marker([d.Latitude, d.Longitude]).bindPopup(`
-          <b>${d.Company}</b><br>
-          <strong>SIC Description:</strong> ${d['Primary SIC Code Description'] ?? 'N/A'}<br>
-          <strong>Year Established:</strong> ${d['Year Established'] ?? 'N/A'}<br>
-          <strong>Business Description:</strong> ${d['Business Description'] ?? 'N/A'}<br>
-          <strong>Brand Names:</strong> ${d['Brand Names'] ?? 'N/A'}
-        `);
+        const m = L.marker([d.Latitude, d.Longitude]).bindPopup(`<b>${d.Company}</b>`);
         markers.addLayer(m);
         card.addEventListener('click', () => { map.setView([d.Latitude, d.Longitude], 13); m.openPopup(); });
       }
@@ -818,3 +812,6 @@ industryStatsDiv.style.display = 'none';
   }
   window.updateConnectionsFiltered = updateConnectionsFiltered;
 })();
+
+
+});
