@@ -1,0 +1,364 @@
+/* ---------- CSS RESET & VARIABLES ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f9fafb;
+  --bg-alt: #ffffff;
+  --fg: #1f2937;
+  --fg-light: #6b7280;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --border: #e5e7eb;
+  --radius: 0.75rem;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Dark theme */
+html[data-theme="dark"] {
+  --bg: #1f2937;
+  --bg-alt: #111827;
+  --fg: #f3f4f6;
+  --fg-light: #9ca3af;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --border: #374151;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ---------- TOP BAR ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  z-index: 1000;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.topbar svg {
+  width: 24px;
+  height: 24px;
+}
+
+.badge {
+  background: var(--primary);
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+}
+
+#theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 1rem;
+  color: var(--fg);
+}
+
+#theme-toggle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.topbar-btns {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-left: 1.5rem;
+  height: 2.5rem;
+}
+.topbar-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 0.4rem;
+  font-weight: 500;
+  font-size: 0.97rem;
+  padding: 0 1.1em;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  box-shadow: none;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  cursor: pointer;
+  outline: none;
+  min-width: 2.5em;
+}
+.topbar-btn:hover, .topbar-btn:focus {
+  background: var(--primary-hover);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+}
+.topbar-btn:active {
+  background: #1741a6;
+}
+@media (max-width: 700px) {
+  .topbar-btns { flex-direction: column; gap: 0.3rem; margin-left: 0.7rem; height: auto; }
+  .topbar-btn { font-size: 0.92rem; padding: 0 0.7em; }
+}
+
+/* ---------- LAYOUT ---------- */
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Map panel */
+#map {
+  flex: 2 1 0;
+  height: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+  flex: 1 1 0;
+  max-width: 420px;
+  background: var(--bg-alt);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-title {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 1.25rem 0.5rem;
+}
+
+.controls {
+  padding: 0.75rem 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.controls input,
+.controls select {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  color: var(--fg);
+  font-size: 0.9rem;
+}
+
+.controls input:focus,
+.controls select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.2);
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.checkbox input {
+  accent-color: var(--primary);
+}
+
+/* Cards */
+.cards {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.company-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.company-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.company-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.company-card p {
+  font-size: 0.85rem;
+  color: var(--fg-light);
+  line-height: 1.35;
+}
+
+/* ---------- BOTTOM BAR ---------- */
+.bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.25rem;
+  background: var(--bg-alt);
+  border-top: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.btn {
+  padding: 0.55rem 1rem;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+}
+
+#status-text {
+  font-size: 0.85rem;
+  color: var(--fg-light);
+}
+
+/* ---------- SCROLLBARS ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--bg);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+/* ───── County-stats table makeover ──── */
+#county-stats {
+  padding: 1.5rem;
+}
+
+#county-stats h2 {
+  margin-bottom: .75rem;
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+
+#county-stats table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: var(--bg-alt);
+  font-size: .92rem;
+}
+
+#county-stats thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  padding: .55rem .75rem;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+#county-stats thead th:hover {
+  background: var(--bg-alt);
+}
+
+#county-stats tbody td {
+  padding: .5rem .75rem;
+  text-align: right;
+  transition: background .25s;
+}
+
+#county-stats tbody tr:hover td {
+  filter: brightness(1.07);
+}
+
+#county-stats tbody td:first-child,
+#county-stats thead th:first-child {
+  text-align: left;
+}
+
+/* header sort arrows */
+th.sortable::after {
+  content: " ⇅";
+  font-size: .7em;
+  opacity: .45;
+}
+th.sortable.asc::after  { content: " ↑"; }
+th.sortable.desc::after { content: " ↓"; }
+
+/*  prettier, consistent tables  */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.92rem;
+}
+th, td {
+  padding: 0.55em 0.8em;
+  border-bottom: 1px solid var(--tbl-divider, #e2e8f0);
+}
+th {
+  cursor: pointer;
+  position: sticky; top: 0;
+  background: var(--tbl-head, #f1f5f9);
+  text-align: left;
+  user-select: none;
+}
+tr:hover td { background: rgb(243 244 246 / 0.65); }   /* row-hover */
+th.asc::after  { content: " ▲"; }
+th.desc::after { content: " ▼"; }
+
+.conn-label span{
+  font: 600 0.75rem/1 'Inter',sans-serif;
+  background:#fff;padding:2px 4px;border-radius:4px;
+  box-shadow:0 0 3px rgba(0,0,0,.25);
+  white-space:nowrap;
+}
+

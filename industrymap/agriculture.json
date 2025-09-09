@@ -1,0 +1,96 @@
+{
+  "nodes": [
+      { "id":"325310","label":"Fertilizer Mfg.","tier":"inputs"},
+      { "id":"325320","label":"Pesticide & Ag Chem Mfg.","tier":"inputs"},
+      { "id":"333111","label":"Farm Machinery Mfg.","tier":"inputs"},
+      { "id":"423820","label":"Farm Machinery Wholesalers","tier":"inputs"},
+
+      { "id":"111110","label":"Soybean Farming","tier":"raw"},
+      { "id":"111150","label":"Corn Farming","tier":"raw"},
+      { "id":"111140","label":"Wheat Farming","tier":"raw"},
+      { "id":"111160","label":"Rice Farming","tier":"raw"},
+      { "id":"111991","label":"Sugar Beet Farming","tier":"raw"},
+      { "id":"111930","label":"Sugarcane Farming","tier":"raw"},
+      { "id":"111992","label":"Peanut Farming","tier":"raw"},
+
+      { "id":"311224","label":"Soybean & Oilseed Proc.","tier":"processing1"},
+      { "id":"311221","label":"Wet Corn Milling","tier":"processing1"},
+      { "id":"311211","label":"Flour Milling","tier":"processing1"},
+      { "id":"311212","label":"Rice Milling","tier":"processing1"},
+      { "id":"311313","label":"Beet Sugar Mfg.","tier":"processing1"},
+      { "id":"311314","label":"Cane Sugar Mfg.","tier":"processing1"},
+
+      { "id":"311230","label":"Breakfast Cereal Mfg.","tier":"processing2"},
+      { "id":"311821","label":"Cookie & Cracker Mfg.","tier":"processing2"},
+      { "id":"311340","label":"Confectionery Mfg.","tier":"processing2"},
+      { "id":"311111","label":"Dog & Cat Food Mfg.","tier":"processing2"},
+      { "id":"311911","label":"Nut & PB Mfg.","tier":"processing2"},
+
+      { "id":"322211","label":"Corrugated Box Mfg.","tier":"packaging"},
+      { "id":"326111","label":"Plastic Bag & Pouch Mfg.","tier":"packaging"},
+      { "id":"326112","label":"Packaging Film Mfg.","tier":"packaging"},
+
+      { "id":"493120","label":"Refrigerated Storage","tier":"storage"},
+      { "id":"493130","label":"Farm Product Storage","tier":"storage"},
+
+      { "id":"484230","label":"Freight Trucking (Long-Dist.)","tier":"logistics"},
+      { "id":"488510","label":"Freight Arrangement (3PL)","tier":"logistics"},
+      { "id":"425120","label":"Wholesale Trade Brokers","tier":"logistics"},
+
+      { "id":"FoodDist","label":"Food Distributor","tier":"distribution"},
+
+      { "id":"GroceryStore","label":"Retail Grocery","tier":"end_consumers"},
+      { "id":"CandyStore","label":"Confectionery Retail","tier":"end_consumers"},
+      { "id":"PetOwners","label":"Pet Owners / Retail","tier":"end_consumers"}
+ 
+  ],
+
+  "edges": [
+      { "from":"325310","to":"111110","material":"Fertilizer"},
+      { "from":"325310","to":"111150","material":"Fertilizer"},
+      { "from":"325320","to":"111140","material":"Pesticides"},
+      { "from":"333111","to":"423820","material":"Machinery"},
+      { "from":"423820","to":"111110","material":"Equipment"},
+
+      { "from":"111110","to":"311224","material":"Soybeans"},
+      { "from":"111150","to":"311221","material":"Corn"},
+      { "from":"111140","to":"311211","material":"Wheat"},
+      { "from":"111160","to":"311212","material":"Rice"},
+      { "from":"111991","to":"311313","material":"Sugar Beets"},
+      { "from":"111930","to":"311314","material":"Sugarcane"},
+      { "from":"111992","to":"311911","material":"Peanuts"},
+
+      { "from":"311224","to":"311111","material":"Soy Meal/Oil"},
+      { "from":"311221","to":"311230","material":"Corn Starch/Syrup"},
+      { "from":"311211","to":"311821","material":"Flour"},
+      { "from":"311313","to":"311340","material":"Beet Sugar"},
+      { "from":"311314","to":"311340","material":"Cane Sugar"},
+
+      { "from":"322211","to":"311230","material":"Cartons"},
+      { "from":"326111","to":"311821","material":"Plastic Bags"},
+      { "from":"326112","to":"311340","material":"Film Wrap"},
+
+      { "from":"311340","to":"493120","material":"Candy Pallets"},
+      { "from":"311230","to":"493130","material":"Cereal Pallets"},
+      { "from":"311821","to":"493130","material":"Cookie Pallets"},
+
+      { "from":"493120","to":"FoodDist","material":"Cold Goods"},
+      { "from":"493130","to":"FoodDist","material":"Stored Goods"},
+
+      { "from":"311821","to":"FoodDist","material":"Cookies"},
+      { "from":"311230","to":"FoodDist","material":"Cereal"},
+      { "from":"311340","to":"FoodDist","material":"Candy"},
+      { "from":"311111","to":"FoodDist","material":"Pet Food"},
+      { "from":"311911","to":"FoodDist","material":"Nut Products"},
+
+      { "from":"FoodDist","to":"484230","material":"Truckloads"},
+      { "from":"FoodDist","to":"488510","material":"Freight Booking"},
+
+      { "from":"484230","to":"GroceryStore","material":"Delivery"},
+      { "from":"484230","to":"CandyStore","material":"Delivery"},
+      { "from":"484230","to":"PetOwners","material":"Delivery"},
+
+      { "from":"425120","to":"FoodDist","material":"Brokered Supply"}
+ 
+  ]
+}
