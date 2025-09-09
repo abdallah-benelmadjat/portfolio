@@ -819,6 +819,101 @@ industryStatsDiv.style.display = 'none';
   window.updateConnectionsFiltered = updateConnectionsFiltered;
 })();
 
+/* ----------  GPS / LIVE-LOCATION TRACKING  ---------- */
+(() => {
+  /* custom blue-dot icon rendered via CSS */
+  const blueDot = L.divIcon({
+    className: 'gps-bluedot',
+    html: '<div class="dot"></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]      // centre of icon = lat-lng point
+  });
 
-});
+  let watchId        = null;  // id from navigator.geolocation.watchPosition
+  let userMarker     = null;  // L.Marker instance
+  let accuracyCircle = null;  // L.Circle instance
+  let firstFix       = true;  // recentre only once
 
+  /* start watching the user’s position */
+  function startTracking() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+    watchId = navigator.geolocation.watchPosition(
+      ({ coords }) => {
+        const { latitude, longitude, accuracy } = coords;
+        const ll = [latitude, longitude];
+
+        // create marker + circle once, update thereafter
+        if (!userMarker) {
+          userMarker = L.marker(ll, { icon: blueDot }).addTo(map);
+          accuracyCircle = L.circle(ll, {
+            radius: accuracy,
+            color: '#136aec',
+            fillColor: '#4a90e2',
+            fillOpacity: 0.15,
+            weight: 2
+          }).addTo(map);
+        } else {
+          userMarker.setLatLng(ll);
+          accuracyCircle.setLatLng(ll).setRadius(accuracy);
+        }
+
+        // zoom to first fix; afterwards pan only when off-screen
+        if (firstFix) {
+          map.setView(ll, Math.max(map.getZoom(), 13));
+          firstFix = false;
+        } else if (!map.getBounds().contains(ll)) {
+          map.panTo(ll, { animate: true });
+        }
+      },
+      (err) => {
+        console.error('GPS error:', err);
+        alert('Unable to retrieve your location.');
+        stopTracking();
+      },
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+    );
+  }
+
+  /* stop watching and clean up layers */
+  function stopTracking() {
+    if (watchId !== null) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+    }
+    if (userMarker)       { map.removeLayer(userMarker);     userMarker = null; }
+    if (accuracyCircle)   { map.removeLayer(accuracyCircle); accuracyCircle = null; }
+    btn.textContent = 'Track My Location';
+    firstFix = true;
+  }
+
+  /* toggle button */
+  const btn = document.createElement('button');
+  btn.textContent = 'Track My Location';
+  btn.style.cssText =
+    'position:absolute;top:10px;left:10px;z-index:1000;' +
+    'background:#fff;padding:4px 8px;border:1px solid #888;cursor:pointer;';
+  btn.addEventListener('click', () => {
+    if (watchId === null) {
+      startTracking();
+      btn.textContent = 'Stop Tracking';
+    } else {
+      stopTracking();
+    }
+  });
+  map.getContainer().appendChild(btn);
+
+  /* blue-dot CSS */
+  const css = document.createElement('style');
+  css.textContent = `
+    .gps-bluedot .dot{
+      width:12px;height:12px;border-radius:50%;
+      background:#3182f6;border:2px solid #fff;
+      box-shadow:0 0 6px 2px rgba(49,130,246,0.75);
+    }`;
+  document.head.appendChild(css);
+})();   // end GPS IIFE
+
+});     // end DOMContentLoaded
