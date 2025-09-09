@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Wisconsin Industry Map by Abe Benelmadjat</title>
+  <meta name="description" content="Interactive map of Wisconsin-based companies with powerful filters and revenue visualisations." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin />
+  <link href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.css" rel="stylesheet" />
+  <link href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.Default.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style2.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 8.8L2 7v10l10 5 10-5V7l-10 3.8z"/></svg>
+      <span>Wisconsin Industry Map</span>
+    </div>
+
+    <div class="topbar-right">
+      <span id="company-counter" class="badge">0 companies</span>
+      <button id="theme-toggle" aria-label="Toggle theme">
+        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 110-12 6 6 0 010 12zm0-16v2m0 16v2m8-10h2M2 12H0m15.536 6.364l1.414 1.414M4.636 4.636L3.222 3.222m0 17.172l1.414-1.414M18.364 4.636l1.414-1.414"/></svg>
+        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.364 18.364a.75.75 0 00-1.06-1.06l-1.415 1.414a.75.75 0 001.06 1.06l1.415-1.414zM20.25 12a.75.75 0 01-.75.75H18a.75.75 0 010-1.5h1.5a.75.75 0 01.75.75zM18.364 5.636a.75.75 0 011.06-1.06l1.414 1.414a.75.75 0 01-1.06 1.06L18.364 5.636zM12 21.75a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0V21a.75.75 0 01-.75.75zM5.636 18.364a.75.75 0 01-1.06 1.06L3.159 17.99a.75.75 0 011.06-1.06l1.415 1.415zM3.75 12a.75.75 0 00.75-.75V9.75a.75.75 0 00-1.5 0v1.5a.75.75 0 00.75.75zM5.636 5.636a.75.75 0 001.06 1.06L8.11 5.28a.75.75 0 00-1.06-1.06L5.636 5.636z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section id="map" role="application" aria-label="Company locations"></section>
+
+    <aside class="sidebar">
+        <div class="intro-panel">
+            <h2>About the Project</h2>
+            <p>An interactive map of Wisconsin's industry, designed to visualize the state's corporate landscape. Created by <strong>Abe Benelmadjat</strong>.</p>
+        </div>
+
+        <div class="filter-panel">
+            <h2 class="sidebar-title">Find a Company</h2>
+            <div class="controls">
+                <div class="search-wrapper">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm-5.94-1.55a.75.75 0 10-1.06 1.06l-4.5-4.5a.75.75 0 00-1.06 0l-1.72 1.72a.75.75 0 101.06 1.06l4.5 4.5a.75.75 0 001.06 0l1.72-1.72z"/></svg>
+                    <input id="search-bar" type="search" placeholder="Search by name…" />
+                </div>
+
+                <select id="industry-filter"><option value="">All industries</option></select>
+                <select id="major-category-filter"><option value="">All categories</option></select>
+                <select id="revenue-filter"><option value="">Any revenue</option><option value="0-100000">0 – 100 k</option><option value="100000-1000000">100 k – 1 M</option><option value="1000000-250000000">1 M – 250 M</option><option value="250000000-500000000">250 M – 500 M</option><option value="500000000-750000000">500 M – 750 M</option><option value="750000000-1000000000">750 M – 1 B</option><option value="1000000000-100000000000">1 B – 100 B</option></select>
+                <select id="employee-filter"><option value="">Any size</option><option value="1-19">1 – 19</option><option value="20-99">20 – 99</option><option value="100-499">100 – 499</option><option value="500-999">500 – 999</option><option value="1000-4999">1 k – 4.9 k</option><option value="5000+">5 k+</option></select>
+
+                <label class="checkbox">
+                    <input id="highway-filter" type="checkbox" />
+                    Near major highways
+                </label>
+            </div>
+        </div>
+      
+      <div id="cards-container" class="cards"></div>
+    </aside>
+  </main>
+
+  <footer class="bottombar">
+    <button id="heatmap-toggle-btn" class="btn">
+      Toggle Revenue Heatmap
+    </button>
+    <span id="status-text">Ready</span>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.1/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+  <script src="script.js" defer></script>
+</body>
+</html>

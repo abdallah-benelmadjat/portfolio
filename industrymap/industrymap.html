@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Page info -->
+  <title>Wisconsin Industry Map</title>
+  <meta name="description" content="Interactive map of Wisconsin-based companies with powerful filters and revenue visualisations." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet & clustering -->
+  <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin />
+  <link href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.css" rel="stylesheet" />
+  <link href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.Default.css" rel="stylesheet" />
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ───────────── LOADING OVERLAY ───────────── -->
+  <div id="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-bar-container">
+        <div class="loading-bar"></div>
+      </div>
+      <span class="loading-text">Loading map data…</span>
+    </div>
+  </div>
+
+  <!-- ───────────── TOP BAR ───────────── -->
+  <header class="topbar">
+    <div class="brand" style="display:flex;align-items:center;gap:0.5rem;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 8.8L2 7v10l10 5 10-5V7l-10 3.8z"/></svg>
+      <span>Wisconsin Industry Map</span>
+      <div class="topbar-btns">
+        <button id="heatmap-toggle-btn" class="topbar-btn">Toggle Revenue Heatmap</button>
+        <button id="county-stats-toggle-btn" class="topbar-btn">Toggle County Stats</button>
+        <button id="industry-stats-toggle-btn" class="topbar-btn">Industry Stats</button>
+        <!-- NEW: industry-connections toggle -->
+        <button id="connections-toggle-btn" class="topbar-btn">Industry Connections</button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="company-counter" class="badge">0 companies</span>
+      <button id="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="sun" viewBox="0 0 24 24"><path d="M12 18a6 6 0 110-12 6 6 0 010 12zm0-16v2m0 16v2m8-10h2M2 12H0m15.536 6.364l1.414 1.414M4.636 4.636L3.222 3.222m0 17.172l1.414-1.414M18.364 4.636l1.414-1.414"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="project-desc" style="padding:0.7em 1.5em 0.7em 1.5em;background:var(--bg-alt);border-bottom:1px solid var(--border);font-size:1.05em;">
+    <strong>About:</strong> This interactive map was created by Abe to help visualize the industrial landscape of Milwaukee and Wisconsin. Explore company locations, filter by industry, and see per-capita stats by county.
+  </div>
+
+  <!-- ───────────── MAIN AREA ───────────── -->
+  <main class="layout">
+    <!-- Map -->
+    <section id="map" role="application" aria-label="Company locations"></section>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2 class="sidebar-title">Filters</h2>
+
+      <div class="controls">
+        <input id="search-bar" type="search" placeholder="🔍  Search company…" />
+
+        <select id="industry-filter">
+          <option value="">All industries</option>
+        </select>
+
+        <select id="major-category-filter">
+          <option value="">All categories</option>
+        </select>
+
+        <select id="revenue-filter">
+          <option value="">Any revenue</option>
+          <option value="0-100000">0 – 100 k</option>
+          <option value="100000-1000000">100 k – 1 M</option>
+          <option value="1000000-250000000">1 M – 250 M</option>
+          <option value="250000000-500000000">250 M – 500 M</option>
+          <option value="500000000-750000000">500 M – 750 M</option>
+          <option value="750000000-1000000000">750 M – 1 B</option>
+          <option value="1000000000-100000000000">1 B – 100 B</option>
+        </select>
+
+        <select id="employee-filter">
+          <option value="">Any size</option>
+          <option value="1-19">1 – 19</option>
+          <option value="20-99">20 – 99</option>
+          <option value="100-499">100 – 499</option>
+          <option value="500-999">500 – 999</option>
+          <option value="1000-4999">1 k – 4.9 k</option>
+          <option value="5000+">5 k+</option>
+        </select>
+
+        <label class="checkbox">
+          <input id="highway-filter" type="checkbox" />
+          Near major highways
+        </label>
+      </div>
+
+      <div id="cards-container" class="cards"></div>
+    </aside>
+  </main>
+
+  <div id="county-stats"></div>
+
+  <!-- ───────────── BOTTOM BAR ───────────── -->
+  <footer class="bottombar">
+    <span id="status-text">Ready</span>
+  </footer>
+
+  <!-- ───────────── SCRIPTS ───────────── -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.1/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+  <script>
+    /* -------- Loading overlay -------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('loading-overlay');
+      const bar     = document.querySelector('.loading-bar');
+      let p = 0, id;
+      id = setInterval(()=>{ p+=2; bar.style.width=p+'%';
+        if(p>=100){ clearInterval(id);
+          setTimeout(()=>{ overlay.classList.add('fade-out');
+            setTimeout(()=>overlay.remove(),600);
+          },300); }
+      },100);
+    });
+  </script>
+  <script src="script.js" defer></script>
+
+  <!-- Extra inline styles only for loader + connection labels -->
+  <style>
+    #loading-overlay {position:fixed;z-index:9999;inset:0;background:rgba(255,255,255,.97);display:flex;align-items:center;justify-content:center;transition:opacity .6s;}
+    #loading-overlay.fade-out{opacity:0;pointer-events:none;}
+    .loading-content{text-align:center;}
+    .loading-bar-container{width:320px;height:16px;background:#e0e0e0;border-radius:8px;overflow:hidden;margin-bottom:1.2em;box-shadow:0 2px 8px rgba(0,0,0,.07);border:1px solid #d0d0d0;margin-inline:auto;}
+    .loading-bar{height:100%;width:0;background:linear-gradient(90deg,#3b82f6 0%,#2563eb 100%);border-radius:8px;transition:width .1s linear;}
+    .loading-text{font-size:1.1em;color:#222;letter-spacing:.01em;font-weight:500;}
+    @media(max-width:500px){.loading-bar-container{width:90vw;}}
+
+    /* label floating above connection-centroids */
+    .conn-label span{
+      font:600 0.75rem/1 'Inter',sans-serif;
+      background:#fff;
+      padding:2px 4px;
+      border-radius:4px;
+      box-shadow:0 0 3px rgba(0,0,0,.25);
+      white-space:nowrap;
+    }
+  </style>
+</body>
+</html>
