@@ -846,4 +846,27 @@ gpsButton.addEventListener('click', () => {
     alert('Geolocation is not supported by your browser.');
   }
 });
+
+// Adding a geolocation control to the map
+const locateControl = L.control({ position: 'topright' });
+locateControl.onAdd = function () {
+  const button = L.DomUtil.create('button', 'leaflet-bar');
+  button.innerHTML = '📍';
+  button.title = 'Show my location';
+  button.style.cursor = 'pointer';
+  L.DomEvent.on(button, 'click', () => {
+    map.locate({ setView: true, maxZoom: 16 });
+  });
+  return button;
+};
+locateControl.addTo(map);
+
+// Handling location found and error events
+map.on('locationfound', (e) => {
+  L.marker(e.latlng).addTo(map).bindPopup('You are here!').openPopup();
+});
+
+map.on('locationerror', () => {
+  alert('Unable to retrieve your location. Please ensure GPS is enabled.');
+});
 // Ensure all brackets are properly closed
