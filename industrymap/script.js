@@ -241,11 +241,48 @@ const CLUSTER_PX = {
           <strong>SIC Description:</strong> ${d['Primary SIC Code Description'] ?? 'N/A'}<br>
           <strong>Year Established:</strong> ${d['Year Established'] ?? 'N/A'}<br>
           <strong>Business Description:</strong> ${d['Business Description'] ?? 'N/A'}<br>
-          <strong>Brand Names:</strong> ${d['Brand Names'] ?? 'N/A'}
+          <strong>Brand Names:</strong> ${d['Brand Names'] ?? 'N/A'}<br>
+          <strong>Annual Sales:</strong> ${d['Annual Sales'] ?? 'N/A'}<br>
+          <strong>Employees:</strong> ${d.Employees ?? 'N/A'}<br>
         `);
         markers.addLayer(m);
         card.addEventListener('click', () => { map.setView([d.Latitude, d.Longitude], 13); m.openPopup(); });
       }
+      card.innerHTML += '<div class="executives">';
+      const executives = Object.keys(d)
+        .filter((key) => key.startsWith('Executive') && key.endsWith('First Name'))
+        .map((key) => {
+          const index = key.match(/\d+/)[0];
+          return {
+            name: `${d[`Executive ${index} First Name`]} ${d[`Executive ${index} Last Name`]}`,
+            email: d[`Executive ${index} Direct Email`],
+            phone: d[`Executive ${index} Direct Phone`],
+          };
+        })
+        .filter((exec) => exec.name.trim());
+
+      executives.slice(0, 3).forEach((exec, index) => {
+        if (exec.name) card.innerHTML += `<p><strong>Executive:</strong> ${exec.name}</p>`;
+        const title = d[`Executive ${index + 1} Title`];
+        if (title) card.innerHTML += `<p><strong>Title:</strong> ${title}</p>`;
+        if (exec.email) card.innerHTML += `<p><strong>Email:</strong> ${exec.email}</p>`;
+        if (exec.phone) card.innerHTML += `<p><strong>Phone:</strong> ${exec.phone}</p>`;
+      });
+
+      if (executives.length > 3) {
+        const dropdown = document.createElement('details');
+        dropdown.innerHTML = '<summary>More Executives</summary>';
+        executives.slice(3).forEach((exec, index) => {
+          if (exec.name) dropdown.innerHTML += `<p><strong>Executive:</strong> ${exec.name}</p>`;
+          const title = d[`Executive ${index + 4} Title`];
+          if (title) dropdown.innerHTML += `<p><strong>Title:</strong> ${title}</p>`;
+          if (exec.email) dropdown.innerHTML += `<p><strong>Email:</strong> ${exec.email}</p>`;
+          if (exec.phone) dropdown.innerHTML += `<p><strong>Phone:</strong> ${exec.phone}</p>`;
+        });
+        card.appendChild(dropdown);
+      }
+
+      card.innerHTML += '</div>';
       wrap.appendChild(card);
     });
   }
@@ -344,6 +381,48 @@ function updateCompanyCounter(count) {
 function setStatus(text) {
   document.getElementById('status-text').textContent = text;
 }
+
+/* ---------- EXPORT FUNCTIONALITY ---------- */
+function exportToCSV() {
+  if (!filtered.length) {
+    alert('No data to export. Please adjust your filters.');
+    return;
+  }
+
+  const headers = [
+    'Company', 'Primary SIC Code Description', 'Employees', 'Annual Sales',
+    'Year Established', 'Business Description', 'Latitude', 'Longitude',
+    'Primary SIC Code', 'NAICS Code', 'Brand Names'
+  ];
+
+  const csvContent = [
+    headers.join(','),
+    ...filtered.map(row =>
+      headers.map(header => {
+        const value = row[header] || '';
+        // Escape quotes and wrap in quotes if contains comma or quote
+        const escaped = value.toString().replace(/"/g, '""');
+        return escaped.includes(',') || escaped.includes('"') ? `"${escaped}"` : escaped;
+      }).join(',')
+    )
+  ].join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', `wisconsin-companies-${new Date().toISOString().split('T')[0]}.csv`);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  setStatus(`Exported ${filtered.length} companies to CSV`);
+}
+
+/* Export button event listener */
+document.getElementById('export-btn')?.addEventListener('click', exportToCSV);
 
 // --- County/Per Capita Stats Table ---
 let countiesData = [];
@@ -916,4 +995,47 @@ industryStatsDiv.style.display = 'none';
   document.head.appendChild(css);
 })();   // end GPS IIFE
 
+// Adding FontAwesome library for icons
+const script = document.createElement('script');
+script.src = "https://kit.fontawesome.com/a076d05399.js";
+script.crossOrigin = "anonymous";
+document.head.appendChild(script);
+
+// Function to assign icons based on industry or size
+function getCategoryIcon(industry, size) {
+    const industryIcons = {
+        'Manufacturing': 'fa-industry',
+        'Technology': 'fa-laptop-code',
+        'Healthcare': 'fa-heartbeat',
+        'Retail': 'fa-shopping-cart',
+        'Finance': 'fa-dollar-sign'
+    };
+
+    const sizeIcons = {
+        'Small': 'fa-user',
+        'Medium': 'fa-users',
+        'Large': 'fa-building'
+    };
+
+    const industryIcon = industryIcons[industry] || 'fa-briefcase';
+    const sizeIcon = sizeIcons[size] || 'fa-user-friends';
+
+    return `<i class="fas ${industryIcon}"></i> <i class="fas ${sizeIcon}"></i>`;
+}
+
+// Example usage: Adding icons to company cards
+function addIconsToCompanyCards(companies) {
+    companies.forEach(company => {
+        const card = document.getElementById(`company-card-${company.id}`);
+        if (card) {
+            const iconHTML = getCategoryIcon(company.industry, company.size);
+            const iconContainer = document.createElement('div');
+            iconContainer.innerHTML = iconHTML;
+            card.prepend(iconContainer);
+        }
+    });
+}
+
+// Assuming `companies` is an array of company objects with `id`, `industry`, and `size` properties
+// addIconsToCompanyCards(companies);
 });     // end DOMContentLoaded
