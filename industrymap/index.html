@@ -35,22 +35,47 @@
 
   <!-- ───────────── TOP BAR ───────────── -->
   <header class="topbar">
-    <div class="brand" style="display:flex;align-items:center;gap:0.5rem;">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 8.8L2 7v10l10 5 10-5V7l-10 3.8z"/></svg>
-      <span>Wisconsin Industry Map</span>
-      <div class="topbar-btns">
-        <button id="heatmap-toggle-btn" class="topbar-btn">Toggle Revenue Heatmap</button>
-        <button id="county-stats-toggle-btn" class="topbar-btn">Toggle County Stats</button>
-        <button id="industry-stats-toggle-btn" class="topbar-btn">Industry Stats</button>
-        <!-- NEW: industry-connections toggle -->
-        <button id="connections-toggle-btn" class="topbar-btn">Industry Connections</button>
+    <div class="brand">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM12 6.5L7 4v6l5 2.5V6.5z"/>
+        <path d="M12 13.5L7 11v6l5 2.5V13.5z"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-title">Wisconsin Industry Map</span>
+        <span class="brand-subtitle">Explore Business Landscape</span>
       </div>
     </div>
-    <div class="topbar-right">
-      <span id="company-counter" class="badge">0 companies</span>
-      <button id="theme-toggle" aria-label="Toggle dark mode">
-        <svg class="sun" viewBox="0 0 24 24"><path d="M12 18a6 6 0 110-12 6 6 0 010 12zm0-16v2m0 16v2m8-10h2M2 12H0m15.536 6.364l1.414 1.414M4.636 4.636L3.222 3.222m0 17.172l1.414-1.414M18.364 4.636l1.414-1.414"/></svg>
-      </button>
+    <div class="topbar-actions">
+      <div class="topbar-btns">
+        <button id="heatmap-toggle-btn" class="topbar-btn" title="Toggle between normal and revenue heatmaps">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Revenue Heatmap
+        </button>
+        <button id="county-stats-toggle-btn" class="topbar-btn" title="View county-level statistics">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM9 7h6v2H9V7zm0 4h6v2H9v9zm0 4h6v2H9v-2z"/></svg>
+          County Stats
+        </button>
+        <button id="industry-stats-toggle-btn" class="topbar-btn" title="View industry-level statistics">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          Industry Stats
+        </button>
+        <button id="connections-toggle-btn" class="topbar-btn" title="Show industry connection networks">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Connections
+        </button>
+        <button id="export-btn" class="topbar-btn" title="Export current data">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+          Export
+        </button>
+      </div>
+      <div class="topbar-right">
+        <span id="company-counter" class="badge">0 companies</span>
+        <button id="theme-toggle" aria-label="Toggle dark mode">
+          <svg class="sun" viewBox="0 0 24 24">
+            <path d="M12 18a6 6 0 110-12 6 6 0 010 12zm0-16v2m0 16v2m8-10h2M2 12H0m15.536 6.364l1.414 1.414M4.636 4.636L3.222 3.222m0 17.172l1.414-1.414M18.364 4.636l1.414-1.414"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
