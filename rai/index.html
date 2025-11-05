@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rai Song Browser</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">🎵 Rai Song Browser</h1>
+            <p class="subtitle">Discover the most popular Rai songs</p>
+        </header>
+
+        <div class="filters">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search by title or search term..." class="search-input">
+                <button class="search-btn">🔍</button>
+            </div>
+
+            <div class="filter-controls">
+                <select id="yearFilter" class="filter-select">
+                    <option value="">All Years</option>
+                </select>
+
+                <div class="views-filter">
+                    <label for="minViews">Min Views (M):</label>
+                    <input type="number" id="minViews" min="0" step="0.1" placeholder="0">
+                    <label for="maxViews">Max Views (M):</label>
+                    <input type="number" id="maxViews" min="0" step="0.1" placeholder="500">
+                </div>
+
+                <select id="sortBy" class="filter-select">
+                    <option value="views-desc">Most Popular</option>
+                    <option value="views-asc">Least Popular</option>
+                    <option value="year-desc">Newest First</option>
+                    <option value="year-asc">Oldest First</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="pagination-controls">
+            <button class="page-btn" data-size="20">20 per page</button>
+            <button class="page-btn active" data-size="50">50 per page</button>
+            <button class="page-btn" data-size="100">100 per page</button>
+        </div>
+
+        <div class="songs-grid" id="songsGrid">
+            <!-- Songs will be loaded here -->
+        </div>
+
+        <div class="pagination">
+            <button id="prevBtn" class="nav-btn" disabled>Previous</button>
+            <span id="pageInfo">Page 1 of 1</span>
+            <button id="nextBtn" class="nav-btn">Next</button>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="videoContainer"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
