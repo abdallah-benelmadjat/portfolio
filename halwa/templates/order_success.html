@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Mediterranean Sweets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="logo">
+            <h1>Jiji's Cakes & Deserts</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('products') }}">Products</a></li>
+                    <li><a href="{{ url_for('basket') }}">Basket</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h2>Order Confirmed!</h2>
+        <p>Thank you for your order from Mediterranean Sweets.</p>
+        <div class="success-details">
+            <h3>Order #{{ order.id }}</h3>
+            <h4>Items Ordered:</h4>
+            <ul>
+                {% for product_id, quantity in order.items %}
+                <li>{{ product_id }} x{{ quantity }}</li>
+                {% endfor %}
+            </ul>
+            <p><strong>Total Amount: ${{ "%.2f"|format(order.total) }}</strong></p>
+            <h4>Delivery Details:</h4>
+            <p><strong>Name:</strong> {{ order.customer.name }}</p>
+            <p><strong>Email:</strong> {{ order.customer.email }}</p>
+            <p><strong>Address:</strong> {{ order.customer.address }}</p>
+            <p><strong>Phone:</strong> {{ order.customer.phone }}</p>
+        </div>
+        <p>Your pastries will be delivered within 2-3 business days. Enjoy your North African delicacies!</p>
+        <a href="{{ url_for('index') }}" class="btn-primary">Back to Home</a>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Mediterranean Sweets. All rights reserved.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

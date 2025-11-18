@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Pastries - Mediterranean Sweets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="{{ url_for('index') }}" class="logo-link">
+                    <img src="{{ url_for('static', filename='img/logo2.png') }}" alt="Mediterranean Sweets" class="logo">
+                    <h1 class="brand-name">Jiji's Cakes & Deserts</h1>
+                </a>
+            </div>
+
+            <nav class="nav-main">
+                <div class="nav-links">
+                    <a href="{{ url_for('index') }}" class="nav-link">🏠 Home</a>
+                    <a href="{{ url_for('products') }}" class="nav-link">🍪 Products</a>
+                    <a href="{{ url_for('basket') }}" class="nav-link basket-link">
+                        <span class="basket-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17,18A2,2 0 0,1 19,20A2,2 0 0,1 17,22C15.89,22 15,21.1 15,20C15,18.89 15.89,18 17,18M1,2H4.27L5.21,4H20A1,1 0 0,1 21,5C21,5.17 20.95,5.34 20.88,5.5L17.3,11.97C16.96,12.58 16.3,13 15.55,13H8.1L7.2,14.63L7.17,14.75A0.25,0.25 0 0,0 7,15.75V17H18V18H7L5,20H18C19,20 20,19 20,18H5.76L5.21,4H4.27L1,2ZM7,12C7,12 7.5,12.5 7,13C6.5,13.5 6,13 6,13C6,12.5 6.5,12 7,12Z"/>
+                            </svg>
+                            {% if basket_count > 0 %}
+                            <span class="basket-count">{{ basket_count }}</span>
+                            {% endif %}
+                        </span>
+                        Basket
+                    </a>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="nav-action-btn" id="searchToggle" aria-label="Search">
+                        🔍
+                    </button>
+
+                    <div class="account-dropdown">
+                        <button class="nav-action-btn" id="accountBtn" aria-label="Account">
+                            👤
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="dropdown-link">👤 Profile</a>
+                            <a href="#" class="dropdown-link">📦 Orders</a>
+                            <a href="#" class="dropdown-link">❤️ Wishlist</a>
+                            <a href="#" class="dropdown-link">🎯 Preferences</a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-link">🚪 Logout</a>
+                        </div>
+                    </div>
+
+                    <div class="lang-selector">
+                        <button class="nav-action-btn" id="langBtn" aria-label="Language">
+                            🌍 EN
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="dropdown-link" data-lang="en">🇺🇸 English</a>
+                            <a href="#" class="dropdown-link" data-lang="ar">🇸🇦 العربية</a>
+                            <a href="#" class="dropdown-link" data-lang="fr">🇫🇷 Français</a>
+                        </div>
+                    </div>
+
+                    <button class="nav-action-btn mobile-menu-toggle" id="menuToggle" aria-label="Menu">
+                        ☰
+                    </button>
+                </div>
+
+                <div class="nav-search" id="navSearch">
+                    <input type="text" placeholder="Search pastries..." class="search-input">
+                    <button class="search-submit" type="submit">🔍</button>
+                </div>
+            </nav>
+        </div>
+
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-content">
+                <button class="mobile-menu-close" id="mobileMenuClose">✕</button>
+                <a href="{{ url_for('index') }}" class="mobile-menu-link">🏠 Home</a>
+                <a href="{{ url_for('products') }}" class="mobile-menu-link">🍪 Products</a>
+                <a href="{{ url_for('basket') }}" class="mobile-menu-link">
+                    <span class="basket-icon">
+                        🛒
+                        {% if basket_count > 0 %}
+                        <span class="basket-count">{{ basket_count }}</span>
+                        {% endif %}
+                    </span>
+                    Basket
+                </a>
+
+                <div class="mobile-menu-section">
+                    <h3>Account</h3>
+                    <a href="#" class="mobile-menu-link">👤 Profile</a>
+                    <a href="#" class="mobile-menu-link">📦 Orders</a>
+                    <a href="#" class="mobile-menu-link">❤️ Wishlist</a>
+                </div>
+
+                <div class="mobile-menu-section">
+                    <h3>Language</h3>
+                    <a href="#" class="mobile-menu-link">🇺🇸 English</a>
+                    <a href="#" class="mobile-menu-link">🇸🇦 العربية</a>
+                    <a href="#" class="mobile-menu-link">🇫🇷 Français</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="search-filter-bar">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search pastries..." oninput="filterProducts()">
+                <div class="search-icon">🔍</div>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterByCategory('all')">All</button>
+                <button class="filter-btn" onclick="filterByCategory('traditional')">Traditional</button>
+                <button class="filter-btn" onclick="filterByCategory('sweet')">Sweet</button>
+                <button class="filter-btn" onclick="filterByCategory('special')">Special</button>
+            </div>
+        </div>
+        <h2>Our Authentic North African Pastries</h2>
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card" data-category="{{ product.category }}">
+                <div class="card-image">
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                </div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ product.name }}</h3>
+                        <p class="card-price">${{ "%.2f"|format(product.price) }}</p>
+                    </div>
+                    <p class="card-description">{{ product.description }}</p>
+                    {% if product.price <= 10 %}
+                    <div class="discount-banner">Buy 10+ for 10% off!</div>
+                    {% endif %}
+                    <div class="card-actions">
+                        <div class="quantity-section">
+                            <label for="qty-{{ product.id }}">Qty:</label>
+                            <input type="number" id="qty-{{ product.id }}" value="1" min="1" max="50">
+                        </div>
+                        <button class="btn-primary add-to-basket" onclick="addToBasket('{{ product.id }}', document.getElementById('qty-{{ product.id }}').value)">Add to Basket</button>
+                        {% if product.price <= 10 %}
+                        <button class="btn-discount buy-ten" onclick="buyTen('{{ product.id }}')">Buy 10 (Save ${{ "%.2f"|format(product.price * 10 * 0.1) }})</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Mediterranean Sweets. All rights reserved.</p>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Basket</h3>
+            <button id="cartSidebarClose" class="cart-close-btn">&times;</button>
+        </div>
+        <div id="cartItems" class="cart-items">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <div class="cart-footer" id="cartFooter">
+            <!-- Subtotal and checkout buttons -->
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div id="cartOverlay" class="cart-overlay hidden"></div>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
