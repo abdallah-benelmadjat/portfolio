@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediterranean Sweets - North African Pastries</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="{{ url_for('index') }}" class="logo-link">
+                    <img src="{{ url_for('static', filename='img/logo2.png') }}" alt="Mediterranean Sweets" class="logo">
+                    <h1 class="brand-name">Jiji's Cakes & Deserts</h1>
+                </a>
+            </div>
+
+            <nav class="nav-main">
+                <div class="nav-links">
+                    <a href="{{ url_for('index') }}" class="nav-link">🏠 Home</a>
+                    <a href="{{ url_for('products') }}" class="nav-link">🍪 Products</a>
+                    <a href="{{ url_for('basket') }}" class="nav-link basket-link">
+                        <span class="basket-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17,18A2,2 0 0,1 19,20A2,2 0 0,1 17,22C15.89,22 15,21.1 15,20C15,18.89 15.89,18 17,18M1,2H4.27L5.21,4H20A1,1 0 0,1 21,5C21,5.17 20.95,5.34 20.88,5.5L17.3,11.97C16.96,12.58 16.3,13 15.55,13H8.1L7.2,14.63L7.17,14.75A0.25,0.25 0 0,0 7,15.75V17H18V18H7L5,20H18C19,20 20,19 20,18H5.76L5.21,4H4.27L1,2ZM7,12C7,12 7.5,12.5 7,13C6.5,13.5 6,13 6,13C6,12.5 6.5,12 7,12Z"/>
+                            </svg>
+                            {% if basket_count > 0 %}
+                            <span class="basket-count">{{ basket_count }}</span>
+                            {% endif %}
+                        </span>
+                        Basket
+                    </a>
+                </div>
+
+                <div class="nav-actions">
+                    <!-- Search Toggle -->
+                    <button class="nav-action-btn" id="searchToggle" aria-label="Search">
+                        🔍
+                    </button>
+
+                    <!-- User Account -->
+                    <div class="account-dropdown">
+                        <button class="nav-action-btn" id="accountBtn" aria-label="Account">
+                            👤
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="dropdown-link">👤 Profile</a>
+                            <a href="#" class="dropdown-link">📦 Orders</a>
+                            <a href="#" class="dropdown-link">❤️ Wishlist</a>
+                            <a href="#" class="dropdown-link">🎯 Preferences</a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-link">🚪 Logout</a>
+                        </div>
+                    </div>
+
+                    <!-- Language Selector -->
+                    <div class="lang-selector">
+                        <button class="nav-action-btn" id="langBtn" aria-label="Language">
+                            🌍 EN
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="dropdown-link" data-lang="en">🇺🇸 English</a>
+                            <a href="#" class="dropdown-link" data-lang="ar">🇸🇦 العربية</a>
+                            <a href="#" class="dropdown-link" data-lang="fr">🇫🇷 Français</a>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="nav-action-btn mobile-menu-toggle" id="menuToggle" aria-label="Menu">
+                        ☰
+                    </button>
+                </div>
+
+                <!-- Expandable Search Bar -->
+                <div class="nav-search" id="navSearch">
+                    <input type="text" placeholder="Search pastries..." class="search-input">
+                    <button class="search-submit" type="submit">🔍</button>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-content">
+                <button class="mobile-menu-close" id="mobileMenuClose">✕</button>
+                <a href="{{ url_for('index') }}" class="mobile-menu-link">🏠 Home</a>
+                <a href="{{ url_for('products') }}" class="mobile-menu-link">🍪 Products</a>
+                <a href="{{ url_for('basket') }}" class="mobile-menu-link">
+                    <span class="basket-icon">
+                        🛒
+                        {% if basket_count > 0 %}
+                        <span class="basket-count">{{ basket_count }}</span>
+                        {% endif %}
+                    </span>
+                    Basket
+                </a>
+
+                <div class="mobile-menu-section">
+                    <h3>Account</h3>
+                    <a href="#" class="mobile-menu-link">👤 Profile</a>
+                    <a href="#" class="mobile-menu-link">📦 Orders</a>
+                    <a href="#" class="mobile-menu-link">❤️ Wishlist</a>
+                </div>
+
+                <div class="mobile-menu-section">
+                    <h3>Language</h3>
+                    <a href="#" class="mobile-menu-link">🇺🇸 English</a>
+                    <a href="#" class="mobile-menu-link">🇸🇦 العربية</a>
+                    <a href="#" class="mobile-menu-link">🇫🇷 Français</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="hero">
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Mediterranean pastry collection" class="hero-image">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge">🌟 Featured Collection</div>
+            <h1>✨ Authentic North African Pastries</h1>
+            <p class="hero-subtitle">Handcrafted with generational recipes from the heart of the Mediterranean</p>
+            <p class="hero-description">Experience exquisite textures and delightful flavors - baklava, makroud, and 10+ more traditional treats. Save 10% when you buy 10 or more!</p>
+            <div class="hero-actions">
+                <a href="{{ url_for('products') }}" class="btn-primary">🍪 Browse All Pastries</a>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">Happy Customers</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Traditional Recipes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">⭐ 4.9</span>
+                        <span class="stat-label">Average Rating</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="featured">
+        <div class="section-header">
+            <h2>✨ Featured Pastries</h2>
+            <p class="section-subtitle">Our most beloved traditional treats</p>
+        </div>
+        <div class="featured-grid">
+            <div class="product-card">
+                <div class="card-image">
+                    <img src="https://www.foodandwine.com/thmb/-NNjzTUWrB6MZyntTRxTD0MJQ3E=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/chocolate-hazelnut-baklava-FT-RECIPE1224-dc7ef737e1ef4de8a5a8a0cdfbb44fb3.jpeg" alt="Baklava">
+                    <div class="card-badge">Most Popular</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <h3 class="card-title">Baklava</h3>
+                        <p class="card-price">$6.99</p>
+                    </div>
+                    <p class="card-description">Delicate layers of phyllo pastry filled with chopped nuts, sweetened with honey.</p>
+                    <div class="card-actions">
+                        <button class="btn-primary quick-add" onclick="quickAddFeatured('baklava')"><span class="btn-icon">🛒</span>Add to Basket</button>
+                        <a href="{{ url_for('products') }}" class="btn-link">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="card-image">
+                    <img src="https://www.masmoudigourmet.com/cdn/shop/files/MakroudKairouan700g36Pcs2.png?v=1760393908&width=2048" alt="Makroud">
+                    <div class="card-badge">New Arrival</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <h3 class="card-title">Makroud</h3>
+                        <p class="card-price">$4.50</p>
+                    </div>
+                    <p class="card-description">Semolina pastry filled with almond paste, scented with orange blossom.</p>
+                    <div class="card-actions">
+                        <button class="btn-primary quick-add" onclick="quickAddFeatured('makroud')"><span class="btn-icon">🛒</span>Add to Basket</button>
+                        <a href="{{ url_for('products') }}" class="btn-link">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="card-image">
+                    <img src="https://cdn.shopify.com/s/files/1/0600/9834/7062/files/basboussa_1000x_2b848cce-b87e-4afb-9493-08e85c3ccca6.webp?v=1715011295" alt="Basbousa">
+                    <div class="card-badge">Customer Favorite</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <h3 class="card-title">Basbousa</h3>
+                        <p class="card-price">$5.99</p>
+                    </div>
+                    <p class="card-description">Semolina cake soaked in sweetened syrup, topped with almonds.</p>
+                    <div class="card-actions">
+                        <button class="btn-primary quick-add" onclick="quickAddFeatured('basbousa')"><span class="btn-icon">🛒</span>Add to Basket</button>
+                        <a href="{{ url_for('products') }}" class="btn-link">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="card-image">
+                    <img src="https://parsleyandicing.com/wp-content/uploads/2025/03/batch-of-moroccan-almond-cookies.jpg" alt="Ghriba">
+                    <div class="card-badge">Signature</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <h3 class="card-title">Ghriba bil Louz</h3>
+                        <p class="card-price">$3.99</p>
+                    </div>
+                    <p class="card-description">Moroccan shortbread cookies made with almond flour and icing sugar.</p>
+                    <div class="card-actions">
+                        <button class="btn-primary quick-add" onclick="quickAddFeatured('ghriba')"><span class="btn-icon">🛒</span>Add to Basket</button>
+                        <a href="{{ url_for('products') }}" class="btn-link">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="about-content">
+            <div class="logo-showcase">
+                <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Mediterranean Sweets Logo" class="hero-logo">
+                <h3>✨ Authentic Craftsmanship</h3>
+                <p>Every pastry tells a story passed down through generations</p>
+            </div>
+            <h2>About Us</h2>
+            <p>Mediterranean Sweets brings the authentic flavors of North Africa to your doorstep. Our pastries are made with traditional recipes passed down through generations, using the finest ingredients like almonds, honey, and spices.</p>
+            <p>We source our inspiration from the bustling markets of Morocco, Tunisia, Algeria, and Egypt, ensuring every bite transports you to the vibrant streets of these Mediterranean gems.</p>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>💬 What Our Customers Say</h2>
+            <p class="section-subtitle">Join thousands of satisfied customers</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial">
+                <div class="testimonial-image">
+                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b44c?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Sarah">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                </div>
+                <div class="testimonial-content">
+                    <p>"The baklava is absolutely divine – crunchy layers with just the right amount of sweetness! Every bite transports me back to my childhood in Morocco."</p>
+                    <cite>
+                        <strong>Sarah M.</strong><br>
+                        <span>Moroccan Heritage Enthusiast</span>
+                    </cite>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-image">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Ahmed">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                </div>
+                <div class="testimonial-content">
+                    <p>"Finally found authentic North African pastries online. The sfenj are crispy and delicious exactly like my grandmother used to make!"</p>
+                    <cite>
+                        <strong>Ahmed K.</strong><br>
+                        <span>Culinary Tradition Preserver</span>
+                    </cite>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-image">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Fatima">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                </div>
+                <div class="testimonial-content">
+                    <p>"The ma'amoul brings back wonderful memories of family gatherings. The attention to detail and authenticity is unmatched. Highly recommend!"</p>
+                    <cite>
+                        <strong>Fatima Z.</strong><br>
+                        <span>Home Baker & Tradition Lover</span>
+                    </cite>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-image">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="David">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                </div>
+                <div class="testimonial-content">
+                    <p>"As someone new to North African cuisine, these pastries opened up a whole new world of flavors. The quality and service are exceptional!"</p>
+                    <cite>
+                        <strong>David L.</strong><br>
+                        <span>Culinary Adventurer</span>
+                    </cite>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact">
+        <h2>Contact Us</h2>
+        <p>Phone: (555) 123-4567</p>
+        <p>Email: info@mediterraneansweets.com</p>
+        <p>Address: 123 Spice Street, Mediterranean City, MC 12345</p>
+        <p>Open: Mon-Fri 8AM - 6PM, Sat-Sun 9AM - 5PM</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Mediterranean Sweets. All rights reserved.</p>
+        <p><a href="#top">Back to Top</a></p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
