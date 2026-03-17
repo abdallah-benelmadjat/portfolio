@@ -3,107 +3,847 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Job Application Progress</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <title>Application Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body {
-      background-color: #f9fafb;
-      font-family: 'Inter', sans-serif;
+    :root {
+      --bg:       #0d0f14;
+      --surface:  #151820;
+      --surface2: #1c2030;
+      --border:   #262b3a;
+      --accent:   #f59e0b;
+      --accent2:  #38bdf8;
+      --muted:    #4b5563;
+      --text:     #e2e8f0;
+      --text-dim: #8892a4;
+      --red:      #f87171;
+      --green:    #34d399;
+      --yellow:   #fbbf24;
+      --blue:     #60a5fa;
+      --purple:   #a78bfa;
+
+      /* Status colors */
+      --s-to_apply:    #334155;
+      --s-applied:     #1e3a5f;
+      --s-in_progress: #3b2f00;
+      --s-interview:   #1a3a2a;
+      --s-hired:       #14532d;
+      --s-rejected:    #3b1515;
     }
-    .status-to_apply { background-color: #e0f7fa; }
-    .status-applied { background-color: #e8f5e9; }
-    .status-in_progress { background-color: #fff3e0; }
-    .status-interview { background-color: #e3f2fd; }
-    .status-hired { background-color: #dcedc8; }
-    .status-rejected { background-color: #ffebee; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .logo { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    .logo span { color: var(--text-dim); }
+
+    /* ── STATS ── */
+    #stats-bar {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .stat { flex: 1; min-width: 90px; background: var(--surface); padding: 0.85rem 1.25rem; }
+    .stat-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+    .stat-value { font-family: 'Space Mono', monospace; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+    .stat-value.green  { color: var(--green); }
+    .stat-value.blue   { color: var(--blue); }
+    .stat-value.red    { color: var(--red); }
+    .stat-value.purple { color: var(--purple); }
+    .stat-value.yellow { color: var(--yellow); }
+
+    /* ── CONTROLS ── */
+    #controls {
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 60px;
+      z-index: 199;
+    }
+
+    .search-wrap { position: relative; flex: 1; min-width: 200px; }
+    .search-wrap svg { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--muted); pointer-events: none; }
+
+    input[type="text"], input[type="date"], input[type="url"],
+    textarea, select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.55rem 0.75rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #search { width: 100%; padding-left: 2.25rem; }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+
+    select option { background: var(--surface2); }
+
+    button {
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: opacity 0.15s, background 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-primary { background: var(--accent); color: #000; border-color: var(--accent); }
+    .btn-primary:hover { background: #d97706; }
+    .btn-ghost { background: var(--surface); border-color: var(--border); color: var(--text-dim); }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--text); }
+    .btn-danger { background: rgba(248,113,113,0.15); border-color: rgba(248,113,113,0.4); color: var(--red); }
+    .btn-danger:hover { background: rgba(248,113,113,0.25); }
+    .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+
+    /* ── TABLE ── */
+    #table-wrap {
+      padding: 1.5rem 2rem 4rem;
+      overflow-x: auto;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead { position: sticky; top: 122px; z-index: 10; }
+    
+    th {
+      background: var(--surface2);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th:hover { color: var(--text); }
+    th .sort-arrow { opacity: 0.4; margin-left: 4px; }
+    th.sorted .sort-arrow { opacity: 1; color: var(--accent); }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      vertical-align: middle;
+      max-width: 200px;
+    }
+
+    tr { transition: background 0.1s; }
+    tr:hover td { background: var(--surface2); }
+
+    /* Status row tints */
+    tr.s-to_apply   td { border-left: 3px solid var(--muted); }
+    tr.s-applied    td { border-left: 3px solid var(--blue); }
+    tr.s-in_progress td { border-left: 3px solid var(--yellow); }
+    tr.s-interview  td { border-left: 3px solid var(--green); }
+    tr.s-hired      td { border-left: 3px solid #10b981; }
+    tr.s-rejected   td { border-left: 3px solid var(--red); }
+
+    tr.s-to_apply   { background: rgba(51,65,85,0.2); }
+    tr.s-applied    { background: rgba(96,165,250,0.06); }
+    tr.s-in_progress { background: rgba(251,191,36,0.06); }
+    tr.s-interview  { background: rgba(52,211,153,0.06); }
+    tr.s-hired      { background: rgba(16,185,129,0.08); }
+    tr.s-rejected   { background: rgba(248,113,113,0.05); }
+
+    .job-link { color: var(--accent2); text-decoration: none; }
+    .job-link:hover { text-decoration: underline; }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .badge-to_apply   { background: rgba(75,85,99,0.3);    color: #94a3b8; border-color: rgba(75,85,99,0.5); }
+    .badge-applied    { background: rgba(96,165,250,0.15);  color: var(--blue);   border-color: rgba(96,165,250,0.3); }
+    .badge-in_progress{ background: rgba(251,191,36,0.15);  color: var(--yellow); border-color: rgba(251,191,36,0.3); }
+    .badge-interview  { background: rgba(52,211,153,0.15);  color: var(--green);  border-color: rgba(52,211,153,0.3); }
+    .badge-hired      { background: rgba(16,185,129,0.2);   color: #10b981;       border-color: rgba(16,185,129,0.4); }
+    .badge-rejected   { background: rgba(248,113,113,0.15); color: var(--red);    border-color: rgba(248,113,113,0.3); }
+
+    /* Status dropdown in cell */
+    .status-select {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.78rem;
+      border-radius: 4px;
+    }
+
+    /* Notes cell */
+    .notes-text {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .notes-text:hover { color: var(--text); }
+
+    /* Deadline */
+    .deadline-near { color: var(--yellow); font-weight: 600; }
+    .deadline-past { color: var(--red); }
+    .deadline-ok   { color: var(--text-dim); }
+
+    /* Actions */
+    .actions-cell { display: flex; gap: 0.4rem; align-items: center; white-space: nowrap; }
+
+    /* ── EMPTY STATE ── */
+    #empty {
+      text-align: center;
+      padding: 5rem 2rem;
+      display: none;
+    }
+
+    #empty .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+    #empty p { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--muted); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 0.25s, opacity 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { border-color: rgba(52,211,153,0.5); }
+    #toast.error   { border-color: rgba(248,113,113,0.5); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-grid .full { grid-column: 1 / -1; }
+
+    .field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .field label { font-size: 0.75rem; font-family: 'Space Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .field input, .field select, .field textarea { width: 100%; }
+    .field textarea { resize: vertical; min-height: 70px; }
+
+    .modal-footer { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem; }
+
+    /* ── INLINE EDIT ── */
+    .inline-input {
+      background: var(--surface2);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.25rem 0.5rem;
+      width: 100%;
+      outline: none;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    @media (max-width: 640px) {
+      #controls { padding: 0.75rem 1rem; }
+      #table-wrap { padding: 1rem 0.5rem 4rem; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-<body class="min-h-screen">
-  <div class="max-w-7xl mx-auto p-8">
-    <h1 class="text-2xl font-bold mb-6">Job Application Progress</h1>
+<body>
 
-    <table class="table-auto w-full border-collapse border border-gray-300">
-      <thead>
-        <tr class="bg-gray-100">
-          <th class="border border-gray-300 px-4 py-2">Job</th>
-          <th class="border border-gray-300 px-4 py-2">Company</th>
-          <th class="border border-gray-300 px-4 py-2">Location</th>
-          <th class="border border-gray-300 px-4 py-2">Pay Range</th>
-          <th class="border border-gray-300 px-4 py-2">Deadline</th>
-          <th class="border border-gray-300 px-4 py-2">Source</th>
-          <th class="border border-gray-300 px-4 py-2">Status</th>
-          <th class="border border-gray-300 px-4 py-2">Notes</th>
-          <th class="border border-gray-300 px-4 py-2">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="progressTableBody">
-        <!-- Rows will be dynamically populated -->
-      </tbody>
-    </table>
+<!-- HEADER -->
+<header>
+  <div class="logo">job<span>/</span>tracker</div>
+  <div style="display:flex;gap:0.75rem;align-items:center;">
+    <span id="last-sync" style="font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);">—</span>
+    <button class="btn-primary" onclick="openAddModal()">
+      <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"/></svg>
+      Add Application
+    </button>
+  </div>
+</header>
+
+<!-- STATS -->
+<div id="stats-bar">
+  <div class="stat"><div class="stat-label">Total</div><div class="stat-value" id="s-total">—</div></div>
+  <div class="stat"><div class="stat-label">To Apply</div><div class="stat-value" id="s-toapply">—</div></div>
+  <div class="stat"><div class="stat-label">Applied</div><div class="stat-value blue" id="s-applied">—</div></div>
+  <div class="stat"><div class="stat-label">In Progress</div><div class="stat-value yellow" id="s-inprogress">—</div></div>
+  <div class="stat"><div class="stat-label">Interview</div><div class="stat-value green" id="s-interview">—</div></div>
+  <div class="stat"><div class="stat-label">Hired</div><div class="stat-value green" id="s-hired">—</div></div>
+  <div class="stat"><div class="stat-label">Rejected</div><div class="stat-value red" id="s-rejected">—</div></div>
+</div>
+
+<!-- CONTROLS -->
+<div id="controls">
+  <div class="search-wrap">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+    <input type="text" id="search" placeholder="Search job, company, location...">
   </div>
 
-  <script>
-    const SUPABASE_URL = 'https://qdcxtfnuezcznygvpvsc.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY3h0Zm51ZXpjem55Z3ZwdnNjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDA0NjEzMiwiZXhwIjoyMDY1NjIyMTMyfQ.-W9Ii2b8PT5lFzBDT7J2NYCDIRdvIABfWuZ76gasWv8';
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+  <select id="statusFilter">
+    <option value="all">All Statuses</option>
+    <option value="to_apply">To Apply</option>
+    <option value="applied">Applied</option>
+    <option value="in_progress">In Progress</option>
+    <option value="interview">Interview</option>
+    <option value="hired">Hired</option>
+    <option value="rejected">Rejected</option>
+  </select>
 
-    async function fetchProgress() {
-      const { data, error } = await db.from('progress').select('*');
-      if (error) {
-        console.error('Error fetching progress:', error);
-        return;
-      }
+  <button class="btn-ghost" onclick="loadData()">
+    <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+    Refresh
+  </button>
+</div>
 
-      const tableBody = document.getElementById('progressTableBody');
-      tableBody.innerHTML = '';
+<!-- TABLE -->
+<div id="table-wrap">
+  <table id="main-table">
+    <thead>
+      <tr>
+        <th onclick="sortBy('job')">Job Title <span class="sort-arrow">↕</span></th>
+        <th onclick="sortBy('company')">Company <span class="sort-arrow">↕</span></th>
+        <th onclick="sortBy('loc')">Location <span class="sort-arrow">↕</span></th>
+        <th onclick="sortBy('pay_range')">Pay Range <span class="sort-arrow">↕</span></th>
+        <th onclick="sortBy('deadline')">Deadline <span class="sort-arrow">↕</span></th>
+        <th>Source</th>
+        <th onclick="sortBy('status')">Status <span class="sort-arrow">↕</span></th>
+        <th>Notes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr><td colspan="9" style="text-align:center;padding:3rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.8rem;">
+        <div style="width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;margin:0 auto 1rem;animation:spin 0.8s linear infinite;"></div>
+        Loading...
+      </td></tr>
+    </tbody>
+  </table>
+  <div id="empty">
+    <div class="empty-icon">📋</div>
+    <p>No applications match your filters.<br>Add one with the button above.</p>
+  </div>
+</div>
 
-      data.forEach(entry => {
-        const row = document.createElement('tr');
-        row.className = `status-${entry.status}`;
+<!-- TOAST -->
+<div id="toast"></div>
 
-        row.innerHTML = `
-          <td class="border border-gray-300 px-4 py-2">${entry.job}</td>
-          <td class="border border-gray-300 px-4 py-2">${entry.company}</td>
-          <td class="border border-gray-300 px-4 py-2">${entry.lo || ''}</td>
-          <td class="border border-gray-300 px-4 py-2">${entry.pay_range || ''}</td>
-          <td class="border border-gray-300 px-4 py-2">${entry.deadline || ''}</td>
-          <td class="border border-gray-300 px-4 py-2">${entry.source || ''}</td>
-          <td class="border border-gray-300 px-4 py-2">${entry.status}</td>
-          <td class="border border-gray-300 px-4 py-2">${entry.notes || ''}</td>
-          <td class="border border-gray-300 px-4 py-2">
-            <button onclick="updateStatus('${entry.id}', 'applied')" class="px-2 py-1 bg-blue-500 text-white rounded">Apply</button>
-            <button onclick="updateStatus('${entry.id}', 'in_progress')" class="px-2 py-1 bg-yellow-500 text-white rounded">In Progress</button>
-            <button onclick="updateStatus('${entry.id}', 'interview')" class="px-2 py-1 bg-green-500 text-white rounded">Interview</button>
-            <button onclick="updateStatus('${entry.id}', 'hired')" class="px-2 py-1 bg-indigo-500 text-white rounded">Hired</button>
-            <button onclick="deleteEntry('${entry.id}')" class="px-2 py-1 bg-red-500 text-white rounded">Remove</button>
-          </td>
-        `;
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2 id="modal-title">+ New Application</h2>
+    <form id="modal-form" onsubmit="submitForm(event)">
+      <input type="hidden" id="edit-id">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Job Title *</label>
+          <input type="text" id="f-job" required placeholder="e.g. Mechanical Engineering Intern">
+        </div>
+        <div class="field">
+          <label>Company *</label>
+          <input type="text" id="f-company" required placeholder="e.g. NREL">
+        </div>
+        <div class="field">
+          <label>Location</label>
+          <input type="text" id="f-loc" placeholder="e.g. Golden, CO (Remote)">
+        </div>
+        <div class="field">
+          <label>Pay Range</label>
+          <input type="text" id="f-pay" placeholder="e.g. $25–30/hr">
+        </div>
+        <div class="field">
+          <label>Deadline</label>
+          <input type="date" id="f-deadline">
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select id="f-status">
+            <option value="to_apply">To Apply</option>
+            <option value="applied">Applied</option>
+            <option value="in_progress">In Progress</option>
+            <option value="interview">Interview</option>
+            <option value="hired">Hired</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Job Link / URL</label>
+          <input type="url" id="f-source" placeholder="https://...">
+        </div>
+        <div class="field full">
+          <label>Notes</label>
+          <textarea id="f-notes" placeholder="Requirements, contacts, follow-up dates..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-primary" id="modal-submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-        tableBody.appendChild(row);
-      });
+<!-- NOTES MODAL -->
+<div class="modal-overlay" id="notes-modal">
+  <div class="modal" style="max-width:420px;">
+    <h2>📝 Notes</h2>
+    <div id="notes-job-label" style="color:var(--text-dim);font-size:0.8rem;margin-bottom:1rem;"></div>
+    <textarea id="notes-textarea" style="width:100%;min-height:140px;"></textarea>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeNotesModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveNotes()">Save Notes</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal" style="max-width:380px;">
+    <h2 style="color:var(--red);">⚠ Confirm Delete</h2>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:1.5rem;">Remove <strong id="confirm-job-name" style="color:var(--text)"></strong> from your tracker? This cannot be undone.</p>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-danger" id="confirm-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+// ── SUPABASE ─────────────────────────────────────────────
+const SUPABASE_URL = 'https://qdcxtfnuezcznygvpvsc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY3h0Zm51ZXpjem55Z3ZwdnNjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDA0NjEzMiwiZXhwIjoyMDY1NjIyMTMyfQ.-W9Ii2b8PT5lFzBDT7J2NYCDIRdvIABfWuZ76gasWv8';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── STATE ────────────────────────────────────────────────
+let allRows = [];
+let sortKey = 'deadline';
+let sortDir = 'asc';
+let editingNotesId = null;
+
+const STATUS_ORDER = ['to_apply','applied','in_progress','interview','hired','rejected'];
+const STATUS_LABELS = {
+  to_apply: 'To Apply', applied: 'Applied',
+  in_progress: 'In Progress', interview: 'Interview',
+  hired: 'Hired', rejected: 'Rejected'
+};
+
+// ── LOAD ─────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const { data, error } = await db.from('progress').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    allRows = data || [];
+    document.getElementById('last-sync').textContent = 'Synced ' + new Date().toLocaleTimeString();
+    updateStats();
+    render();
+  } catch (err) {
+    console.error(err);
+    toast('Failed to load: ' + err.message, 'error');
+    document.getElementById('tbody').innerHTML =
+      `<tr><td colspan="9" style="text-align:center;padding:3rem;color:var(--red);font-family:'Space Mono',monospace;font-size:0.8rem;">
+        Error: ${escHtml(err.message)}<br><small style="color:var(--muted)">Check console & Supabase table name</small>
+      </td></tr>`;
+  }
+}
+
+// ── STATS ────────────────────────────────────────────────
+function updateStats() {
+  const counts = {};
+  STATUS_ORDER.forEach(s => counts[s] = 0);
+  allRows.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+  document.getElementById('s-total').textContent     = allRows.length;
+  document.getElementById('s-toapply').textContent   = counts.to_apply;
+  document.getElementById('s-applied').textContent   = counts.applied;
+  document.getElementById('s-inprogress').textContent= counts.in_progress;
+  document.getElementById('s-interview').textContent  = counts.interview;
+  document.getElementById('s-hired').textContent     = counts.hired;
+  document.getElementById('s-rejected').textContent  = counts.rejected;
+}
+
+// ── RENDER ───────────────────────────────────────────────
+function render() {
+  const q      = document.getElementById('search').value.trim().toLowerCase();
+  const filter = document.getElementById('statusFilter').value;
+  const tbody  = document.getElementById('tbody');
+  const empty  = document.getElementById('empty');
+
+  let rows = allRows.filter(r => {
+    if (filter !== 'all' && r.status !== filter) return false;
+    if (q) {
+      const blob = `${r.job||''} ${r.company||''} ${r.loc||''} ${r.notes||''}`.toLowerCase();
+      if (!blob.includes(q)) return false;
     }
+    return true;
+  });
 
-    async function updateStatus(id, status) {
-      const { error } = await db.from('progress').update({ status }).eq('id', id);
-      if (error) {
-        console.error('Error updating status:', error);
-        return;
-      }
-      fetchProgress();
+  // Sort
+  rows.sort((a, b) => {
+    let va = a[sortKey] || '', vb = b[sortKey] || '';
+    if (sortKey === 'status') {
+      va = STATUS_ORDER.indexOf(a.status);
+      vb = STATUS_ORDER.indexOf(b.status);
     }
-
-    async function deleteEntry(id) {
-      const { error } = await db.from('progress').delete().eq('id', id);
-      if (error) {
-        console.error('Error deleting entry:', error);
-        return;
-      }
-      fetchProgress();
+    if (sortKey === 'deadline') {
+      va = va ? new Date(va) : new Date('9999');
+      vb = vb ? new Date(vb) : new Date('9999');
     }
+    if (va < vb) return sortDir === 'asc' ? -1 : 1;
+    if (va > vb) return sortDir === 'asc' ?  1 : -1;
+    return 0;
+  });
 
-    fetchProgress();
-  </script>
+  // Update sort headers
+  document.querySelectorAll('th').forEach(th => th.classList.remove('sorted'));
+  document.querySelectorAll('th').forEach(th => {
+    const attr = th.getAttribute('onclick');
+    if (attr && attr.includes(`'${sortKey}'`)) th.classList.add('sorted');
+  });
+
+  if (!rows.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = rows.map(r => {
+    const dlClass = deadlineClass(r.deadline);
+    const dlStr   = formatDeadline(r.deadline);
+    const badge   = `<span class="status-badge badge-${r.status}" onclick="cycleStatus('${r.id}','${r.status}')" title="Click to advance status">${STATUS_LABELS[r.status] || r.status}</span>`;
+    const notes   = r.notes
+      ? `<span class="notes-text" onclick="openNotesModal('${r.id}')" title="${escHtml(r.notes)}">${escHtml(r.notes)}</span>`
+      : `<span class="notes-text" onclick="openNotesModal('${r.id}')" style="color:var(--border);">+ add</span>`;
+
+    const jobCell = r.source
+      ? `<a href="${escHtml(r.source)}" target="_blank" rel="noopener" class="job-link">${escHtml(r.job || '')}</a>`
+      : escHtml(r.job || '');
+
+    return `<tr class="s-${r.status}" data-id="${r.id}">
+      <td style="font-weight:500;">${jobCell}</td>
+      <td>${escHtml(r.company || '')}</td>
+      <td style="color:var(--text-dim);font-size:0.8rem;">${escHtml(r.loc || '')}</td>
+      <td style="color:var(--green);font-family:'Space Mono',monospace;font-size:0.78rem;">${escHtml(r.pay_range || '')}</td>
+      <td class="${dlClass}" style="font-family:'Space Mono',monospace;font-size:0.78rem;">${dlStr}</td>
+      <td style="font-size:0.78rem;color:var(--text-dim);">${r.source ? `<a href="${escHtml(r.source)}" target="_blank" class="job-link" style="font-size:0.75rem;">🔗 Link</a>` : ''}</td>
+      <td>${badge}</td>
+      <td>${notes}</td>
+      <td>
+        <div class="actions-cell">
+          <button class="btn-ghost btn-sm" onclick="openEditModal('${r.id}')">Edit</button>
+          <button class="btn-danger btn-sm" onclick="confirmDelete('${r.id}','${escHtml(r.job||'')}')">✕</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── STATUS CYCLE ─────────────────────────────────────────
+async function cycleStatus(id, current) {
+  const idx  = STATUS_ORDER.indexOf(current);
+  const next = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+  await updateField(id, { status: next });
+}
+
+// ── SORT ─────────────────────────────────────────────────
+function sortBy(key) {
+  if (sortKey === key) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortKey = key; sortDir = 'asc'; }
+  render();
+}
+
+// ── DEADLINE HELPERS ─────────────────────────────────────
+function deadlineClass(dl) {
+  if (!dl) return '';
+  const days = Math.ceil((new Date(dl) - Date.now()) / 86400000);
+  if (days < 0)  return 'deadline-past';
+  if (days <= 7) return 'deadline-near';
+  return 'deadline-ok';
+}
+
+function formatDeadline(dl) {
+  if (!dl) return '—';
+  const d    = new Date(dl);
+  const days = Math.ceil((d - Date.now()) / 86400000);
+  const str  = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  if (days < 0)  return `${str} (expired)`;
+  if (days === 0) return `${str} (today!)`;
+  if (days <= 7) return `${str} (${days}d)`;
+  return str;
+}
+
+// ── ADD MODAL ────────────────────────────────────────────
+function openAddModal() {
+  document.getElementById('modal-title').textContent = '+ New Application';
+  document.getElementById('modal-submit').textContent = 'Add';
+  document.getElementById('edit-id').value = '';
+  document.getElementById('modal-form').reset();
+  document.getElementById('modal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const r = allRows.find(x => x.id == id);
+  if (!r) return;
+  document.getElementById('modal-title').textContent = '✏ Edit Application';
+  document.getElementById('modal-submit').textContent = 'Save Changes';
+  document.getElementById('edit-id').value = id;
+  document.getElementById('f-job').value     = r.job     || '';
+  document.getElementById('f-company').value = r.company || '';
+  document.getElementById('f-loc').value     = r.loc     || '';
+  document.getElementById('f-pay').value     = r.pay_range || '';
+  document.getElementById('f-deadline').value= r.deadline || '';
+  document.getElementById('f-status').value  = r.status  || 'to_apply';
+  document.getElementById('f-source').value  = r.source  || '';
+  document.getElementById('f-notes').value   = r.notes   || '';
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+async function submitForm(e) {
+  e.preventDefault();
+  const id = document.getElementById('edit-id').value;
+  const payload = {
+    job:       document.getElementById('f-job').value.trim(),
+    company:   document.getElementById('f-company').value.trim(),
+    loc:       document.getElementById('f-loc').value.trim(),
+    pay_range: document.getElementById('f-pay').value.trim(),
+    deadline:  document.getElementById('f-deadline').value || null,
+    status:    document.getElementById('f-status').value,
+    source:    document.getElementById('f-source').value.trim() || null,
+    notes:     document.getElementById('f-notes').value.trim() || null,
+  };
+
+  try {
+    if (id) {
+      const { error } = await db.from('progress').update(payload).eq('id', id);
+      if (error) throw error;
+      toast('Application updated ✓', 'success');
+    } else {
+      const { error } = await db.from('progress').insert(payload);
+      if (error) throw error;
+      toast('Application added ✓', 'success');
+    }
+    closeModal();
+    await loadData();
+  } catch (err) {
+    console.error(err);
+    toast('Error: ' + err.message, 'error');
+  }
+}
+
+// ── NOTES MODAL ──────────────────────────────────────────
+function openNotesModal(id) {
+  const r = allRows.find(x => x.id == id);
+  if (!r) return;
+  editingNotesId = id;
+  document.getElementById('notes-job-label').textContent = `${r.job} @ ${r.company}`;
+  document.getElementById('notes-textarea').value = r.notes || '';
+  document.getElementById('notes-modal').classList.add('open');
+  setTimeout(() => document.getElementById('notes-textarea').focus(), 50);
+}
+
+function closeNotesModal() {
+  document.getElementById('notes-modal').classList.remove('open');
+  editingNotesId = null;
+}
+
+async function saveNotes() {
+  if (!editingNotesId) return;
+  const notes = document.getElementById('notes-textarea').value.trim();
+  await updateField(editingNotesId, { notes: notes || null });
+  closeNotesModal();
+}
+
+// ── DELETE ───────────────────────────────────────────────
+let pendingDeleteId = null;
+
+function confirmDelete(id, name) {
+  pendingDeleteId = id;
+  document.getElementById('confirm-job-name').textContent = name;
+  document.getElementById('confirm-modal').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-modal').classList.remove('open');
+  pendingDeleteId = null;
+}
+
+document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
+  if (!pendingDeleteId) return;
+  try {
+    const { error } = await db.from('progress').delete().eq('id', pendingDeleteId);
+    if (error) throw error;
+    toast('Removed ✓', 'success');
+    closeConfirm();
+    await loadData();
+  } catch (err) {
+    toast('Error: ' + err.message, 'error');
+  }
+});
+
+// ── FIELD UPDATE ─────────────────────────────────────────
+async function updateField(id, patch) {
+  try {
+    const { error } = await db.from('progress').update(patch).eq('id', id);
+    if (error) throw error;
+    // Optimistic update in memory
+    const idx = allRows.findIndex(r => r.id == id);
+    if (idx !== -1) allRows[idx] = { ...allRows[idx], ...patch };
+    updateStats();
+    render();
+  } catch (err) {
+    console.error(err);
+    toast('Error: ' + err.message, 'error');
+    await loadData(); // Re-sync on failure
+  }
+}
+
+// ── TOAST ────────────────────────────────────────────────
+let toastTimer;
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = ''; }, 3000);
+}
+
+// ── UTILS ────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── EVENTS ───────────────────────────────────────────────
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('statusFilter').addEventListener('change', render);
+
+// Close modals on overlay click
+['modal','notes-modal','confirm-modal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('open');
+      if (id === 'notes-modal') editingNotesId = null;
+      if (id === 'confirm-modal') pendingDeleteId = null;
+    }
+  });
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+  if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+    e.preventDefault();
+    openAddModal();
+  }
+});
+
+// ── INIT ─────────────────────────────────────────────────
+loadData();
+</script>
 </body>
 </html>
