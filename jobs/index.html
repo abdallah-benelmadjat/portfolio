@@ -3,419 +3,802 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jobs Dashboard</title>
-  <!-- Tailwind CSS (or your index theme stylesheet) -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <!-- Supabase JS UMD bundle exposes a global `supabase` object -->
+  <title>Job Radar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    /* Custom overrides matching your index theme */
-    body { background-color: #f5f7fa; }
-    .card{ transition: transform .15s, box-shadow .15s; }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
-    .loading { animation: pulse 1.5s infinite; }
+    :root {
+      --bg:        #0d0f14;
+      --surface:   #151820;
+      --surface2:  #1c2030;
+      --border:    #262b3a;
+      --accent:    #f59e0b;
+      --accent2:   #38bdf8;
+      --muted:     #4b5563;
+      --text:      #e2e8f0;
+      --text-dim:  #8892a4;
+      --red:       #f87171;
+      --green:     #34d399;
+    }
 
-    /* Define colors for job categories */
-    .category-engineer { background-color: #e0f7fa; }
-    .category-technician { background-color: #e8f5e9; }
-    .category-manager { background-color: #fff3e0; }
-    .category-default { background-color: #f5f5f5; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Modernized styling */
     body {
-      background-color: #f9fafb;
-      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
     }
 
-    .top-bar {
-      background-color: #1f2937;
-      color: #ffffff;
-      padding: 1rem;
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .top-bar h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
+    .logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
     }
 
-    .top-bar a {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 1rem;
-      margin-left: 1rem;
-      transition: color 0.2s;
+    .logo span { color: var(--text-dim); }
+
+    #last-updated {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
     }
 
-    .top-bar a:hover {
-      color: #a5b4fc;
+    /* ── STATS BAR ── */
+    #stats-bar {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
-    .filters-container {
-      background-color: #ffffff;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .stat {
+      flex: 1;
+      background: var(--surface);
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
-    .filters-container input,
-    .filters-container select,
-    .filters-container button {
-      border: 1px solid #e5e7eb;
-      border-radius: 0.375rem;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
+    .stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .filters-container input:focus,
-    .filters-container select:focus,
-    .filters-container button:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+    .stat-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    /* ── CONTROLS ── */
+    #controls {
+      padding: 1.25rem 2rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 60px;
+      z-index: 99;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.55rem 0.75rem 0.55rem 2.25rem;
       outline: none;
+      transition: border-color 0.15s;
     }
 
-    .filters-container button {
-      background-color: #6366f1;
-      color: #ffffff;
-      font-weight: 500;
+    input[type="text"]:focus { border-color: var(--accent); }
+    input[type="text"]::placeholder { color: var(--muted); }
+
+    select, button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.55rem 0.85rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    select:focus { border-color: var(--accent); }
+
+    button#refresh {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    button#refresh:hover { background: #d97706; }
+    button#refresh svg { width: 14px; height: 14px; }
+
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 20px;
+      transition: background 0.2s;
       cursor: pointer;
     }
 
-    .filters-container button:hover {
-      background-color: #4f46e5;
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px;
+      left: 3px; top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
     }
 
-    .card {
-      background-color: #ffffff;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s, box-shadow 0.2s;
+    .toggle input:checked + .slider { background: var(--accent); }
+    .toggle input:checked + .slider::before { transform: translateX(16px); }
+
+    /* ── ACTIVE FILTERS ── */
+    #active-filters {
+      padding: 0 2rem 0.75rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .filter-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.78rem;
+      color: var(--text-dim);
     }
 
-    .card h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+    .filter-chip button {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1;
+      cursor: pointer;
     }
 
-    .card .text-sm {
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-
-    .card .text-xs {
+    /* ── RESULT COUNT ── */
+    #result-meta {
+      padding: 0 2rem 1rem;
+      font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
-      color: #9ca3af;
+      color: var(--muted);
+    }
+
+    /* ── GRID ── */
+    #grid {
+      padding: 0 2rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1px;
+      background: var(--border);
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: transparent;
+      transition: background 0.15s;
+    }
+
+    .card:hover { background: var(--surface2); }
+    .card:hover::before { background: var(--accent); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+
+    .company-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      object-fit: contain;
+      flex-shrink: 0;
+      padding: 4px;
+    }
+
+    .card-title-block { flex: 1; min-width: 0; }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 0.2rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-company {
+      font-size: 0.8rem;
+      color: var(--accent2);
+      font-weight: 500;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+    }
+
+    .meta-chip svg { width: 10px; height: 10px; }
+
+    .badge-intern {
+      background: rgba(245,158,11,0.15);
+      border-color: rgba(245,158,11,0.4);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .badge-repost {
+      background: rgba(248,113,113,0.1);
+      border-color: rgba(248,113,113,0.3);
+      color: var(--red);
+    }
+
+    .badge-new {
+      background: rgba(52,211,153,0.1);
+      border-color: rgba(52,211,153,0.3);
+      color: var(--green);
+    }
+
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── EMPTY/LOADING ── */
+    #status-msg {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 24px; height: 24px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* ── PAGINATION ── */
+    #pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 2rem;
+    }
+
+    #pagination button {
+      padding: 0.45rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    #pagination button:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    #pagination button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+
+    #page-info {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding: 0 0.5rem;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      #controls { padding: 1rem; }
+      #grid { padding: 0 0 4rem; }
+      .stat { padding: 0.75rem 1rem; }
+      #stats-bar { overflow-x: auto; }
     }
   </style>
 </head>
-<body class="min-h-screen">
-  <!-- Top Bar -->
-  <div class="top-bar">
-    <h1>Company Careers Dashboard</h1>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-    </nav>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">job<span>/</span>radar</div>
+  <div id="last-updated">—</div>
+</header>
+
+<!-- STATS BAR -->
+<div id="stats-bar">
+  <div class="stat"><div class="stat-label">Total Scraped</div><div class="stat-value" id="s-total">—</div></div>
+  <div class="stat"><div class="stat-label">Internships</div><div class="stat-value" id="s-intern">—</div></div>
+  <div class="stat"><div class="stat-label">Showing</div><div class="stat-value" id="s-showing">—</div></div>
+  <div class="stat"><div class="stat-label">Companies</div><div class="stat-value" id="s-companies">—</div></div>
+</div>
+
+<!-- CONTROLS -->
+<div id="controls">
+  <div class="search-wrap">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+    <input type="text" id="search" placeholder="Search title, company, location..." />
   </div>
 
-  <div class="max-w-7xl mx-auto p-8">
-    <!-- Filters -->
-    <div class="filters-container mb-6 flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-3 sm:space-y-0">
-      <input id="search" type="text" placeholder="Search title or company..." class="flex-grow" />
-      <select id="tableFilter">
-        <option value="all">All</option>
-        <option value="alljobs_internships">Mechanical</option>
-        <option value="jobs_internships">Energy</option>
-        <option value="low_level">Low level</option>
-        <option value="research">Research</option>
-      </select>
-      <select id="sortOrder">
-        <option value="desc">Newest First</option>
-        <option value="asc">Oldest First</option>
-      </select>
-      <button id="refresh">Refresh</button>
-    </div>
+  <select id="tableFilter">
+    <option value="all">All Sources</option>
+    <option value="alljobs_internships">Mechanical (Fortune 500 + NatLabs)</option>
+    <option value="jobs_internships">Energy (Fortune 500 + NatLabs)</option>
+    <option value="low_level">Broad Search</option>
+    <option value="research">Research Roles</option>
+  </select>
 
-    <!-- Cards Container -->
-    <div id="cardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  <select id="sortOrder">
+    <option value="desc">Newest First</option>
+    <option value="asc">Oldest First</option>
+  </select>
+
+  <select id="internFilter">
+    <option value="all">All Jobs</option>
+    <option value="intern">Internships Only</option>
+    <option value="full">Full-Time Only</option>
+  </select>
+
+  <div class="toggle-wrap">
+    <label class="toggle">
+      <input type="checkbox" id="repostedFilter" />
+      <span class="slider"></span>
+    </label>
+    Show Reposted
   </div>
 
-  <script>
-    // *** SECURITY WARNING ***
-    // Do NOT ship a service_role key to the browser in production. Use the public anon key + RLS or a backend proxy.
-    const SUPABASE_URL = 'https://qdcxtfnuezcznygvpvsc.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY3h0Zm51ZXpjem55Z3ZwdnNjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDA0NjEzMiwiZXhwIjoyMDY1NjIyMTMyfQ.-W9Ii2b8PT5lFzBDT7J2NYCDIRdvIABfWuZ76gasWv8';
+  <button id="refresh">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+    Refresh
+  </button>
+</div>
 
-    // The CDN exposes global `supabase`. We destructure createClient from it.
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+<!-- ACTIVE FILTERS + COUNT -->
+<div id="active-filters"></div>
+<div id="result-meta"></div>
 
-    // Tables to fetch. (Your schema says `internship`, but the brief also mentioned `internships`.)
-    const tables = {
-      all: ['alljobs', 'allinternships', 'jobs', 'internship'],
-      alljobs_internships: ['alljobs', 'allinternships'],
-      jobs_internships: ['jobs', 'internship'],
-      low_level: ['anyjobs', 'anyinternships'],
-      research: ['research']
-    };
+<!-- GRID -->
+<div id="grid">
+  <div id="status-msg"><div class="spinner"></div>Loading jobs...</div>
+</div>
 
-    // State
-    const dataStore = {};
-    let activeTable = 'all';
+<!-- PAGINATION -->
+<div id="pagination"></div>
 
-    // DOM Elements
-    const cardsContainer = document.getElementById('cardsContainer');
-    const searchInput = document.getElementById('search');
-    const tableFilter = document.getElementById('tableFilter');
-    const refreshBtn = document.getElementById('refresh');
+<script>
+const SUPABASE_URL = 'https://qdcxtfnuezcznygvpvsc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY3h0Zm51ZXpjem55Z3ZwdnNjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDA0NjEzMiwiZXhwIjoyMDY1NjIyMTMyfQ.-W9Ii2b8PT5lFzBDT7J2NYCDIRdvIABfWuZ76gasWv8';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function fetchTable(table) {
-      const { data, error } = await db
-        .from(table)
-        .select('*')
-        .or(
-          `title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%,title.ilike.%research`
-        );
+// ── CONFIG ──────────────────────────────────────────────
+const TABLE_GROUPS = {
+  all:                ['alljobs', 'allinternships', 'jobs', 'internship', 'anyjobs', 'anyinternships'],
+  alljobs_internships: ['alljobs', 'allinternships'],
+  jobs_internships:    ['jobs', 'internship'],
+  low_level:           ['anyjobs', 'anyinternships'],
+  research:            ['jobs', 'internship'],  // research filter applied separately
+};
 
-      if (error) {
-        console.error(`Error fetching ${table}:`, error);
-        dataStore[table] = [];
-      } else {
-        dataStore[table] = data || [];
-      }
+const PAGE_SIZE = 30;
+
+// ── STATE ────────────────────────────────────────────────
+let allData    = [];
+let filtered   = [];
+let page       = 1;
+let activeGroup = 'all';
+
+// ── STOP WORDS for keyword extraction ───────────────────
+const STOP = new Set([
+  'with','that','this','have','from','they','will','been','were','your','their',
+  'what','when','work','able','team','also','more','some','into','than','other',
+  'each','about','which','would','these','those','there','where','while','after',
+  'skills','experience','position','required','including','ability','strong',
+  'excellent','knowledge','must','well','years','level','using','help','make',
+  'role','based','field','such','related','developing','development','working',
+  'manage','support','provide','ensure','responsible','across','through',
+]);
+
+// ── FETCH ────────────────────────────────────────────────
+async function fetchGroup(group) {
+  const tables = TABLE_GROUPS[group] || [];
+  const isResearch = group === 'research';
+
+  const promises = tables.map(async tbl => {
+    try {
+      // FIX: original code was missing closing % on ilike.%research  
+      const filterStr = isResearch
+        ? 'title.ilike.%research%,title.ilike.%assistant%'
+        : 'title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%,title.ilike.%co-op%,title.ilike.%coop%,title.ilike.%research%';
+
+      const { data, error } = await db.from(tbl).select('*').or(filterStr);
+      if (error) { console.warn(`Table "${tbl}" error:`, error.message); return []; }
+      return (data || []).map(r => ({ ...r, _source: tbl }));
+    } catch (e) {
+      console.warn(`Table "${tbl}" failed:`, e);
+      return [];
+    }
+  });
+
+  const results = await Promise.all(promises);
+  const combined = results.flat();
+
+  // Deduplicate by job ID first, then title+company fallback
+  const seen = new Set();
+  return combined.filter(job => {
+    const key = job.id || `${job.title}||${job.company}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+// ── INTERN DETECTION (client-side, matches your Python logic) ───
+const INTERN_RE = /\b(intern(ship)?|co[- ]?op|summer (analyst|associate|intern)|graduate (trainee|program)|rotation(al)? program|student (program|opportunity)|university (program|hire)|(spring|fall|winter|summer) \d{4} intern(ship)?|\d{4} intern(ship)?|new grad(uate)?)\b/i;
+const SENIOR_RE = /\b(senior|sr\.?|manager|director|lead|principal|vp|chief|architect)\b/i;
+
+function isIntern(job) {
+  const blob = `${job.title || ''} ${job.description || ''}`;
+  return INTERN_RE.test(blob) && !SENIOR_RE.test(job.title || '');
+}
+
+// ── FILTER + SORT ────────────────────────────────────────
+function applyFilters() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const sort = document.getElementById('sortOrder').value;
+  const internMode = document.getElementById('internFilter').value;
+  const showReposted = document.getElementById('repostedFilter').checked;
+
+  filtered = allData.filter(j => {
+    if (!showReposted && (j.posted_r || '').toLowerCase().includes('reposted')) return false;
+
+    if (internMode === 'intern' && !isIntern(j)) return false;
+    if (internMode === 'full'   &&  isIntern(j)) return false;
+
+    if (q) {
+      const blob = `${j.title||''} ${j.company||''} ${j.loc||''}`.toLowerCase();
+      if (!blob.includes(q)) return false;
     }
 
-    async function fetchTableGroup(group) {
-      const tableGroup = tables[group];
-      if (!tableGroup) {
-        console.error(`Invalid table group: ${group}`);
-        dataStore[group] = [];
-        return;
-      }
+    return true;
+  });
 
-      const promises = tableGroup.map(table => {
-        if (group === 'research') {
-          // Simplify query for research table
-          return db.from(table).select('*').or(`title.ilike.%research%`);
-        } else {
-          // Use original query for other tables
-          return db
-            .from(table)
-            .select('*')
-            .or(
-              `title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%,title.ilike.%research`
-            );
-        }
-      });
+  filtered.sort((a, b) => {
+    const da = new Date(a.posted || 0), db2 = new Date(b.posted || 0);
+    return sort === 'asc' ? da - db2 : db2 - da;
+  });
 
-      const results = await Promise.all(promises);
+  page = 1;
+  updateStats();
+  renderPage();
+  renderPagination();
+}
 
-      // Debugging: Log results for the research table
-      if (group === 'research') {
-        console.log('Research table results:', results);
-      }
+// ── STATS ────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('s-total').textContent    = allData.length.toLocaleString();
+  document.getElementById('s-intern').textContent   = allData.filter(isIntern).length.toLocaleString();
+  document.getElementById('s-showing').textContent  = filtered.length.toLocaleString();
+  const companies = new Set(allData.map(j => j.company).filter(Boolean));
+  document.getElementById('s-companies').textContent = companies.size.toLocaleString();
 
-      const combinedData = results.flatMap(({ data }) => data || []);
+  const now = new Date();
+  document.getElementById('last-updated').textContent = `Updated ${now.toLocaleTimeString()}`;
+}
 
-      // Remove duplicates based on job title and company
-      const uniqueData = combinedData.filter((job, index, self) =>
-        index === self.findIndex(j => j.title === job.title && j.company === job.company)
-      );
+// ── RENDER ───────────────────────────────────────────────
+function renderPage() {
+  const grid = document.getElementById('grid');
+  const meta = document.getElementById('result-meta');
 
-      dataStore[group] = uniqueData;
+  if (!filtered.length) {
+    grid.innerHTML = '<div id="status-msg">No results match your filters.</div>';
+    meta.textContent = '';
+    return;
+  }
+
+  const start = (page - 1) * PAGE_SIZE;
+  const end   = start + PAGE_SIZE;
+  const slice = filtered.slice(start, end);
+
+  meta.textContent = `Showing ${start + 1}–${Math.min(end, filtered.length)} of ${filtered.length} jobs`;
+
+  grid.innerHTML = slice.map(job => {
+    const intern    = isIntern(job);
+    const reposted  = (job.posted_r || '').toLowerCase().includes('reposted');
+    const daysAgo   = daysSince(job.posted);
+    const isNew     = daysAgo !== null && daysAgo <= 3;
+
+    const domain    = (job.company || '').toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
+    const logoUrl   = `https://img.logo.dev/${domain}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&size=80&format=png`;
+
+    const badges = [
+      intern   ? `<span class="meta-chip badge-intern">Internship</span>` : '',
+      isNew    ? `<span class="meta-chip badge-new">New</span>` : '',
+      reposted ? `<span class="meta-chip badge-repost">Reposted</span>` : '',
+    ].join('');
+
+    const desc = (job.description || '').trim();
+    const postedStr = job.posted
+      ? `${new Date(job.posted).toLocaleDateString()} · ${daysAgo !== null ? daysAgo + 'd ago' : ''}`
+      : (job.posted_r || '—');
+
+    const loc = job.loc || job.location || '';
+
+    return `
+    <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card">
+      <div class="card-header">
+        <img class="company-logo"
+             src="${logoUrl}"
+             alt=""
+             onerror="this.style.display='none'">
+        <div class="card-title-block">
+          <div class="card-title">${escHtml(job.title || 'Untitled')}</div>
+          <div class="card-company">${escHtml(job.company || '')}</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        ${loc ? `<span class="meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>${escHtml(loc)}</span>` : ''}
+        ${badges}
+      </div>
+      ${desc ? `<div class="card-desc">${escHtml(desc)}</div>` : ''}
+      <div class="card-footer">
+        <div class="card-date">${escHtml(postedStr)}</div>
+        <button class="copy-btn" onclick="copyLink(event, '${(job.link||'').replace(/'/g,'')}')">Copy link</button>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+// ── PAGINATION ───────────────────────────────────────────
+function renderPagination() {
+  const pg = document.getElementById('pagination');
+  const total = Math.ceil(filtered.length / PAGE_SIZE);
+  if (total <= 1) { pg.innerHTML = ''; return; }
+
+  const prev = `<button ${page===1?'disabled':''} onclick="goPage(${page-1})">← Prev</button>`;
+  const next = `<button ${page===total?'disabled':''} onclick="goPage(${page+1})">Next →</button>`;
+  const info = `<span id="page-info">Page ${page} / ${total}</span>`;
+
+  // Page number buttons (show max 5 around current)
+  let nums = '';
+  for (let i = 1; i <= total; i++) {
+    if (i===1 || i===total || (i>=page-2 && i<=page+2)) {
+      nums += `<button class="${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if (i===page-3 || i===page+3) {
+      nums += `<span id="page-info">…</span>`;
     }
+  }
 
-    // Fetch data for all tables
-    async function fetchAll() {
-      cardsContainer.innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 loading">Loading...</div>';
-      await fetchTableGroup(activeTable);
-      renderCards();
-    }
+  pg.innerHTML = prev + nums + next + info;
+}
 
-    function safeDate(d) {
-      try {
-        return d ? new Date(d).toLocaleDateString() : '';
-      } catch (_) {
-        return '';
-      }
-    }
+function goPage(n) {
+  page = n;
+  renderPage();
+  renderPagination();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-    function safeDateWithDaysAgo(d) {
-      try {
-        if (!d) return '';
-        const date = new Date(d);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return `${date.toLocaleDateString()} (${diffDays} days ago)`;
-      } catch (_) {
-        return '';
-      }
-    }
+// ── UTILITIES ────────────────────────────────────────────
+function daysSince(iso) {
+  if (!iso) return null;
+  const diff = Date.now() - new Date(iso).getTime();
+  return Math.floor(diff / 86400000);
+}
 
-    function safeDateWithDaysAgoAndReposted(d, repostedText) {
-      try {
-        if (!d) return '';
-        const date = new Date(d);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        const repostedTag = repostedText.toLowerCase().includes('reposted') ? '<span class="text-xs text-red-500">(Reposted)</span>' : '';
-        return `${date.toLocaleDateString()} (${diffDays} days ago) ${repostedTag}`;
-      } catch (_) {
-        return '';
-      }
-    }
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 
-    function getCategoryClass(job) {
-      const title = (job.title || '').toLowerCase();
-      const description = (job.description || '').toLowerCase();
+function copyLink(e, url) {
+  e.preventDefault();
+  e.stopPropagation();
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = e.target;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy link', 1500);
+  });
+}
 
-      if (title.includes('engineer') || description.includes('engineer')) {
-        return 'category-engineer';
-      } else if (title.includes('technician') || description.includes('technician')) {
-        return 'category-technician';
-      } else if (title.includes('manager') || description.includes('manager')) {
-        return 'category-manager';
-      } else {
-        return 'category-default';
-      }
-    }
+// ── MAIN LOAD ────────────────────────────────────────────
+async function loadAll() {
+  document.getElementById('grid').innerHTML = '<div id="status-msg"><div class="spinner"></div>Loading jobs…</div>';
+  document.getElementById('result-meta').textContent = '';
+  document.getElementById('pagination').innerHTML = '';
 
-    // Add checkbox for filtering reposted jobs
-    const repostedCheckbox = document.createElement('input');
-    repostedCheckbox.type = 'checkbox';
-    repostedCheckbox.id = 'repostedFilter';
-    repostedCheckbox.checked = false; // Set the default state of the reposted checkbox to unchecked
-    repostedCheckbox.className = 'ml-2';
+  try {
+    allData = await fetchGroup(activeGroup);
+    applyFilters();
+  } catch (err) {
+    document.getElementById('grid').innerHTML =
+      `<div id="status-msg">Error loading data: ${escHtml(err.message)}</div>`;
+  }
+}
 
-    const repostedLabel = document.createElement('label');
-    repostedLabel.htmlFor = 'repostedFilter';
-    repostedLabel.textContent = 'Include Reposted';
-    repostedLabel.className = 'text-sm ml-2';
+// ── EVENT LISTENERS ──────────────────────────────────────
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('sortOrder').addEventListener('change', applyFilters);
+document.getElementById('internFilter').addEventListener('change', applyFilters);
+document.getElementById('repostedFilter').addEventListener('change', applyFilters);
+document.getElementById('refresh').addEventListener('click', loadAll);
 
-    const filtersContainer = document.querySelector('.mb-6');
-    filtersContainer.appendChild(repostedCheckbox);
-    filtersContainer.appendChild(repostedLabel);
+document.getElementById('tableFilter').addEventListener('change', e => {
+  activeGroup = e.target.value;
+  loadAll();
+});
 
-    function extractKeywords(description) {
-      if (!description) return [];
-
-      const words = description
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, '') // Remove non-alphanumeric characters
-        .split(/\s+/) // Split by whitespace
-        .filter(word => word.length > 3); // Filter out short words
-
-      const wordCounts = words.reduce((counts, word) => {
-        counts[word] = (counts[word] || 0) + 1;
-        return counts;
-      }, {});
-
-      const sortedWords = Object.entries(wordCounts)
-        .sort(([, countA], [, countB]) => countB - countA) // Sort by frequency
-        .slice(0, 5); // Get top 5 keywords
-
-      return sortedWords.map(([word, count]) => ({ word, count }));
-    }
-
-    // Render cards based on activeTable and search query
-    function renderCards() {
-      const items = dataStore[activeTable] || [];
-      const q = searchInput.value.trim().toLowerCase();
-      const sortOrder = document.getElementById('sortOrder').value;
-      const includeReposted = repostedCheckbox.checked;
-
-      const filtered = items.filter(j => {
-        const matchesQuery = q
-          ? (j.title || '').toLowerCase().includes(q) ||
-            (j.company || '').toLowerCase().includes(q) ||
-            (j.loc || '').toLowerCase().includes(q)
-          : true;
-
-        const matchesReposted = includeReposted || !(j.posted_r || '').toLowerCase().includes('reposted');
-
-        return matchesQuery && matchesReposted;
-      });
-
-      if (!filtered.length) {
-        cardsContainer.innerHTML = '<div class="col-span-full text-center text-gray-500">No results found</div>';
-        return;
-      }
-
-      const sorted = filtered.sort((a, b) => {
-        const dateA = new Date(a.posted || a.posted_r || 0);
-        const dateB = new Date(b.posted || b.posted_r || 0);
-        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-      });
-
-      // Update the logo path generation logic to dynamically construct company domains
-      // Update the logic to include the reposted tag next to x days ago
-      cardsContainer.innerHTML = sorted
-        .map(job => {
-          const categoryClass = getCategoryClass(job);
-          const postedDate = safeDateWithDaysAgo(job.posted);
-          const repostedTag = (job.posted_r || '').toLowerCase().includes('reposted')
-            ? '<span class="text-xs text-red-500">(Reposted)</span>'
-            : '';
-          const posted = `${postedDate} ${repostedTag}`;
-          const companyDomain = (job.company || '').toLowerCase().replace(/\s+/g, '') + '.com';
-          const logoUrl = `https://img.logo.dev/${companyDomain}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&size=100&format=png`;
-
-          const keywords = extractKeywords(job.description || '');
-          const keywordsHtml = keywords
-            .map(({ word, count }) => `<span class="text-xs text-gray-600">${word} (${count})</span>`)
-            .join(', ');
-
-          return `
-            <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card block p-4 rounded-lg shadow-md hover:bg-gray-50 ${categoryClass}">
-              <div class="flex items-center mb-2">
-                <img src="${logoUrl}" alt="${job.company || ''} logo" class="w-12 h-12 mr-4" />
-                <h2 class="text-xl font-semibold">${job.title || ''}</h2>
-              </div>
-              <div class="text-sm text-gray-600 mb-2">${job.company || ''} &mdash; ${job.loc || ''}</div>
-              <div class="text-xs text-gray-500">Posted: ${posted}</div>
-              ${job.compatibility ? `<div class="mt-2 inline-block text-xs px-2 py-1 rounded bg-indigo-100 text-indigo-700">${job.compatibility}</div>` : ''}
-              <div class="mt-2 text-xs text-gray-500">Keywords: ${keywordsHtml}</div>
-            </a>`;
-        })
-        .join('');
-    }
-
-    // Add attribution for Logo.dev
-    const attribution = document.createElement('a');
-    attribution.href = 'https://logo.dev';
-    attribution.textContent = 'Logos provided by Logo.dev';
-    attribution.className = 'block text-center text-xs text-gray-500 mt-4';
-    document.body.appendChild(attribution);
-
-    // Add event listener for reposted checkbox
-    repostedCheckbox.addEventListener('change', renderCards);
-
-    // Event Listeners
-    searchInput.addEventListener('input', renderCards);
-    tableFilter.addEventListener('change', e => {
-      activeTable = e.target.value;
-      fetchAll();
-    });
-    document.getElementById('sortOrder').addEventListener('change', renderCards);
-    refreshBtn.addEventListener('click', fetchAll);
-
-    // Initial load
-    fetchAll();
-  </script>
+loadAll();
+</script>
 </body>
 </html>
