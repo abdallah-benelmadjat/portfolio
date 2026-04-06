@@ -1,554 +1,597 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Job Radar</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --bg:        #0d0f14;
-      --surface:   #151820;
-      --surface2:  #1c2030;
-      --border:    #262b3a;
-      --accent:    #f59e0b;
-      --accent2:   #38bdf8;
-      --muted:     #4b5563;
-      --text:      #e2e8f0;
-      --text-dim:  #8892a4;
-      --red:       #f87171;
-      --green:     #34d399;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-    }
-
-    /* ── HEADER ── */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 60px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      font-family: 'Space Mono', monospace;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: -0.5px;
-    }
-
-    .logo span { color: var(--text-dim); }
-
-    #last-updated {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    /* ── STATS BAR ── */
-    #stats-bar {
-      display: flex;
-      gap: 1px;
-      background: var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .stat {
-      flex: 1;
-      background: var(--surface);
-      padding: 0.9rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .stat-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .stat-value {
-      font-family: 'Space Mono', monospace;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--accent);
-      line-height: 1;
-    }
-
-    /* ── CONTROLS ── */
-    #controls {
-      padding: 1.25rem 2rem;
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      align-items: center;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 60px;
-      z-index: 99;
-    }
-
-    .search-wrap {
-      position: relative;
-      flex: 1;
-      min-width: 220px;
-    }
-
-    .search-wrap svg {
-      position: absolute;
-      left: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 14px;
-      color: var(--muted);
-      pointer-events: none;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      padding: 0.55rem 0.75rem 0.55rem 2.25rem;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    input[type="text"]:focus { border-color: var(--accent); }
-    input[type="text"]::placeholder { color: var(--muted); }
-
-    select, button {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      padding: 0.55rem 0.85rem;
-      cursor: pointer;
-      outline: none;
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    select:focus { border-color: var(--accent); }
-
-    button#refresh {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #000;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    button#refresh:hover { background: #d97706; }
-    button#refresh svg { width: 14px; height: 14px; }
-
-    .toggle-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      white-space: nowrap;
-    }
-
-    .toggle {
-      position: relative;
-      width: 36px;
-      height: 20px;
-    }
-
-    .toggle input { opacity: 0; width: 0; height: 0; }
-
-    .slider {
-      position: absolute;
-      inset: 0;
-      background: var(--border);
-      border-radius: 20px;
-      transition: background 0.2s;
-      cursor: pointer;
-    }
-
-    .slider::before {
-      content: '';
-      position: absolute;
-      width: 14px; height: 14px;
-      left: 3px; top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: transform 0.2s;
-    }
-
-    .toggle input:checked + .slider { background: var(--accent); }
-    .toggle input:checked + .slider::before { transform: translateX(16px); }
-
-    /* ── ACTIVE FILTERS ── */
-    #active-filters {
-      padding: 0 2rem 0.75rem;
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-chip {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 0.25rem 0.65rem;
-      font-size: 0.78rem;
-      color: var(--text-dim);
-    }
-
-    .filter-chip button {
-      background: none;
-      border: none;
-      padding: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    /* ── RESULT COUNT ── */
-    #result-meta {
-      padding: 0 2rem 1rem;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    /* ── GRID ── */
-    #grid {
-      padding: 0 2rem 4rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 1px;
-      background: var(--border);
-    }
-
-    /* ── CARD ── */
-    .card {
-      background: var(--surface);
-      padding: 1.4rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      text-decoration: none;
-      color: inherit;
-      transition: background 0.15s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px;
-      height: 100%;
-      background: transparent;
-      transition: background 0.15s;
-    }
-
-    .card:hover { background: var(--surface2); }
-    .card:hover::before { background: var(--accent); }
-
-    .card-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-    }
-
-    .company-logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      object-fit: contain;
-      flex-shrink: 0;
-      padding: 4px;
-    }
-
-    .card-title-block { flex: 1; min-width: 0; }
-
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.35;
-      margin-bottom: 0.2rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .card-company {
-      font-size: 0.8rem;
-      color: var(--accent2);
-      font-weight: 500;
-    }
-
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .meta-chip {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.15rem 0.45rem;
-    }
-
-    .meta-chip svg { width: 10px; height: 10px; }
-
-    .badge-intern {
-      background: rgba(245,158,11,0.15);
-      border-color: rgba(245,158,11,0.4);
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .badge-repost {
-      background: rgba(248,113,113,0.1);
-      border-color: rgba(248,113,113,0.3);
-      color: var(--red);
-    }
-
-    .badge-new {
-      background: rgba(52,211,153,0.1);
-      border-color: rgba(52,211,153,0.3);
-      color: var(--green);
-    }
-
-    .card-desc {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      line-height: 1.55;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: auto;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .card-date {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.68rem;
-      color: var(--muted);
-    }
-
-    .copy-btn {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.2rem 0.5rem;
-      font-size: 0.68rem;
-      color: var(--muted);
-      cursor: pointer;
-      transition: color 0.15s, border-color 0.15s;
-    }
-
-    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
-
-    /* ── EMPTY/LOADING ── */
-    #status-msg {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 5rem 2rem;
-      color: var(--muted);
-      font-family: 'Space Mono', monospace;
-      font-size: 0.85rem;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner {
-      width: 24px; height: 24px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      margin: 0 auto 1rem;
-      animation: spin 0.8s linear infinite;
-    }
-
-    /* ── PAGINATION ── */
-    #pagination {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 2rem;
-    }
-
-    #pagination button {
-      padding: 0.45rem 1rem;
-      font-size: 0.85rem;
-    }
-
-    #pagination button:disabled {
-      opacity: 0.3;
-      cursor: default;
-    }
-
-    #pagination button.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #000;
-      font-weight: 600;
-    }
-
-    #page-info {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--muted);
-      padding: 0 0.5rem;
-    }
-
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 640px) {
-      #controls { padding: 1rem; }
-      #grid { padding: 0 0 4rem; }
-      .stat { padding: 0.75rem 1rem; }
-      #stats-bar { overflow-x: auto; }
-    }
-  </style>
-</head>
-<body>
-
-<!-- HEADER -->
-<header>
-  <div class="logo">job<span>/</span>radar</div>
-  <div id="last-updated">—</div>
-</header>
-
-<!-- STATS BAR -->
-<div id="stats-bar">
-  <div class="stat"><div class="stat-label">Total Scraped</div><div class="stat-value" id="s-total">—</div></div>
-  <div class="stat"><div class="stat-label">Internships</div><div class="stat-value" id="s-intern">—</div></div>
-  <div class="stat"><div class="stat-label">Showing</div><div class="stat-value" id="s-showing">—</div></div>
-  <div class="stat"><div class="stat-label">Companies</div><div class="stat-value" id="s-companies">—</div></div>
-</div>
-
-<!-- CONTROLS -->
-<div id="controls">
-  <div class="search-wrap">
-    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
-    <input type="text" id="search" placeholder="Search title, company, location..." />
-  </div>
-
-  <select id="tableFilter">
-    <option value="all">All Sources</option>
-    <option value="alljobs_internships">Mechanical (Fortune 500 + NatLabs)</option>
-    <option value="jobs_internships">Energy (Fortune 500 + NatLabs)</option>
-    <option value="low_level">Broad Search</option>
-    <option value="research">Research Roles</option>
-  </select>
-
-  <select id="sortOrder">
-    <option value="desc">Newest First</option>
-    <option value="asc">Oldest First</option>
-  </select>
-
-  <select id="internFilter">
-    <option value="all">All Jobs</option>
-    <option value="intern">Internships Only</option>
-    <option value="full">Full-Time Only</option>
-  </select>
-
-  <div class="toggle-wrap">
-    <label class="toggle">
-      <input type="checkbox" id="repostedFilter" />
-      <span class="slider"></span>
-    </label>
-    Show Reposted
-  </div>
-
-  <button id="refresh">
-    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
-    Refresh
-  </button>
-</div>
-
-<!-- ACTIVE FILTERS + COUNT -->
-<div id="active-filters"></div>
-<div id="result-meta"></div>
-
-<!-- GRID -->
-<div id="grid">
-  <div id="status-msg"><div class="spinner"></div>Loading jobs...</div>
-</div>
-
-<!-- PAGINATION -->
-<div id="pagination"></div>
-
-<script>
-const SUPABASE_URL = 'https://qdcxtfnuezcznygvpvsc.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY3h0Zm51ZXpjem55Z3ZwdnNjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDA0NjEzMiwiZXhwIjoyMDY1NjIyMTMyfQ.-W9Ii2b8PT5lFzBDT7J2NYCDIRdvIABfWuZ76gasWv8';
+\<\!DOCTYPE html\>
+
+\<html lang="en"\>
+\<head\>
+\<meta charset="UTF-8" /\>
+\<meta name="viewport" content="width=device-width, initial-scale=1.0" /\>
+\<title\>Job Radar\</title\>
+\<link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)"\>
+\<link href="[https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700\&family=DM+Sans:wght@300;400;500;600\&display=swap](https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap)" rel="stylesheet"\>
+\<script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)"\>\</script\>
+\<style\>
+:root {
+\--bg:        \#0d0f14;
+\--surface:   \#151820;
+\--surface2:  \#1c2030;
+\--border:    \#262b3a;
+\--accent:    \#f59e0b;
+\--accent2:   \#38bdf8;
+\--muted:     \#4b5563;
+\--text:      \#e2e8f0;
+\--text-dim:  \#8892a4;
+\--red:       \#f87171;
+\--green:     \#34d399;
+}
+
+```
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+}
+
+.logo span { color: var(--text-dim); }
+
+#last-updated {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* ── STATS BAR ── */
+#stats-bar {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.stat {
+  flex: 1;
+  background: var(--surface);
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+/* ── CONTROLS ── */
+#controls {
+  padding: 1.25rem 2rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 60px;
+  z-index: 99;
+}
+
+.search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+
+.search-wrap svg {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+input[type="text"] {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.55rem 0.75rem 0.55rem 2.25rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+input[type="text"]:focus { border-color: var(--accent); }
+input[type="text"]::placeholder { color: var(--muted); }
+
+select, button {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+select:focus { border-color: var(--accent); }
+
+button#refresh {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+button#refresh:hover { background: #d97706; }
+button#refresh svg { width: 14px; height: 14px; }
+
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+}
+
+.toggle input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 20px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  left: 3px; top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.toggle input:checked + .slider { background: var(--accent); }
+.toggle input:checked + .slider::before { transform: translateX(16px); }
+
+/* ── ACTIVE FILTERS ── */
+#active-filters {
+  padding: 0 2rem 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.filter-chip button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* ── RESULT COUNT ── */
+#result-meta {
+  padding: 0 2rem 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ── GRID ── */
+#grid {
+  padding: 0 2rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.card:hover { background: var(--surface2); }
+.card:hover::before { background: var(--accent); }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+/* Added a wrapper for the left side of the header to push the score to the right */
+.header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.company-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  object-fit: contain;
+  flex-shrink: 0;
+  padding: 4px;
+}
+
+.card-title-block { flex: 1; min-width: 0; }
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 0.2rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-company {
+  font-size: 0.8rem;
+  color: var(--accent2);
+  font-weight: 500;
+}
+
+/* ── COMPATIBILITY SCORE BADGES ── */
+.card-score {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.3rem 0.55rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.score-high { 
+  background: rgba(52,211,153,0.15); 
+  color: var(--green); 
+  border: 1px solid rgba(52,211,153,0.3); 
+}
+.score-med { 
+  background: rgba(245,158,11,0.15); 
+  color: var(--accent); 
+  border: 1px solid rgba(245,158,11,0.3); 
+}
+.score-low { 
+  background: rgba(248,113,113,0.15); 
+  color: var(--red); 
+  border: 1px solid rgba(248,113,113,0.3); 
+}
+.score-none { 
+  background: var(--surface2); 
+  color: var(--muted); 
+  border: 1px solid var(--border); 
+  font-size: 0.75rem; 
+  font-weight: 500;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+}
+
+.meta-chip svg { width: 10px; height: 10px; }
+
+.badge-intern {
+  background: rgba(245,158,11,0.15);
+  border-color: rgba(245,158,11,0.4);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.badge-repost {
+  background: rgba(248,113,113,0.1);
+  border-color: rgba(248,113,113,0.3);
+  color: var(--red);
+}
+
+.badge-new {
+  background: rgba(52,211,153,0.1);
+  border-color: rgba(52,211,153,0.3);
+  color: var(--green);
+}
+
+.card-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.card-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.copy-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── EMPTY/LOADING ── */
+#status-msg {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 24px; height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ── PAGINATION ── */
+#pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+}
+
+#pagination button {
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+}
+
+#pagination button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+#pagination button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 600;
+}
+
+#page-info {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  padding: 0 0.5rem;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  #controls { padding: 1rem; }
+  #grid { padding: 0 0 4rem; }
+  .stat { padding: 0.75rem 1rem; }
+  #stats-bar { overflow-x: auto; }
+}
+```
+
+\</style\>
+\</head\>
+\<body\>
+
+\<header\>
+\<div class="logo"\>job\<span\>/\</span\>radar\</div\>
+\<div id="last-updated"\>—\</div\>
+\</header\>
+
+\<div id="stats-bar"\>
+\<div class="stat"\>\<div class="stat-label"\>Total Scraped\</div\>\<div class="stat-value" id="s-total"\>—\</div\>\</div\>
+\<div class="stat"\>\<div class="stat-label"\>Internships\</div\>\<div class="stat-value" id="s-intern"\>—\</div\>\</div\>
+\<div class="stat"\>\<div class="stat-label"\>Showing\</div\>\<div class="stat-value" id="s-showing"\>—\</div\>\</div\>
+\<div class="stat"\>\<div class="stat-label"\>Companies\</div\>\<div class="stat-value" id="s-companies"\>—\</div\>\</div\>
+\</div\>
+
+\<div id="controls"\>
+\<div class="search-wrap"\>
+\<svg viewBox="0 0 20 20" fill="currentColor"\>\<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/\>\</svg\>
+\<input type="text" id="search" placeholder="Search title, company, location..." /\>
+\</div\>
+
+\<select id="tableFilter"\>
+\<option value="all"\>All Sources\</option\>
+\<option value="alljobs\_internships"\>Mechanical (Fortune 500 + NatLabs)\</option\>
+\<option value="jobs\_internships"\>Energy (Fortune 500 + NatLabs)\</option\>
+\<option value="low\_level"\>Broad Search\</option\>
+\<option value="research"\>Research Roles\</option\>
+\</select\>
+
+\<select id="sortOrder"\>
+\<option value="score"\>Highest Match\</option\>
+\<option value="desc"\>Newest First\</option\>
+\<option value="asc"\>Oldest First\</option\>
+\</select\>
+
+\<select id="internFilter"\>
+\<option value="all"\>All Jobs\</option\>
+\<option value="intern"\>Internships Only\</option\>
+\<option value="full"\>Full-Time Only\</option\>
+\</select\>
+
+\<div class="toggle-wrap"\>
+\<label class="toggle"\>
+\<input type="checkbox" id="repostedFilter" /\>
+\<span class="slider"\>\</span\>
+\</label\>
+Show Reposted
+\</div\>
+
+\<button id="refresh"\>
+\<svg viewBox="0 0 20 20" fill="currentColor"\>\<path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/\>\</svg\>
+Refresh
+\</button\>
+\</div\>
+
+\<div id="active-filters"\>\</div\>
+\<div id="result-meta"\>\</div\>
+
+\<div id="grid"\>
+\<div id="status-msg"\>\<div class="spinner"\>\</div\>Loading jobs...\</div\>
+\</div\>
+
+\<div id="pagination"\>\</div\>
+
+\<script\>
+const SUPABASE\_URL = '[https://qdcxtfnuezcznygvpvsc.supabase.co](https://qdcxtfnuezcznygvpvsc.supabase.co)';
+const SUPABASE\_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY3h0Zm51ZXpjem55Z3ZwdnNjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDA0NjEzMiwiZXhwIjoyMDY1NjIyMTMyfQ.-W9Ii2b8PT5lFzBDT7J2NYCDIRdvIABfWuZ76gasWv8';
 const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = createClient(SUPABASE\_URL, SUPABASE\_KEY);
 
 // ── CONFIG ──────────────────────────────────────────────
-const TABLE_GROUPS = {
-  all:                ['alljobs', 'allinternships', 'jobs', 'internship', 'anyjobs', 'anyinternships'],
-  alljobs_internships: ['alljobs', 'allinternships'],
-  jobs_internships:    ['jobs', 'internship'],
-  low_level:           ['anyjobs', 'anyinternships'],
-  research:            ['jobs', 'internship'],  // research filter applied separately
+const TABLE\_GROUPS = {
+all:                 ['alljobs', 'allinternships', 'jobs', 'internship', 'anyjobs', 'anyinternships'],
+alljobs\_internships: ['alljobs', 'allinternships'],
+jobs\_internships:    ['jobs', 'internship'],
+low\_level:           ['anyjobs', 'anyinternships'],
+research:            ['jobs', 'internship'],  
 };
 
-const PAGE_SIZE = 30;
+const PAGE\_SIZE = 30;
 
 // ── STATE ────────────────────────────────────────────────
 let allData    = [];
@@ -558,232 +601,274 @@ let activeGroup = 'all';
 
 // ── STOP WORDS for keyword extraction ───────────────────
 const STOP = new Set([
-  'with','that','this','have','from','they','will','been','were','your','their',
-  'what','when','work','able','team','also','more','some','into','than','other',
-  'each','about','which','would','these','those','there','where','while','after',
-  'skills','experience','position','required','including','ability','strong',
-  'excellent','knowledge','must','well','years','level','using','help','make',
-  'role','based','field','such','related','developing','development','working',
-  'manage','support','provide','ensure','responsible','across','through',
+'with','that','this','have','from','they','will','been','were','your','their',
+'what','when','work','able','team','also','more','some','into','than','other',
+'each','about','which','would','these','those','there','where','while','after',
+'skills','experience','position','required','including','ability','strong',
+'excellent','knowledge','must','well','years','level','using','help','make',
+'role','based','field','such','related','developing','development','working',
+'manage','support','provide','ensure','responsible','across','through',
 ]);
 
 // ── FETCH ────────────────────────────────────────────────
 async function fetchGroup(group) {
-  const tables = TABLE_GROUPS[group] || [];
-  const isResearch = group === 'research';
+const tables = TABLE\_GROUPS[group] || [];
+const isResearch = group === 'research';
 
-  const promises = tables.map(async tbl => {
-    try {
-      // FIX: original code was missing closing % on ilike.%research  
-      const filterStr = isResearch
-        ? 'title.ilike.%research%,title.ilike.%assistant%'
-        : 'title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%,title.ilike.%co-op%,title.ilike.%coop%,title.ilike.%research%';
+const promises = tables.map(async tbl =\> {
+try {
+const filterStr = isResearch
+? 'title.ilike.%research%,title.ilike.%assistant%'
+: 'title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%,title.ilike.%co-op%,title.ilike.%coop%,title.ilike.%research%';
 
-      const { data, error } = await db.from(tbl).select('*').or(filterStr);
-      if (error) { console.warn(`Table "${tbl}" error:`, error.message); return []; }
-      return (data || []).map(r => ({ ...r, _source: tbl }));
-    } catch (e) {
-      console.warn(`Table "${tbl}" failed:`, e);
-      return [];
-    }
-  });
+```
+  const { data, error } = await db.from(tbl).select(&#39;*&#39;).or(filterStr);
+  if (error) { console.warn(`Table &quot;${tbl}&quot; error:`, error.message); return []; }
+  return (data || []).map(r =&gt; ({ ...r, _source: tbl }));
+} catch (e) {
+  console.warn(`Table &quot;${tbl}&quot; failed:`, e);
+  return [];
+}
+```
 
-  const results = await Promise.all(promises);
-  const combined = results.flat();
+});
 
-  // Deduplicate by job ID first, then title+company fallback
-  const seen = new Set();
-  return combined.filter(job => {
-    const key = job.id || `${job.title}||${job.company}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+const results = await Promise.all(promises);
+const combined = results.flat();
+
+// Deduplicate by job ID first, then title+company fallback
+const seen = new Set();
+return combined.filter(job =\> {
+const key = job.id || `${job.title}||${job.company}`;
+if (seen.has(key)) return false;
+seen.add(key);
+return true;
+});
 }
 
-// ── INTERN DETECTION (client-side, matches your Python logic) ───
-const INTERN_RE = /\b(intern(ship)?|co[- ]?op|summer (analyst|associate|intern)|graduate (trainee|program)|rotation(al)? program|student (program|opportunity)|university (program|hire)|(spring|fall|winter|summer) \d{4} intern(ship)?|\d{4} intern(ship)?|new grad(uate)?)\b/i;
-const SENIOR_RE = /\b(senior|sr\.?|manager|director|lead|principal|vp|chief|architect)\b/i;
+// ── INTERN DETECTION ───
+const INTERN\_RE = /\\b(intern(ship)?|co[- ]?op|summer (analyst|associate|intern)|graduate (trainee|program)|rotation(al)? program|student (program|opportunity)|university (program|hire)|(spring|fall|winter|summer) \\d{4} intern(ship)?|\\d{4} intern(ship)?|new grad(uate)?)\\b/i;
+const SENIOR\_RE = /\\b(senior|sr.?|manager|director|lead|principal|vp|chief|architect)\\b/i;
 
 function isIntern(job) {
-  const blob = `${job.title || ''} ${job.description || ''}`;
-  return INTERN_RE.test(blob) && !SENIOR_RE.test(job.title || '');
+const blob = `${job.title || &#39;&#39;} ${job.description || &#39;&#39;}`;
+return INTERN\_RE.test(blob) && \!SENIOR\_RE.test(job.title || '');
 }
 
 // ── FILTER + SORT ────────────────────────────────────────
 function applyFilters() {
-  const q = document.getElementById('search').value.trim().toLowerCase();
-  const sort = document.getElementById('sortOrder').value;
-  const internMode = document.getElementById('internFilter').value;
-  const showReposted = document.getElementById('repostedFilter').checked;
+const q = document.getElementById('search').value.trim().toLowerCase();
+const sort = document.getElementById('sortOrder').value;
+const internMode = document.getElementById('internFilter').value;
+const showReposted = document.getElementById('repostedFilter').checked;
 
-  filtered = allData.filter(j => {
-    if (!showReposted && (j.posted_r || '').toLowerCase().includes('reposted')) return false;
+filtered = allData.filter(j =\> {
+if (\!showReposted && (j.posted\_r || '').toLowerCase().includes('reposted')) return false;
 
-    if (internMode === 'intern' && !isIntern(j)) return false;
-    if (internMode === 'full'   &&  isIntern(j)) return false;
+```
+if (internMode === &#39;intern&#39; &amp;&amp; !isIntern(j)) return false;
+if (internMode === &#39;full&#39;   &amp;&amp;  isIntern(j)) return false;
 
-    if (q) {
-      const blob = `${j.title||''} ${j.company||''} ${j.loc||''}`.toLowerCase();
-      if (!blob.includes(q)) return false;
-    }
+if (q) {
+  const blob = `${j.title||&#39;&#39;} ${j.company||&#39;&#39;} ${j.loc||&#39;&#39;}`.toLowerCase();
+  if (!blob.includes(q)) return false;
+}
 
-    return true;
-  });
+return true;
+```
 
-  filtered.sort((a, b) => {
-    const da = new Date(a.posted || 0), db2 = new Date(b.posted || 0);
-    return sort === 'asc' ? da - db2 : db2 - da;
-  });
+});
 
-  page = 1;
-  updateStats();
-  renderPage();
-  renderPagination();
+// UPDATED: Added logic to handle highest score sorting
+filtered.sort((a, b) =\> {
+if (sort === 'score') {
+const scoreA = (a.compatibility \!== null && a.compatibility \!== undefined) ? Number(a.compatibility) : -1;
+const scoreB = (b.compatibility \!== null && b.compatibility \!== undefined) ? Number(b.compatibility) : -1;
+
+```
+  if (scoreA !== scoreB) {
+    return scoreB - scoreA; // Highest score first
+  }
+  
+  // Tie-breaker: sort by newest date if scores are identical
+  const da = new Date(a.posted || 0), db2 = new Date(b.posted || 0);
+  return db2 - da;
+} else {
+  const da = new Date(a.posted || 0), db2 = new Date(b.posted || 0);
+  return sort === &#39;asc&#39; ? da - db2 : db2 - da;
+}
+```
+
+});
+
+page = 1;
+updateStats();
+renderPage();
+renderPagination();
 }
 
 // ── STATS ────────────────────────────────────────────────
 function updateStats() {
-  document.getElementById('s-total').textContent    = allData.length.toLocaleString();
-  document.getElementById('s-intern').textContent   = allData.filter(isIntern).length.toLocaleString();
-  document.getElementById('s-showing').textContent  = filtered.length.toLocaleString();
-  const companies = new Set(allData.map(j => j.company).filter(Boolean));
-  document.getElementById('s-companies').textContent = companies.size.toLocaleString();
+document.getElementById('s-total').textContent    = allData.length.toLocaleString();
+document.getElementById('s-intern').textContent   = allData.filter(isIntern).length.toLocaleString();
+document.getElementById('s-showing').textContent  = filtered.length.toLocaleString();
+const companies = new Set(allData.map(j =\> j.company).filter(Boolean));
+document.getElementById('s-companies').textContent = companies.size.toLocaleString();
 
-  const now = new Date();
-  document.getElementById('last-updated').textContent = `Updated ${now.toLocaleTimeString()}`;
+const now = new Date();
+document.getElementById('last-updated').textContent = `Updated ${now.toLocaleTimeString()}`;
 }
 
 // ── RENDER ───────────────────────────────────────────────
 function renderPage() {
-  const grid = document.getElementById('grid');
-  const meta = document.getElementById('result-meta');
+const grid = document.getElementById('grid');
+const meta = document.getElementById('result-meta');
 
-  if (!filtered.length) {
-    grid.innerHTML = '<div id="status-msg">No results match your filters.</div>';
-    meta.textContent = '';
-    return;
-  }
+if (\!filtered.length) {
+grid.innerHTML = '\<div id="status-msg"\>No results match your filters.\</div\>';
+meta.textContent = '';
+return;
+}
 
-  const start = (page - 1) * PAGE_SIZE;
-  const end   = start + PAGE_SIZE;
-  const slice = filtered.slice(start, end);
+const start = (page - 1) \* PAGE\_SIZE;
+const end   = start + PAGE\_SIZE;
+const slice = filtered.slice(start, end);
 
-  meta.textContent = `Showing ${start + 1}–${Math.min(end, filtered.length)} of ${filtered.length} jobs`;
+meta.textContent = `Showing ${start + 1}–${Math.min(end, filtered.length)} of ${filtered.length} jobs`;
 
-  grid.innerHTML = slice.map(job => {
-    const intern    = isIntern(job);
-    const reposted  = (job.posted_r || '').toLowerCase().includes('reposted');
-    const daysAgo   = daysSince(job.posted);
-    const isNew     = daysAgo !== null && daysAgo <= 3;
+grid.innerHTML = slice.map(job =\> {
+const intern    = isIntern(job);
+const reposted  = (job.posted\_r || '').toLowerCase().includes('reposted');
+const daysAgo   = daysSince(job.posted);
+const isNew     = daysAgo \!== null && daysAgo \<= 3;
 
-    const domain    = (job.company || '').toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
-    const logoUrl   = `https://img.logo.dev/${domain}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&size=80&format=png`;
+```
+const domain    = (job.company || &#39;&#39;).toLowerCase().replace(/[^a-z0-9]/g, &#39;&#39;) + &#39;.com&#39;;
+const logoUrl   = `https://img.logo.dev/${domain}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&amp;size=80&amp;format=png`;
 
-    const badges = [
-      intern   ? `<span class="meta-chip badge-intern">Internship</span>` : '',
-      isNew    ? `<span class="meta-chip badge-new">New</span>` : '',
-      reposted ? `<span class="meta-chip badge-repost">Reposted</span>` : '',
-    ].join('');
+const badges = [
+  intern   ? `&lt;span class=&quot;meta-chip badge-intern&quot;&gt;Internship&lt;/span&gt;` : &#39;&#39;,
+  isNew    ? `&lt;span class=&quot;meta-chip badge-new&quot;&gt;New&lt;/span&gt;` : &#39;&#39;,
+  reposted ? `&lt;span class=&quot;meta-chip badge-repost&quot;&gt;Reposted&lt;/span&gt;` : &#39;&#39;,
+].join(&#39;&#39;);
 
-    const desc = (job.description || '').trim();
-    const postedStr = job.posted
-      ? `${new Date(job.posted).toLocaleDateString()} · ${daysAgo !== null ? daysAgo + 'd ago' : ''}`
-      : (job.posted_r || '—');
+const desc = (job.description || &#39;&#39;).trim();
+const postedStr = job.posted
+  ? `${new Date(job.posted).toLocaleDateString()} · ${daysAgo !== null ? daysAgo + &#39;d ago&#39; : &#39;&#39;}`
+  : (job.posted_r || &#39;—&#39;);
 
-    const loc = job.loc || job.location || '';
+const loc = job.loc || job.location || &#39;&#39;;
 
-    return `
-    <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card">
-      <div class="card-header">
-        <img class="company-logo"
-             src="${logoUrl}"
-             alt=""
-             onerror="this.style.display='none'">
-        <div class="card-title-block">
-          <div class="card-title">${escHtml(job.title || 'Untitled')}</div>
-          <div class="card-company">${escHtml(job.company || '')}</div>
-        </div>
-      </div>
-      <div class="card-meta">
-        ${loc ? `<span class="meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>${escHtml(loc)}</span>` : ''}
-        ${badges}
-      </div>
-      ${desc ? `<div class="card-desc">${escHtml(desc)}</div>` : ''}
-      <div class="card-footer">
-        <div class="card-date">${escHtml(postedStr)}</div>
-        <button class="copy-btn" onclick="copyLink(event, '${(job.link||'').replace(/'/g,'')}')">Copy link</button>
-      </div>
-    </a>`;
-  }).join('');
+// ADDED: Compatibility Score Generation
+const rawScore = job.compatibility;
+let scoreBadge = &#39;&#39;;
+
+if (rawScore !== null &amp;&amp; rawScore !== undefined) {
+  const score = Number(rawScore);
+  let scoreClass = &#39;score-low&#39;;
+  if (score &gt;= 80) scoreClass = &#39;score-high&#39;;
+  else if (score &gt;= 50) scoreClass = &#39;score-med&#39;;
+  scoreBadge = `&lt;div class=&quot;card-score ${scoreClass}&quot;&gt;${score}%&lt;/div&gt;`;
+} else {
+  scoreBadge = `&lt;div class=&quot;card-score score-none&quot;&gt;Unscored&lt;/div&gt;`;
+}
+
+return `
+&lt;a href=&quot;${job.link || &#39;#&#39;}&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; class=&quot;card&quot;&gt;
+  &lt;div class=&quot;card-header&quot;&gt;
+    &lt;div class=&quot;header-left&quot;&gt;
+      &lt;img class=&quot;company-logo&quot;
+           src=&quot;${logoUrl}&quot;
+           alt=&quot;&quot;
+           onerror=&quot;this.style.display=&#39;none&#39;&quot;&gt;
+      &lt;div class=&quot;card-title-block&quot;&gt;
+        &lt;div class=&quot;card-title&quot;&gt;${escHtml(job.title || &#39;Untitled&#39;)}&lt;/div&gt;
+        &lt;div class=&quot;card-company&quot;&gt;${escHtml(job.company || &#39;&#39;)}&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    ${scoreBadge}
+  &lt;/div&gt;
+  &lt;div class=&quot;card-meta&quot;&gt;
+    ${loc ? `&lt;span class=&quot;meta-chip&quot;&gt;&lt;svg viewBox=&quot;0 0 20 20&quot; fill=&quot;currentColor&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z&quot; clip-rule=&quot;evenodd&quot;/&gt;&lt;/svg&gt;${escHtml(loc)}&lt;/span&gt;` : &#39;&#39;}
+    ${badges}
+  &lt;/div&gt;
+  ${desc ? `&lt;div class=&quot;card-desc&quot;&gt;${escHtml(desc)}&lt;/div&gt;` : &#39;&#39;}
+  &lt;div class=&quot;card-footer&quot;&gt;
+    &lt;div class=&quot;card-date&quot;&gt;${escHtml(postedStr)}&lt;/div&gt;
+    &lt;button class=&quot;copy-btn&quot; onclick=&quot;copyLink(event, &#39;${(job.link||&#39;&#39;).replace(/&#39;/g,&#39;&#39;)}&#39;)&quot;&gt;Copy link&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/a&gt;`;
+```
+
+}).join('');
 }
 
 // ── PAGINATION ───────────────────────────────────────────
 function renderPagination() {
-  const pg = document.getElementById('pagination');
-  const total = Math.ceil(filtered.length / PAGE_SIZE);
-  if (total <= 1) { pg.innerHTML = ''; return; }
+const pg = document.getElementById('pagination');
+const total = Math.ceil(filtered.length / PAGE\_SIZE);
+if (total \<= 1) { pg.innerHTML = ''; return; }
 
-  const prev = `<button ${page===1?'disabled':''} onclick="goPage(${page-1})">← Prev</button>`;
-  const next = `<button ${page===total?'disabled':''} onclick="goPage(${page+1})">Next →</button>`;
-  const info = `<span id="page-info">Page ${page} / ${total}</span>`;
+const prev = `&lt;button ${page===1?&#39;disabled&#39;:&#39;&#39;} onclick=&quot;goPage(${page-1})&quot;&gt;← Prev&lt;/button&gt;`;
+const next = `&lt;button ${page===total?&#39;disabled&#39;:&#39;&#39;} onclick=&quot;goPage(${page+1})&quot;&gt;Next →&lt;/button&gt;`;
+const info = `&lt;span id=&quot;page-info&quot;&gt;Page ${page} / ${total}&lt;/span&gt;`;
 
-  // Page number buttons (show max 5 around current)
-  let nums = '';
-  for (let i = 1; i <= total; i++) {
-    if (i===1 || i===total || (i>=page-2 && i<=page+2)) {
-      nums += `<button class="${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`;
-    } else if (i===page-3 || i===page+3) {
-      nums += `<span id="page-info">…</span>`;
-    }
-  }
+// Page number buttons (show max 5 around current)
+let nums = '';
+for (let i = 1; i \<= total; i++) {
+if (i===1 || i===total || (i\>=page-2 && i\<=page+2)) {
+nums += `&lt;button class=&quot;${i===page?&#39;active&#39;:&#39;&#39;}&quot; onclick=&quot;goPage(${i})&quot;&gt;${i}&lt;/button&gt;`;
+} else if (i===page-3 || i===page+3) {
+nums += `&lt;span id=&quot;page-info&quot;&gt;…&lt;/span&gt;`;
+}
+}
 
-  pg.innerHTML = prev + nums + next + info;
+pg.innerHTML = prev + nums + next + info;
 }
 
 function goPage(n) {
-  page = n;
-  renderPage();
-  renderPagination();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+page = n;
+renderPage();
+renderPagination();
+window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ── UTILITIES ────────────────────────────────────────────
 function daysSince(iso) {
-  if (!iso) return null;
-  const diff = Date.now() - new Date(iso).getTime();
-  return Math.floor(diff / 86400000);
+if (\!iso) return null;
+const diff = Date.now() - new Date(iso).getTime();
+return Math.floor(diff / 86400000);
 }
 
 function escHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+return String(str)
+.replace(/&/g,'\&amp;').replace(/\</g,'\&lt;').replace(/\>/g,'\&gt;')
+.replace(/"/g,'\&quot;').replace(/'/g,'&\#39;');
 }
 
 function copyLink(e, url) {
-  e.preventDefault();
-  e.stopPropagation();
-  navigator.clipboard.writeText(url).then(() => {
-    const btn = e.target;
-    btn.textContent = 'Copied!';
-    setTimeout(() => btn.textContent = 'Copy link', 1500);
-  });
+e.preventDefault();
+e.stopPropagation();
+navigator.clipboard.writeText(url).then(() =\> {
+const btn = e.target;
+btn.textContent = 'Copied\!';
+setTimeout(() =\> btn.textContent = 'Copy link', 1500);
+});
 }
 
 // ── MAIN LOAD ────────────────────────────────────────────
 async function loadAll() {
-  document.getElementById('grid').innerHTML = '<div id="status-msg"><div class="spinner"></div>Loading jobs…</div>';
-  document.getElementById('result-meta').textContent = '';
-  document.getElementById('pagination').innerHTML = '';
+document.getElementById('grid').innerHTML = '\<div id="status-msg"\>\<div class="spinner"\>\</div\>Loading jobs…\</div\>';
+document.getElementById('result-meta').textContent = '';
+document.getElementById('pagination').innerHTML = '';
 
-  try {
-    allData = await fetchGroup(activeGroup);
-    applyFilters();
-  } catch (err) {
-    document.getElementById('grid').innerHTML =
-      `<div id="status-msg">Error loading data: ${escHtml(err.message)}</div>`;
-  }
+try {
+allData = await fetchGroup(activeGroup);
+applyFilters();
+} catch (err) {
+document.getElementById('grid').innerHTML =
+`&lt;div id=&quot;status-msg&quot;&gt;Error loading data: ${escHtml(err.message)}&lt;/div&gt;`;
+}
 }
 
 // ── EVENT LISTENERS ──────────────────────────────────────
@@ -793,12 +878,13 @@ document.getElementById('internFilter').addEventListener('change', applyFilters)
 document.getElementById('repostedFilter').addEventListener('change', applyFilters);
 document.getElementById('refresh').addEventListener('click', loadAll);
 
-document.getElementById('tableFilter').addEventListener('change', e => {
-  activeGroup = e.target.value;
-  loadAll();
+document.getElementById('tableFilter').addEventListener('change', e =\> {
+activeGroup = e.target.value;
+loadAll();
 });
 
 loadAll();
-</script>
-</body>
-</html>
+\</script\>
+
+\</body\>
+\</html\>
