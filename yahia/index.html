@@ -1,11 +1,31 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="refresh" content="0; url='https://9526-2600-1700-b500-72af-e978-522f-cb49-88ba.ngrok-free.app'" />
-    <title>Redirecting to Yahia Project...</title>
-  </head>
-  <body style="background-color: #111; color: white; font-family: sans-serif; text-align: center; padding-top: 50px;">
-    <p>Redirecting to the live server...</p>
-    <p><a href="https://9526-2600-1700-b500-72af-e978-522f-cb49-88ba.ngrok-free.app" style="color: #4da6ff;">Click here if you are not redirected automatically.</a></p>
-  </body>
+<head>
+    <title>Redirecting...</title>
+    <script>
+        async function tryRedirect() {
+            const targetUrl = "https://9526-2600-1700-b500-72af-e978-522f-cb49-88ba.ngrok-free.app";
+            
+            try {
+                // 1. We try to 'poke' ngrok with the secret header
+                await fetch(targetUrl, {
+                    method: 'GET',
+                    mode: 'no-cors', // Needed because of browser security
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true'
+                    }
+                });
+                
+                // 2. Now we try to move the human user there
+                window.location.href = targetUrl;
+            } catch (e) {
+                window.location.href = targetUrl;
+            }
+        }
+        window.onload = tryRedirect;
+    </script>
+</head>
+<body style="background: #111; color: white; text-align: center; font-family: sans-serif;">
+    <p>Loading project safely...</p>
+</body>
 </html>
