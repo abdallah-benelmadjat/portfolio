@@ -21,16 +21,13 @@
       --red:       #f87171;
       --green:     #34d399;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
     }
-
     /* ── HEADER ── */
     header {
       background: var(--surface);
@@ -44,7 +41,6 @@
       top: 0;
       z-index: 100;
     }
-
     .logo {
       font-family: 'Space Mono', monospace;
       font-size: 1.1rem;
@@ -52,15 +48,33 @@
       color: var(--accent);
       letter-spacing: -0.5px;
     }
-
     .logo span { color: var(--text-dim); }
-
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .kbd-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .kbd-hint kbd {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.1rem 0.35rem;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+    }
     #last-updated {
       font-family: 'Space Mono', monospace;
       font-size: 0.7rem;
       color: var(--muted);
     }
-
     /* ── STATS BAR ── */
     #stats-bar {
       display: flex;
@@ -68,7 +82,6 @@
       background: var(--border);
       border-bottom: 1px solid var(--border);
     }
-
     .stat {
       flex: 1;
       background: var(--surface);
@@ -77,7 +90,6 @@
       flex-direction: column;
       gap: 2px;
     }
-
     .stat-label {
       font-family: 'Space Mono', monospace;
       font-size: 0.65rem;
@@ -85,7 +97,6 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-
     .stat-value {
       font-family: 'Space Mono', monospace;
       font-size: 1.4rem;
@@ -93,7 +104,6 @@
       color: var(--accent);
       line-height: 1;
     }
-
     /* ── CONTROLS ── */
     #controls {
       padding: 1.25rem 2rem;
@@ -107,13 +117,11 @@
       top: 60px;
       z-index: 99;
     }
-
     .search-wrap {
       position: relative;
       flex: 1;
       min-width: 220px;
     }
-
     .search-wrap svg {
       position: absolute;
       left: 0.75rem;
@@ -124,7 +132,22 @@
       color: var(--muted);
       pointer-events: none;
     }
-
+    .search-clear {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      padding: 0.2rem;
+      display: none;
+    }
+    .search-clear:hover { color: var(--text); }
+    .search-wrap.has-value .search-clear { display: block; }
     input[type="text"] {
       width: 100%;
       background: var(--surface);
@@ -133,15 +156,13 @@
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.9rem;
-      padding: 0.55rem 0.75rem 0.55rem 2.25rem;
+      padding: 0.55rem 2rem 0.55rem 2.25rem;
       outline: none;
       transition: border-color 0.15s;
     }
-
     input[type="text"]:focus { border-color: var(--accent); }
     input[type="text"]::placeholder { color: var(--muted); }
-
-    select, button {
+    select, button.ctrl-btn {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -153,22 +174,23 @@
       outline: none;
       transition: border-color 0.15s, background 0.15s;
     }
-
     select:focus { border-color: var(--accent); }
-
     button#refresh {
       background: var(--accent);
-      border-color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
       color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.55rem 0.85rem;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      cursor: pointer;
     }
-
     button#refresh:hover { background: #d97706; }
     button#refresh svg { width: 14px; height: 14px; }
-
     .toggle-wrap {
       display: flex;
       align-items: center;
@@ -177,15 +199,12 @@
       color: var(--text-dim);
       white-space: nowrap;
     }
-
     .toggle {
       position: relative;
       width: 36px;
       height: 20px;
     }
-
     .toggle input { opacity: 0; width: 0; height: 0; }
-
     .slider {
       position: absolute;
       inset: 0;
@@ -194,7 +213,6 @@
       transition: background 0.2s;
       cursor: pointer;
     }
-
     .slider::before {
       content: '';
       position: absolute;
@@ -204,10 +222,72 @@
       border-radius: 50%;
       transition: transform 0.2s;
     }
-
     .toggle input:checked + .slider { background: var(--accent); }
     .toggle input:checked + .slider::before { transform: translateX(16px); }
-
+    /* ── SECONDARY CONTROLS ROW ── */
+    #controls-row2 {
+      padding: 0 2rem 0.75rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .control-group-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .pill-group {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .pill-group button {
+      background: var(--surface);
+      border: none;
+      border-right: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      padding: 0.35rem 0.65rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .pill-group button:last-child { border-right: none; }
+    .pill-group button:hover { background: var(--surface2); color: var(--text); }
+    .pill-group button.active {
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+    .controls-spacer { flex: 1; }
+    .action-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      padding: 0.35rem 0.65rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .action-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .action-btn svg { width: 12px; height: 12px; }
     /* ── ACTIVE FILTERS ── */
     #active-filters {
       padding: 0 2rem 0.75rem;
@@ -215,7 +295,7 @@
       gap: 0.5rem;
       flex-wrap: wrap;
     }
-
+    #active-filters:empty { padding: 0; }
     .filter-chip {
       display: flex;
       align-items: center;
@@ -226,8 +306,12 @@
       padding: 0.25rem 0.65rem;
       font-size: 0.78rem;
       color: var(--text-dim);
+      animation: chipIn 0.2s ease;
     }
-
+    @keyframes chipIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
     .filter-chip button {
       background: none;
       border: none;
@@ -237,15 +321,17 @@
       line-height: 1;
       cursor: pointer;
     }
-
+    .filter-chip button:hover { color: var(--red); }
     /* ── RESULT COUNT ── */
     #result-meta {
       padding: 0 2rem 1rem;
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
       color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-
     /* ── GRID ── */
     #grid {
       padding: 0 2rem 4rem;
@@ -254,7 +340,19 @@
       gap: 1px;
       background: var(--border);
     }
-
+    #grid.list-view {
+      grid-template-columns: 1fr;
+    }
+    #grid.list-view .card {
+      flex-direction: row;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1rem 1.4rem;
+    }
+    #grid.list-view .card-header { flex: 0 0 auto; width: 320px; }
+    #grid.list-view .card-meta { flex: 0 0 auto; }
+    #grid.list-view .card-desc { flex: 1; min-width: 0; -webkit-line-clamp: 1; }
+    #grid.list-view .card-footer { margin-top: 0; padding-top: 0; border-top: none; flex: 0 0 auto; }
     /* ── CARD ── */
     .card {
       background: var(--surface);
@@ -268,7 +366,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .card::before {
       content: '';
       position: absolute;
@@ -278,17 +375,22 @@
       background: transparent;
       transition: background 0.15s;
     }
-
     .card:hover { background: var(--surface2); }
     .card:hover::before { background: var(--accent); }
-
+    .card.bookmarked::after {
+      content: '★';
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
     .card-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 0.85rem;
     }
-    
     .header-left {
       display: flex;
       align-items: flex-start;
@@ -296,7 +398,6 @@
       flex: 1;
       min-width: 0;
     }
-
     .company-logo {
       width: 40px;
       height: 40px;
@@ -307,9 +408,7 @@
       flex-shrink: 0;
       padding: 4px;
     }
-
     .card-title-block { flex: 1; min-width: 0; }
-
     .card-title {
       font-size: 0.95rem;
       font-weight: 600;
@@ -321,13 +420,11 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
     .card-company {
       font-size: 0.8rem;
       color: var(--accent2);
       font-weight: 500;
     }
-
     /* ── COMPATIBILITY SCORE BADGES ── */
     .card-score {
       font-family: 'Space Mono', monospace;
@@ -339,36 +436,34 @@
       align-items: center;
       flex-shrink: 0;
     }
-    .score-high { 
-      background: rgba(52,211,153,0.15); 
-      color: var(--green); 
-      border: 1px solid rgba(52,211,153,0.3); 
+    .score-high {
+      background: rgba(52,211,153,0.15);
+      color: var(--green);
+      border: 1px solid rgba(52,211,153,0.3);
     }
-    .score-med { 
-      background: rgba(245,158,11,0.15); 
-      color: var(--accent); 
-      border: 1px solid rgba(245,158,11,0.3); 
+    .score-med {
+      background: rgba(245,158,11,0.15);
+      color: var(--accent);
+      border: 1px solid rgba(245,158,11,0.3);
     }
-    .score-low { 
-      background: rgba(248,113,113,0.15); 
-      color: var(--red); 
-      border: 1px solid rgba(248,113,113,0.3); 
+    .score-low {
+      background: rgba(248,113,113,0.15);
+      color: var(--red);
+      border: 1px solid rgba(248,113,113,0.3);
     }
-    .score-none { 
-      background: var(--surface2); 
-      color: var(--muted); 
-      border: 1px solid var(--border); 
-      font-size: 0.75rem; 
+    .score-none {
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
       font-weight: 500;
     }
-
     .card-meta {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       flex-wrap: wrap;
     }
-
     .meta-chip {
       display: flex;
       align-items: center;
@@ -380,28 +475,23 @@
       border-radius: 4px;
       padding: 0.15rem 0.45rem;
     }
-
     .meta-chip svg { width: 10px; height: 10px; }
-
     .badge-intern {
       background: rgba(245,158,11,0.15);
       border-color: rgba(245,158,11,0.4);
       color: var(--accent);
       font-weight: 600;
     }
-
     .badge-repost {
       background: rgba(248,113,113,0.1);
       border-color: rgba(248,113,113,0.3);
       color: var(--red);
     }
-
     .badge-new {
       background: rgba(52,211,153,0.1);
       border-color: rgba(52,211,153,0.3);
       color: var(--green);
     }
-
     .card-desc {
       font-size: 0.8rem;
       color: var(--text-dim);
@@ -411,7 +501,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
     .card-footer {
       display: flex;
       align-items: center;
@@ -419,15 +508,18 @@
       margin-top: auto;
       padding-top: 0.5rem;
       border-top: 1px solid var(--border);
+      gap: 0.5rem;
     }
-
     .card-date {
       font-family: 'Space Mono', monospace;
       font-size: 0.68rem;
       color: var(--muted);
     }
-
-    .copy-btn {
+    .card-actions {
+      display: flex;
+      gap: 0.35rem;
+    }
+    .card-btn {
       background: none;
       border: 1px solid var(--border);
       border-radius: 4px;
@@ -436,10 +528,10 @@
       color: var(--muted);
       cursor: pointer;
       transition: color 0.15s, border-color 0.15s;
+      font-family: 'DM Sans', sans-serif;
     }
-
-    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
-
+    .card-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .card-btn.bookmarked { color: var(--accent); border-color: var(--accent); }
     /* ── EMPTY/LOADING ── */
     #status-msg {
       grid-column: 1 / -1;
@@ -449,7 +541,6 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.85rem;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
       width: 24px; height: 24px;
@@ -459,7 +550,6 @@
       margin: 0 auto 1rem;
       animation: spin 0.8s linear infinite;
     }
-
     /* ── PAGINATION ── */
     #pagination {
       display: flex;
@@ -467,67 +557,124 @@
       justify-content: center;
       gap: 0.5rem;
       padding: 2rem;
+      flex-wrap: wrap;
     }
-
     #pagination button {
-      padding: 0.45rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
       font-size: 0.85rem;
+      padding: 0.45rem 1rem;
+      cursor: pointer;
     }
-
     #pagination button:disabled {
       opacity: 0.3;
       cursor: default;
     }
-
     #pagination button.active {
       background: var(--accent);
       border-color: var(--accent);
       color: #000;
       font-weight: 600;
     }
-
     #page-info {
       font-family: 'Space Mono', monospace;
       font-size: 0.72rem;
       color: var(--muted);
       padding: 0 0.5rem;
     }
-
+    /* ── SCROLL TO TOP ── */
+    #scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      color: #000;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    #scroll-top.visible { opacity: 1; pointer-events: auto; }
+    #scroll-top:hover { transform: scale(1.1); }
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      z-index: 200;
+      pointer-events: none;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
     /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-
     /* ── RESPONSIVE ── */
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       #controls { padding: 1rem; }
+      #controls-row2 { padding: 0 1rem 0.75rem; }
       #grid { padding: 0 0 4rem; }
+      #grid.list-view .card { flex-direction: column; }
+      #grid.list-view .card-header { width: auto; }
       .stat { padding: 0.75rem 1rem; }
       #stats-bar { overflow-x: auto; }
+      .kbd-hint { display: none; }
+      #result-meta { padding: 0 1rem 1rem; }
+      #active-filters { padding: 0 1rem 0.75rem; }
     }
   </style>
 </head>
 <body>
-
 <header>
   <div class="logo">job<span>/</span>radar</div>
-  <div id="last-updated">—</div>
+  <div class="header-right">
+    <div class="kbd-hint">
+      <kbd>/</kbd> search
+      <kbd>J</kbd><kbd>K</kbd> nav
+      <kbd>B</kbd> bookmark
+    </div>
+    <div id="last-updated">-</div>
+  </div>
 </header>
-
 <div id="stats-bar">
-  <div class="stat"><div class="stat-label">Total Scraped</div><div class="stat-value" id="s-total">—</div></div>
-  <div class="stat"><div class="stat-label">Internships</div><div class="stat-value" id="s-intern">—</div></div>
-  <div class="stat"><div class="stat-label">Showing</div><div class="stat-value" id="s-showing">—</div></div>
-  <div class="stat"><div class="stat-label">Companies</div><div class="stat-value" id="s-companies">—</div></div>
+  <div class="stat"><div class="stat-label">Total Scraped</div><div class="stat-value" id="s-total">-</div></div>
+  <div class="stat"><div class="stat-label">Internships</div><div class="stat-value" id="s-intern">-</div></div>
+  <div class="stat"><div class="stat-label">Showing</div><div class="stat-value" id="s-showing">-</div></div>
+  <div class="stat"><div class="stat-label">Companies</div><div class="stat-value" id="s-companies">-</div></div>
+  <div class="stat"><div class="stat-label">Bookmarked</div><div class="stat-value" id="s-bookmarked">0</div></div>
 </div>
-
 <div id="controls">
-  <div class="search-wrap">
+  <div class="search-wrap" id="searchWrap">
     <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
     <input type="text" id="search" placeholder="Search title, company, location..." />
+    <button class="search-clear" id="searchClear" title="Clear search">&times;</button>
   </div>
-
   <select id="tableFilter">
     <option value="all">All Sources</option>
     <option value="alljobs_internships">Mechanical (Fortune 500 + NatLabs)</option>
@@ -535,41 +682,80 @@
     <option value="low_level">Broad Search</option>
     <option value="research">Research Roles</option>
   </select>
-
   <select id="sortOrder">
     <option value="desc">Newest First</option>
     <option value="asc">Oldest First</option>
     <option value="score">Highest Match</option>
   </select>
-
   <select id="internFilter">
     <option value="all">All Jobs</option>
     <option value="intern">Internships Only</option>
     <option value="full">Full-Time Only</option>
+    <option value="bookmarked">Bookmarked Only</option>
   </select>
-
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="repostedFilter" />
       <span class="slider"></span>
     </label>
-    Show Reposted
+    Reposted
   </div>
-
   <button id="refresh">
     <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
     Refresh
   </button>
 </div>
-
+<!-- Secondary controls row -->
+<div id="controls-row2">
+  <div class="control-group">
+    <span class="control-group-label">Recency:</span>
+    <div class="pill-group" id="recencyPills">
+      <button class="active" data-hours="0">All</button>
+      <button data-hours="24">24h</button>
+      <button data-hours="48">48h</button>
+      <button data-hours="72">3d</button>
+      <button data-hours="120">5d</button>
+      <button data-hours="168">7d</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <span class="control-group-label">Per page:</span>
+    <div class="pill-group" id="pageSizePills">
+      <button data-size="20">20</button>
+      <button class="active" data-size="30">30</button>
+      <button data-size="50">50</button>
+      <button data-size="100">100</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <span class="control-group-label">View:</span>
+    <div class="pill-group" id="viewPills">
+      <button class="active" data-view="grid" title="Grid view">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+      </button>
+      <button data-view="list" title="List view">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="14" height="3" rx="1"/><rect x="1" y="6.5" width="14" height="3" rx="1"/><rect x="1" y="12" width="14" height="3" rx="1"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="controls-spacer"></div>
+  <button class="action-btn" id="clearAll" title="Clear all filters">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+    Clear filters
+  </button>
+  <button class="action-btn" id="exportCSV" title="Export filtered results as CSV">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+    Export CSV
+  </button>
+</div>
 <div id="active-filters"></div>
 <div id="result-meta"></div>
-
 <div id="grid">
   <div id="status-msg"><div class="spinner"></div>Loading jobs...</div>
 </div>
-
 <div id="pagination"></div>
+<button id="scroll-top" title="Scroll to top">↑</button>
+<div id="toast"></div>
 
 <script>
 const SUPABASE_URL = 'https://qdcxtfnuezcznygvpvsc.supabase.co';
@@ -583,39 +769,47 @@ const TABLE_GROUPS = {
   alljobs_internships: ['alljobs', 'allinternships'],
   jobs_internships:    ['jobs', 'internship'],
   low_level:           ['anyjobs', 'anyinternships'],
-  research:            ['jobs', 'internship'],  
+  research:            ['jobs', 'internship'],
 };
 
-const PAGE_SIZE = 30;
-
 // ── STATE ────────────────────────────────────────────────
-let allData    = [];
-let filtered   = [];
-let page       = 1;
-let activeGroup = 'all';
+let allData      = [];
+let filtered     = [];
+let page         = 1;
+let pageSize     = 30;
+let activeGroup  = 'all';
+let recencyHours = 0; // 0 = all
+let viewMode     = 'grid';
+let bookmarks    = JSON.parse(localStorage.getItem('jr_bookmarks') || '{}');
 
-// ── STOP WORDS for keyword extraction ───────────────────
-const STOP = new Set([
-  'with','that','this','have','from','they','will','been','were','your','their',
-  'what','when','work','able','team','also','more','some','into','than','other',
-  'each','about','which','would','these','those','there','where','while','after',
-  'skills','experience','position','required','including','ability','strong',
-  'excellent','knowledge','must','well','years','level','using','help','make',
-  'role','based','field','such','related','developing','development','working',
-  'manage','support','provide','ensure','responsible','across','through',
-]);
+// ── BOOKMARKS ────────────────────────────────────────────
+function getJobKey(job) {
+  return job.id ? String(job.id) : `${job.title}||${job.company}`;
+}
+function isBookmarked(job) {
+  return !!bookmarks[getJobKey(job)];
+}
+function toggleBookmark(job) {
+  const key = getJobKey(job);
+  if (bookmarks[key]) {
+    delete bookmarks[key];
+  } else {
+    bookmarks[key] = { title: job.title, company: job.company, link: job.link, savedAt: Date.now() };
+  }
+  localStorage.setItem('jr_bookmarks', JSON.stringify(bookmarks));
+  updateStats();
+  renderPage();
+}
 
 // ── FETCH ────────────────────────────────────────────────
 async function fetchGroup(group) {
   const tables = TABLE_GROUPS[group] || [];
   const isResearch = group === 'research';
-
   const promises = tables.map(async tbl => {
     try {
       const filterStr = isResearch
         ? 'title.ilike.%research%,title.ilike.%assistant%'
         : 'title.ilike.%intern%,title.ilike.%internship%,title.ilike.%graduate%,title.ilike.%phd%,title.ilike.%student%,title.ilike.%co-op%,title.ilike.%coop%,title.ilike.%research%';
-
       const { data, error } = await db.from(tbl).select('*').or(filterStr);
       if (error) { console.warn(`Table "${tbl}" error:`, error.message); return []; }
       return (data || []).map(r => ({ ...r, _source: tbl }));
@@ -624,11 +818,8 @@ async function fetchGroup(group) {
       return [];
     }
   });
-
   const results = await Promise.all(promises);
   const combined = results.flat();
-
-  // Deduplicate by job ID first, then title+company fallback
   const seen = new Set();
   return combined.filter(job => {
     const key = job.id || `${job.title}||${job.company}`;
@@ -638,10 +829,9 @@ async function fetchGroup(group) {
   });
 }
 
-// ── INTERN DETECTION ───
+// ── INTERN DETECTION ─────────────────────────────────────
 const INTERN_RE = /\b(intern(ship)?|co[- ]?op|summer (analyst|associate|intern)|graduate (trainee|program)|rotation(al)? program|student (program|opportunity)|university (program|hire)|(spring|fall|winter|summer) \d{4} intern(ship)?|\d{4} intern(ship)?|new grad(uate)?)\b/i;
 const SENIOR_RE = /\b(senior|sr\.?|manager|director|lead|principal|vp|chief|architect)\b/i;
-
 function isIntern(job) {
   const blob = `${job.title || ''} ${job.description || ''}`;
   return INTERN_RE.test(blob) && !SENIOR_RE.test(job.title || '');
@@ -654,30 +844,32 @@ function applyFilters() {
   const internMode = document.getElementById('internFilter').value;
   const showReposted = document.getElementById('repostedFilter').checked;
 
-  filtered = allData.filter(j => {
-    if (!showReposted && (j.posted_r || '').toLowerCase().includes('reposted')) return false;
+  // Update search wrap class for clear button
+  const wrap = document.getElementById('searchWrap');
+  wrap.classList.toggle('has-value', q.length > 0);
 
+  filtered = allData.filter(j => {
+    // Recency filter
+    if (recencyHours > 0 && j.posted) {
+      const cutoff = Date.now() - recencyHours * 3600000;
+      if (new Date(j.posted).getTime() < cutoff) return false;
+    }
+    if (recencyHours > 0 && !j.posted) return false;
+    if (!showReposted && (j.posted_r || '').toLowerCase().includes('reposted')) return false;
     if (internMode === 'intern' && !isIntern(j)) return false;
     if (internMode === 'full'   &&  isIntern(j)) return false;
-
+    if (internMode === 'bookmarked' && !isBookmarked(j)) return false;
     if (q) {
       const blob = `${j.title||''} ${j.company||''} ${j.loc||''}`.toLowerCase();
       if (!blob.includes(q)) return false;
     }
-
     return true;
   });
-
   filtered.sort((a, b) => {
     if (sort === 'score') {
       const scoreA = (a.compatibility !== null && a.compatibility !== undefined) ? Number(a.compatibility) : -1;
       const scoreB = (b.compatibility !== null && b.compatibility !== undefined) ? Number(b.compatibility) : -1;
-      
-      if (scoreA !== scoreB) {
-        return scoreB - scoreA; // Highest score first
-      }
-      
-      // Tie-breaker: sort by newest date if scores are identical
+      if (scoreA !== scoreB) return scoreB - scoreA;
       const da = new Date(a.posted || 0), db2 = new Date(b.posted || 0);
       return db2 - da;
     } else {
@@ -685,11 +877,37 @@ function applyFilters() {
       return sort === 'asc' ? da - db2 : db2 - da;
     }
   });
-
   page = 1;
   updateStats();
+  renderActiveFilters();
   renderPage();
   renderPagination();
+}
+
+// ── ACTIVE FILTERS DISPLAY ──────────────────────────────
+function renderActiveFilters() {
+  const el = document.getElementById('active-filters');
+  const chips = [];
+  const q = document.getElementById('search').value.trim();
+  if (q) chips.push({ label: `Search: "${q}"`, clear: () => { document.getElementById('search').value = ''; applyFilters(); } });
+  if (recencyHours > 0) {
+    const label = recencyHours <= 48 ? `Last ${recencyHours}h` : `Last ${recencyHours/24}d`;
+    chips.push({ label, clear: () => { setRecency(0); } });
+  }
+  const internMode = document.getElementById('internFilter').value;
+  if (internMode !== 'all') {
+    const labels = { intern: 'Internships Only', full: 'Full-Time Only', bookmarked: 'Bookmarked Only' };
+    chips.push({ label: labels[internMode], clear: () => { document.getElementById('internFilter').value = 'all'; applyFilters(); } });
+  }
+  const showReposted = document.getElementById('repostedFilter').checked;
+  if (showReposted) chips.push({ label: 'Showing Reposted', clear: () => { document.getElementById('repostedFilter').checked = false; applyFilters(); } });
+
+  el.innerHTML = chips.map((c, i) =>
+    `<span class="filter-chip">${escHtml(c.label)} <button data-idx="${i}">&times;</button></span>`
+  ).join('');
+  el.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => chips[btn.dataset.idx].clear());
+  });
 }
 
 // ── STATS ────────────────────────────────────────────────
@@ -699,7 +917,7 @@ function updateStats() {
   document.getElementById('s-showing').textContent  = filtered.length.toLocaleString();
   const companies = new Set(allData.map(j => j.company).filter(Boolean));
   document.getElementById('s-companies').textContent = companies.size.toLocaleString();
-
+  document.getElementById('s-bookmarked').textContent = Object.keys(bookmarks).length.toLocaleString();
   const now = new Date();
   document.getElementById('last-updated').textContent = `Updated ${now.toLocaleTimeString()}`;
 }
@@ -709,43 +927,38 @@ function renderPage() {
   const grid = document.getElementById('grid');
   const meta = document.getElementById('result-meta');
 
+  grid.classList.toggle('list-view', viewMode === 'list');
+
   if (!filtered.length) {
     grid.innerHTML = '<div id="status-msg">No results match your filters.</div>';
-    meta.textContent = '';
+    meta.innerHTML = '';
     return;
   }
-
-  const start = (page - 1) * PAGE_SIZE;
-  const end   = start + PAGE_SIZE;
+  const start = (page - 1) * pageSize;
+  const end   = start + pageSize;
   const slice = filtered.slice(start, end);
-
-  meta.textContent = `Showing ${start + 1}–${Math.min(end, filtered.length)} of ${filtered.length} jobs`;
-
-  grid.innerHTML = slice.map(job => {
+  meta.innerHTML = `<span>Showing ${start + 1}-${Math.min(end, filtered.length)} of ${filtered.length} jobs</span>`;
+  grid.innerHTML = slice.map((job, idx) => {
     const intern    = isIntern(job);
     const reposted  = (job.posted_r || '').toLowerCase().includes('reposted');
     const daysAgo   = daysSince(job.posted);
     const isNew     = daysAgo !== null && daysAgo <= 3;
-
+    const bm        = isBookmarked(job);
     const domain    = (job.company || '').toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
     const logoUrl   = `https://img.logo.dev/${domain}?token=pk_c5d-g2vKSH2o-TpvYEG99Q&size=80&format=png`;
-
     const badges = [
       intern   ? `<span class="meta-chip badge-intern">Internship</span>` : '',
       isNew    ? `<span class="meta-chip badge-new">New</span>` : '',
       reposted ? `<span class="meta-chip badge-repost">Reposted</span>` : '',
     ].join('');
-
     const desc = (job.description || '').trim();
     const postedStr = job.posted
       ? `${new Date(job.posted).toLocaleDateString()} · ${daysAgo !== null ? daysAgo + 'd ago' : ''}`
-      : (job.posted_r || '—');
-
+      : (job.posted_r || '-');
     const loc = job.loc || job.location || '';
-    
+
     const rawScore = job.compatibility;
     let scoreBadge = '';
-    
     if (rawScore !== null && rawScore !== undefined) {
       const score = Number(rawScore);
       let scoreClass = 'score-low';
@@ -755,9 +968,9 @@ function renderPage() {
     } else {
       scoreBadge = `<div class="card-score score-none">Unscored</div>`;
     }
-
+    const safeLink = (job.link||'').replace(/'/g, '').replace(/"/g, '');
     return `
-    <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card">
+    <a href="${job.link || '#'}" target="_blank" rel="noopener" class="card${bm?' bookmarked':''}" data-idx="${start+idx}">
       <div class="card-header">
         <div class="header-left">
           <img class="company-logo"
@@ -778,7 +991,12 @@ function renderPage() {
       ${desc ? `<div class="card-desc">${escHtml(desc)}</div>` : ''}
       <div class="card-footer">
         <div class="card-date">${escHtml(postedStr)}</div>
-        <button class="copy-btn" onclick="copyLink(event, '${(job.link||'').replace(/'/g,'')}')">Copy link</button>
+        <div class="card-actions">
+          <button class="card-btn${bm?' bookmarked':''}" onclick="handleBookmark(event, ${start+idx})" title="${bm?'Remove bookmark':'Bookmark'}">
+            ${bm ? '★ Saved' : '☆ Save'}
+          </button>
+          <button class="card-btn" onclick="copyLink(event, '${safeLink}')">Copy link</button>
+        </div>
       </div>
     </a>`;
   }).join('');
@@ -787,25 +1005,21 @@ function renderPage() {
 // ── PAGINATION ───────────────────────────────────────────
 function renderPagination() {
   const pg = document.getElementById('pagination');
-  const total = Math.ceil(filtered.length / PAGE_SIZE);
+  const total = Math.ceil(filtered.length / pageSize);
   if (total <= 1) { pg.innerHTML = ''; return; }
-
   const prev = `<button ${page===1?'disabled':''} onclick="goPage(${page-1})">← Prev</button>`;
   const next = `<button ${page===total?'disabled':''} onclick="goPage(${page+1})">Next →</button>`;
   const info = `<span id="page-info">Page ${page} / ${total}</span>`;
-
   let nums = '';
   for (let i = 1; i <= total; i++) {
     if (i===1 || i===total || (i>=page-2 && i<=page+2)) {
       nums += `<button class="${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`;
     } else if (i===page-3 || i===page+3) {
-      nums += `<span id="page-info">…</span>`;
+      nums += `<span id="page-info">...</span>`;
     }
   }
-
   pg.innerHTML = prev + nums + next + info;
 }
-
 function goPage(n) {
   page = n;
   renderPage();
@@ -819,29 +1033,161 @@ function daysSince(iso) {
   const diff = Date.now() - new Date(iso).getTime();
   return Math.floor(diff / 86400000);
 }
-
 function escHtml(str) {
   return String(str)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-
 function copyLink(e, url) {
   e.preventDefault();
   e.stopPropagation();
   navigator.clipboard.writeText(url).then(() => {
-    const btn = e.target;
-    btn.textContent = 'Copied!';
-    setTimeout(() => btn.textContent = 'Copy link', 1500);
+    showToast('Link copied to clipboard');
   });
 }
+function handleBookmark(e, idx) {
+  e.preventDefault();
+  e.stopPropagation();
+  const job = filtered[idx];
+  if (!job) return;
+  toggleBookmark(job);
+  showToast(isBookmarked(job) ? 'Job bookmarked' : 'Bookmark removed');
+}
+
+// ── TOAST ────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ── RECENCY PILLS ────────────────────────────────────────
+function setRecency(hours) {
+  recencyHours = hours;
+  document.querySelectorAll('#recencyPills button').forEach(b => {
+    b.classList.toggle('active', Number(b.dataset.hours) === hours);
+  });
+  applyFilters();
+}
+document.querySelectorAll('#recencyPills button').forEach(btn => {
+  btn.addEventListener('click', () => setRecency(Number(btn.dataset.hours)));
+});
+
+// ── PAGE SIZE PILLS ──────────────────────────────────────
+function setPageSize(size) {
+  pageSize = size;
+  document.querySelectorAll('#pageSizePills button').forEach(b => {
+    b.classList.toggle('active', Number(b.dataset.size) === size);
+  });
+  page = 1;
+  renderPage();
+  renderPagination();
+}
+document.querySelectorAll('#pageSizePills button').forEach(btn => {
+  btn.addEventListener('click', () => setPageSize(Number(btn.dataset.size)));
+});
+
+// ── VIEW MODE PILLS ─────────────────────────────────────
+document.querySelectorAll('#viewPills button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    viewMode = btn.dataset.view;
+    document.querySelectorAll('#viewPills button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderPage();
+  });
+});
+
+// ── CLEAR ALL FILTERS ────────────────────────────────────
+document.getElementById('clearAll').addEventListener('click', () => {
+  document.getElementById('search').value = '';
+  document.getElementById('sortOrder').value = 'desc';
+  document.getElementById('internFilter').value = 'all';
+  document.getElementById('repostedFilter').checked = false;
+  setRecency(0);
+  applyFilters();
+  showToast('All filters cleared');
+});
+
+// ── EXPORT CSV ───────────────────────────────────────────
+document.getElementById('exportCSV').addEventListener('click', () => {
+  if (!filtered.length) { showToast('No data to export'); return; }
+  const headers = ['Title','Company','Location','Posted','Compatibility','Link','Source'];
+  const rows = filtered.map(j => [
+    `"${(j.title||'').replace(/"/g,'""')}"`,
+    `"${(j.company||'').replace(/"/g,'""')}"`,
+    `"${(j.loc||j.location||'').replace(/"/g,'""')}"`,
+    j.posted || '',
+    j.compatibility != null ? j.compatibility : '',
+    j.link || '',
+    j._source || ''
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `job-radar-export-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`Exported ${filtered.length} jobs`);
+});
+
+// ── SEARCH CLEAR BUTTON ──────────────────────────────────
+document.getElementById('searchClear').addEventListener('click', () => {
+  document.getElementById('search').value = '';
+  applyFilters();
+});
+
+// ── SCROLL TO TOP ────────────────────────────────────────
+const scrollBtn = document.getElementById('scroll-top');
+window.addEventListener('scroll', () => {
+  scrollBtn.classList.toggle('visible', window.scrollY > 400);
+});
+scrollBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ── KEYBOARD SHORTCUTS ───────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  // Don't capture if inside input/select
+  const tag = document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') {
+    if (e.key === 'Escape') {
+      document.activeElement.blur();
+      e.preventDefault();
+    }
+    return;
+  }
+
+  switch (e.key) {
+    case '/':
+      e.preventDefault();
+      document.getElementById('search').focus();
+      break;
+    case 'j': // Next page
+      if (page < Math.ceil(filtered.length / pageSize)) goPage(page + 1);
+      break;
+    case 'k': // Prev page
+      if (page > 1) goPage(page - 1);
+      break;
+    case 'r': // Refresh
+      if (!e.ctrlKey && !e.metaKey) loadAll();
+      break;
+    case 'Escape':
+      document.getElementById('search').value = '';
+      applyFilters();
+      break;
+  }
+});
 
 // ── MAIN LOAD ────────────────────────────────────────────
 async function loadAll() {
-  document.getElementById('grid').innerHTML = '<div id="status-msg"><div class="spinner"></div>Loading jobs…</div>';
-  document.getElementById('result-meta').textContent = '';
+  document.getElementById('grid').innerHTML = '<div id="status-msg"><div class="spinner"></div>Loading jobs...</div>';
+  document.getElementById('result-meta').innerHTML = '';
   document.getElementById('pagination').innerHTML = '';
-
   try {
     allData = await fetchGroup(activeGroup);
     applyFilters();
@@ -857,7 +1203,6 @@ document.getElementById('sortOrder').addEventListener('change', applyFilters);
 document.getElementById('internFilter').addEventListener('change', applyFilters);
 document.getElementById('repostedFilter').addEventListener('change', applyFilters);
 document.getElementById('refresh').addEventListener('click', loadAll);
-
 document.getElementById('tableFilter').addEventListener('change', e => {
   activeGroup = e.target.value;
   loadAll();
