@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Forge — Custom Trading Card Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600;1,700&family=DM+Sans:wght@400;500;600&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+
+  :root {
+    --bg-deep: #0c1015;
+    --bg-panel: #161b24;
+    --bg-input: #0e1219;
+    --line: #2a2f3a;
+    --line-soft: #1d2230;
+    --text: #E8DDC4;
+    --text-dim: #8a8775;
+    --gold: #D4A03A;
+    --gold-bright: #F4C040;
+    --gold-deep: #8a6418;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, #1a2030 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 100% 100%, #1f1810 0%, transparent 50%),
+      #0c1015;
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    padding: 32px 24px 64px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 3px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 1;
+    max-width: 1380px;
+    margin: 0 auto 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 44px;
+    letter-spacing: -0.5px;
+    margin: 0;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  h1 em {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .tagline {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .badge {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--gold);
+    border: 1px solid var(--gold-deep);
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(212, 160, 58, 0.06);
+  }
+
+  .layout {
+    position: relative;
+    z-index: 1;
+    max-width: 1380px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .preview {
+      position: static !important;
+    }
+  }
+
+  .controls {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 26px 24px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .section-title:not(:first-of-type) {
+    margin-top: 30px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .field-row .field {
+    margin-bottom: 0;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 500;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 160, 58, 0.12);
+  }
+
+  input[type="text"][dir="rtl"] {
+    font-family: 'Amiri', 'Tahoma', sans-serif;
+    font-size: 16px;
+  }
+
+  .color-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .color-field label {
+    margin-bottom: 4px;
+  }
+
+  input[type="color"] {
+    width: 100%;
+    height: 40px;
+    background: var(--bg-input);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  input[type="color"]:hover {
+    border-color: var(--gold);
+  }
+
+  .upload-area {
+    border: 1.5px dashed var(--line);
+    border-radius: 6px;
+    padding: 22px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: var(--bg-input);
+    display: block;
+  }
+
+  .upload-area:hover,
+  .upload-area.drag-over {
+    border-color: var(--gold);
+    background: rgba(212, 160, 58, 0.04);
+  }
+
+  .upload-area.has-image {
+    border-style: solid;
+    border-color: var(--gold-deep);
+    padding: 10px;
+  }
+
+  .upload-icon {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 26px;
+    color: var(--gold);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+
+  .upload-text {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .upload-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .upload-thumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .upload-thumb img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .upload-thumb-info {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .upload-thumb-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .upload-thumb-action {
+    font-size: 11px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  #imageFile { display: none; }
+
+  .clear-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--text-dim);
+    font-size: 11px;
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+
+  .clear-link:hover {
+    color: #d57878;
+  }
+
+  button {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.08s, box-shadow 0.18s;
+    width: 100%;
+  }
+
+  button.primary {
+    background: linear-gradient(180deg, #E5B449 0%, #C28A18 100%);
+    color: #1a1408;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+
+  button.primary:hover {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 14px rgba(212, 160, 58, 0.25);
+    transform: translateY(-1px);
+  }
+
+  button.ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--line);
+  }
+
+  button.ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  button:active {
+    transform: translateY(0);
+  }
+
+  .preview {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .card-stage {
+    width: 100%;
+    max-width: 560px;
+    padding: 16px;
+  }
+
+  #cardSvg {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 30px 50px rgba(0,0,0,0.5)) drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+  }
+
+  #cardSvg svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: 4px;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* Custom range slider */
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    margin: 8px 0;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+  }
+
+  input[type="range"]::-moz-range-track {
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--gold);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -6px;
+    border: 2px solid #1a1408;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--gold);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #1a1408;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .slider-row input[type="range"] {
+    flex: 1;
+  }
+
+  .slider-value {
+    font-size: 12px;
+    color: var(--gold);
+    min-width: 40px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 56px;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1><em>Card</em> Forge</h1>
+    <div class="tagline">Build ornate trading cards in the style of the Maruti template</div>
+  </div>
+  <div class="badge">Live preview · PNG &amp; SVG export</div>
+</header>
+
+<div class="layout">
+
+  <aside class="controls">
+
+    <h2 class="section-title">Center image</h2>
+    <label class="upload-area" id="uploadArea" for="imageFile">
+      <div id="uploadDefault">
+        <div class="upload-icon">+</div>
+        <div class="upload-text">Click or drop an image</div>
+        <div class="upload-sub">PNG · JPG · SVG · transparent backgrounds work best</div>
+      </div>
+      <div id="uploadFilled" class="upload-thumb" style="display: none;">
+        <img id="thumbPreview" alt="">
+        <div class="upload-thumb-info">
+          <div class="upload-thumb-name" id="thumbName"></div>
+          <div class="upload-thumb-action">Click to replace</div>
+        </div>
+      </div>
+    </label>
+    <input type="file" id="imageFile" accept="image/*">
+    <a class="clear-link" id="clearImage" style="display: none;">× remove image</a>
+
+    <h2 class="section-title">Text</h2>
+    <div class="field">
+      <label for="titleEn">Title — Latin</label>
+      <input type="text" id="titleEn" value="Frigidaire" maxlength="20">
+    </div>
+    <div class="field">
+      <label for="titleAr">Title — Arabic / secondary</label>
+      <input type="text" id="titleAr" value="فريجيدار" dir="rtl" maxlength="20">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="price">Price</label>
+        <input type="number" id="price" value="5000" min="0">
+      </div>
+      <div class="field">
+        <label for="currency">Suffix</label>
+        <input type="text" id="currency" value="DA" maxlength="6">
+      </div>
+    </div>
+
+    <h2 class="section-title">Colors</h2>
+    <div class="color-grid">
+      <div class="color-field">
+        <label for="bgColor">Card background</label>
+        <input type="color" id="bgColor" value="#0e1d42">
+      </div>
+      <div class="color-field">
+        <label for="goldColor">Frame &amp; price</label>
+        <input type="color" id="goldColor" value="#F4C040">
+      </div>
+      <div class="color-field">
+        <label for="bannerColor">Banner</label>
+        <input type="color" id="bannerColor" value="#F5C940">
+      </div>
+      <div class="color-field">
+        <label for="patternColor">Pattern</label>
+        <input type="color" id="patternColor" value="#3d5e94">
+      </div>
+      <div class="color-field" style="grid-column: span 2;">
+        <label for="centerBgColor">Center background</label>
+        <input type="color" id="centerBgColor" value="#0e1d42">
+      </div>
+    </div>
+
+    <div class="field" style="margin-top: 14px;">
+      <label for="hueShift">Quick hue shift <span style="text-transform: none; opacity: 0.6;">(applies to all 5 colors)</span></label>
+      <div class="slider-row">
+        <input type="range" id="hueShift" min="-180" max="180" value="0" step="1">
+        <span class="slider-value" id="hueValue">0°</span>
+      </div>
+    </div>
+
+    <h2 class="section-title">Image fit</h2>
+    <div class="field">
+      <label for="imgScale">Scale</label>
+      <div class="slider-row">
+        <input type="range" id="imgScale" min="0.5" max="1.5" value="1" step="0.05">
+        <span class="slider-value" id="scaleValue">100%</span>
+      </div>
+    </div>
+    <div class="field">
+      <label for="imgYOffset">Vertical position</label>
+      <div class="slider-row">
+        <input type="range" id="imgYOffset" min="-80" max="80" value="0" step="1">
+        <span class="slider-value" id="yOffsetValue">0</span>
+      </div>
+    </div>
+
+    <h2 class="section-title">Reset</h2>
+    <button id="resetBtn" class="ghost">Restore defaults</button>
+
+  </aside>
+
+  <main class="preview">
+    <div class="card-stage">
+      <div id="cardSvg"></div>
+    </div>
+    <div class="actions">
+      <button id="downloadPng" class="primary">Download PNG</button>
+      <button id="downloadSvg" class="ghost">Download SVG</button>
+    </div>
+    <div class="hint">PNG exports at 3× resolution (~2040 × 2280 px)</div>
+  </main>
+
+</div>
+
+<div class="footer">
+  Forged in the spirit of vintage card collections
+</div>
+
+<script>
+  const els = {
+    imageFile: document.getElementById('imageFile'),
+    uploadArea: document.getElementById('uploadArea'),
+    uploadDefault: document.getElementById('uploadDefault'),
+    uploadFilled: document.getElementById('uploadFilled'),
+    thumbPreview: document.getElementById('thumbPreview'),
+    thumbName: document.getElementById('thumbName'),
+    clearImage: document.getElementById('clearImage'),
+    titleEn: document.getElementById('titleEn'),
+    titleAr: document.getElementById('titleAr'),
+    price: document.getElementById('price'),
+    currency: document.getElementById('currency'),
+    bgColor: document.getElementById('bgColor'),
+    goldColor: document.getElementById('goldColor'),
+    bannerColor: document.getElementById('bannerColor'),
+    patternColor: document.getElementById('patternColor'),
+    centerBgColor: document.getElementById('centerBgColor'),
+    hueShift: document.getElementById('hueShift'),
+    hueValue: document.getElementById('hueValue'),
+    imgScale: document.getElementById('imgScale'),
+    scaleValue: document.getElementById('scaleValue'),
+    imgYOffset: document.getElementById('imgYOffset'),
+    yOffsetValue: document.getElementById('yOffsetValue'),
+    cardSvg: document.getElementById('cardSvg'),
+    downloadPng: document.getElementById('downloadPng'),
+    downloadSvg: document.getElementById('downloadSvg'),
+    resetBtn: document.getElementById('resetBtn'),
+  };
+
+  const defaults = {
+    titleEn: 'Frigidaire',
+    titleAr: 'فريجيدار',
+    price: '5000',
+    currency: 'DA',
+    bgColor: '#0e1d42',
+    goldColor: '#F4C040',
+    bannerColor: '#F5C940',
+    patternColor: '#3d5e94',
+    centerBgColor: '#0e1d42',
+    hueShift: 0,
+    imgScale: 1,
+    imgYOffset: 0,
+  };
+
+  let state = { ...defaults, imageData: null, imageName: '' };
+
+  // ─── Color helpers ──────────────────────────────────────────
+
+  function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const num = parseInt(hex, 16);
+    return { r: (num >> 16) & 0xff, g: (num >> 8) & 0xff, b: num & 0xff };
+  }
+
+  function rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(x => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, '0')).join('');
+  }
+
+  function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    if (max === min) { h = s = 0; }
+    else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h *= 60;
+    }
+    return { h, s, l };
+  }
+
+  function hslToRgb(h, s, l) {
+    h = ((h % 360) + 360) % 360;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = l - c / 2;
+    let r, g, b;
+    if (h < 60)      { r = c; g = x; b = 0; }
+    else if (h < 120){ r = x; g = c; b = 0; }
+    else if (h < 180){ r = 0; g = c; b = x; }
+    else if (h < 240){ r = 0; g = x; b = c; }
+    else if (h < 300){ r = x; g = 0; b = c; }
+    else             { r = c; g = 0; b = x; }
+    return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 };
+  }
+
+  function shiftHue(hex, deg) {
+    if (deg === 0) return hex;
+    const { r, g, b } = hexToRgb(hex);
+    const { h, s, l } = rgbToHsl(r, g, b);
+    const out = hslToRgb(h + deg, s, l);
+    return rgbToHex(out.r, out.g, out.b);
+  }
+
+  function lighten(hex, amt) {
+    const { r, g, b } = hexToRgb(hex);
+    return rgbToHex(r + (255 - r) * amt, g + (255 - g) * amt, b + (255 - b) * amt);
+  }
+
+  function darken(hex, amt) {
+    const { r, g, b } = hexToRgb(hex);
+    return rgbToHex(r * (1 - amt), g * (1 - amt), b * (1 - amt));
+  }
+
+  function luma(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    return 0.299 * r + 0.587 * g + 0.114 * b;
+  }
+
+  function contrastingDark(hex) {
+    // Return a dark color readable on the given background
+    return luma(hex) > 140 ? darken(hex, 0.78) : darken(hex, 0.45);
+  }
+
+  function escapeXml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
+
+  // ─── Card SVG renderer ──────────────────────────────────────
+
+  function renderCard() {
+    const hue = state.hueShift;
+    const bg = shiftHue(state.bgColor, hue);
+    const gold = shiftHue(state.goldColor, hue);
+    const banner = shiftHue(state.bannerColor, hue);
+    const pattern = shiftHue(state.patternColor, hue);
+    const centerBg = shiftHue(state.centerBgColor, hue);
+
+    const bgLight = lighten(bg, 0.2);
+    const bgDark = darken(bg, 0.4);
+    const goldLight = lighten(gold, 0.4);
+    const goldDark = darken(gold, 0.5);
+    const goldDeepest = darken(gold, 0.7);
+    const bannerLight = lighten(banner, 0.4);
+    const bannerDark = darken(banner, 0.4);
+    const bannerText = contrastingDark(banner);
+
+    // Title font sizes — auto shrink
+    const enLen = state.titleEn.length;
+    const arLen = state.titleAr.length;
+    const enFontSize = enLen > 14 ? 15 : enLen > 11 ? 18 : enLen > 8 ? 21 : 23;
+    const arFontSize = arLen > 12 ? 16 : arLen > 9 ? 20 : 23;
+
+    const priceText = state.price + state.currency;
+    const priceLen = priceText.length;
+    const priceFontSize = priceLen > 9 ? 32 : priceLen > 7 ? 38 : priceLen > 5 ? 44 : 48;
+
+    // Image positioning
+    const baseX = 175, baseY = 175, baseW = 330, baseH = 380;
+    const scale = state.imgScale;
+    const imgW = baseW * scale;
+    const imgH = baseH * scale;
+    const imgX = 340 - imgW / 2;
+    const imgY = baseY + (baseH - imgH) / 2 + parseFloat(state.imgYOffset);
+
+    let imageHtml = '';
+    if (state.imageData) {
+      imageHtml = `<image href="${state.imageData}" x="${imgX.toFixed(1)}" y="${imgY.toFixed(1)}" width="${imgW.toFixed(1)}" height="${imgH.toFixed(1)}" preserveAspectRatio="xMidYMid meet"/>`;
+    } else {
+      imageHtml = `<g opacity="0.5">
+        <rect x="240" y="290" width="200" height="160" fill="none" stroke="${gold}" stroke-width="1" stroke-dasharray="6 6" rx="6"/>
+        <text x="340" y="375" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="15" fill="${goldLight}">upload an image</text>
+      </g>`;
+    }
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 760" width="100%" role="img" aria-label="Custom trading card">
+<defs>
+<pattern id="islamicPattern" x="0" y="0" width="44" height="44" patternUnits="userSpaceOnUse">
+<path d="M22 2 L42 22 L22 42 L2 22 Z" fill="none" stroke="${pattern}" stroke-width="0.6"/>
+<path d="M22 10 L34 22 L22 34 L10 22 Z" fill="none" stroke="${pattern}" stroke-width="0.4"/>
+<circle cx="22" cy="22" r="1.5" fill="${pattern}" opacity="0.6"/>
+<circle cx="2" cy="22" r="1" fill="${pattern}" opacity="0.4"/>
+<circle cx="42" cy="22" r="1" fill="${pattern}" opacity="0.4"/>
+<circle cx="22" cy="2" r="1" fill="${pattern}" opacity="0.4"/>
+<circle cx="22" cy="42" r="1" fill="${pattern}" opacity="0.4"/>
+</pattern>
+<linearGradient id="cardBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="${bgLight}"/>
+<stop offset="50%" stop-color="${bgDark}"/>
+<stop offset="100%" stop-color="${bgLight}"/>
+</linearGradient>
+<linearGradient id="goldFrameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="${goldLight}"/>
+<stop offset="35%" stop-color="${gold}"/>
+<stop offset="70%" stop-color="${goldDark}"/>
+<stop offset="100%" stop-color="${goldDeepest}"/>
+</linearGradient>
+<linearGradient id="bannerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+<stop offset="0%" stop-color="${bannerLight}"/>
+<stop offset="50%" stop-color="${banner}"/>
+<stop offset="100%" stop-color="${bannerDark}"/>
+</linearGradient>
+<linearGradient id="goldTextGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+<stop offset="0%" stop-color="${goldLight}"/>
+<stop offset="35%" stop-color="${gold}"/>
+<stop offset="65%" stop-color="${goldDark}"/>
+<stop offset="100%" stop-color="${goldDeepest}"/>
+</linearGradient>
+<radialGradient id="archInnerGrad" cx="50%" cy="40%" r="65%">
+<stop offset="0%" stop-color="${lighten(centerBg, 0.05)}"/>
+<stop offset="100%" stop-color="${darken(centerBg, 0.5)}"/>
+</radialGradient>
+<clipPath id="archClipPath">
+<path d="M163 182 L163 552 L517 552 L517 182 Q517 148 340 148 Q163 148 163 182 Z"/>
+</clipPath>
+</defs>
+
+<ellipse cx="340" cy="730" rx="230" ry="9" fill="#000" opacity="0.18"/>
+
+<rect x="90" y="30" width="500" height="680" rx="20" fill="#FAFAFA"/>
+
+<rect x="100" y="40" width="480" height="660" rx="12" fill="url(#cardBgGrad)"/>
+<rect x="100" y="40" width="480" height="660" rx="12" fill="url(#islamicPattern)" opacity="0.45"/>
+
+<rect x="108" y="48" width="464" height="644" rx="7" fill="none" stroke="url(#goldFrameGrad)" stroke-width="3.5"/>
+<rect x="115" y="55" width="450" height="630" rx="5" fill="none" stroke="${gold}" stroke-width="1"/>
+<rect x="120" y="60" width="440" height="620" rx="3" fill="none" stroke="${goldDark}" stroke-width="0.5" opacity="0.7"/>
+
+<g fill="${gold}">
+<path d="M120 75 Q120 60 135 60 L150 60 Q135 60 132 67 Q128 75 120 75 Z"/>
+<circle cx="125" cy="65" r="2"/>
+<circle cx="142" cy="63" r="1.4"/>
+<circle cx="122" cy="78" r="1.4"/>
+</g>
+<g fill="${gold}">
+<path d="M560 75 Q560 60 545 60 L530 60 Q545 60 548 67 Q552 75 560 75 Z"/>
+<circle cx="555" cy="65" r="2"/>
+<circle cx="538" cy="63" r="1.4"/>
+<circle cx="558" cy="78" r="1.4"/>
+</g>
+<g fill="${gold}">
+<path d="M120 665 Q120 680 135 680 L150 680 Q135 680 132 673 Q128 665 120 665 Z"/>
+<circle cx="125" cy="675" r="2"/>
+<circle cx="142" cy="677" r="1.4"/>
+<circle cx="122" cy="662" r="1.4"/>
+</g>
+<g fill="${gold}">
+<path d="M560 665 Q560 680 545 680 L530 680 Q545 680 548 673 Q552 665 560 665 Z"/>
+<circle cx="555" cy="675" r="2"/>
+<circle cx="538" cy="677" r="1.4"/>
+<circle cx="558" cy="662" r="1.4"/>
+</g>
+
+<g>
+<path d="M210 78 L470 78 Q485 78 492 90 Q499 102 492 114 Q485 126 470 126 L210 126 Q195 126 188 114 Q181 102 188 90 Q195 78 210 78 Z" fill="url(#bannerGrad)" stroke="${goldDark}" stroke-width="1.5"/>
+<path d="M214 84 L466 84 Q478 84 484 92 Q490 102 484 112 Q478 120 466 120 L214 120 Q202 120 196 112 Q190 102 196 92 Q202 84 214 84 Z" fill="none" stroke="${darken(banner, 0.5)}" stroke-width="0.6" opacity="0.7"/>
+<text x="280" y="110" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="${enFontSize}" font-style="italic" fill="${bannerText}">${escapeXml(state.titleEn)}</text>
+<text x="410" y="111" text-anchor="middle" font-family="Amiri, 'Tahoma', 'Traditional Arabic', serif" font-size="${arFontSize}" fill="${bannerText}">${escapeXml(state.titleAr)}</text>
+</g>
+
+<path d="M163 182 L163 552 L517 552 L517 182 Q517 148 340 148 Q163 148 163 182 Z" fill="url(#archInnerGrad)" stroke="${darken(gold, 0.3)}" stroke-width="0.5"/>
+
+<path d="M155 175 L155 560 L525 560 L525 175 Q525 140 340 140 Q155 140 155 175 Z" fill="none" stroke="${gold}" stroke-width="2.5" stroke-dasharray="0.1 9" stroke-linecap="round"/>
+
+<path d="M148 172 L148 568 L533 568 L533 172 Q533 132 340 132 Q148 132 148 172 Z" fill="none" stroke="${darken(gold, 0.3)}" stroke-width="1"/>
+<path d="M158 178 L158 558 L522 558 L522 178 Q522 145 340 145 Q158 145 158 178 Z" fill="none" stroke="${darken(gold, 0.5)}" stroke-width="0.5" opacity="0.6"/>
+
+<g clip-path="url(#archClipPath)">
+${imageHtml}
+</g>
+
+<g transform="translate(340 625)">
+<text x="3" y="3" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="${priceFontSize}" font-style="italic" fill="#000" opacity="0.55">${escapeXml(priceText)}</text>
+<text x="0" y="0" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="${priceFontSize}" font-style="italic" fill="url(#goldTextGrad)" stroke="${darken(gold, 0.6)}" stroke-width="1">${escapeXml(priceText)}</text>
+</g>
+</svg>`;
+  }
+
+  // ─── State sync & re-render ─────────────────────────────────
+
+  function update() {
+    state.titleEn = els.titleEn.value;
+    state.titleAr = els.titleAr.value;
+    state.price = els.price.value;
+    state.currency = els.currency.value;
+    state.bgColor = els.bgColor.value;
+    state.goldColor = els.goldColor.value;
+    state.bannerColor = els.bannerColor.value;
+    state.patternColor = els.patternColor.value;
+    state.centerBgColor = els.centerBgColor.value;
+    state.hueShift = parseInt(els.hueShift.value, 10);
+    state.imgScale = parseFloat(els.imgScale.value);
+    state.imgYOffset = parseFloat(els.imgYOffset.value);
+
+    els.hueValue.textContent = (state.hueShift > 0 ? '+' : '') + state.hueShift + '°';
+    els.scaleValue.textContent = Math.round(state.imgScale * 100) + '%';
+    els.yOffsetValue.textContent = state.imgYOffset > 0 ? '+' + state.imgYOffset : state.imgYOffset;
+
+    els.cardSvg.innerHTML = renderCard();
+  }
+
+  // ─── Image upload ───────────────────────────────────────────
+
+  function handleFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      state.imageData = ev.target.result;
+      state.imageName = file.name;
+      els.thumbPreview.src = ev.target.result;
+      els.thumbName.textContent = file.name;
+      els.uploadDefault.style.display = 'none';
+      els.uploadFilled.style.display = 'flex';
+      els.uploadArea.classList.add('has-image');
+      els.clearImage.style.display = 'inline-block';
+      update();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  els.imageFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) handleFile(file);
+  });
+
+  els.uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    els.uploadArea.classList.add('drag-over');
+  });
+
+  els.uploadArea.addEventListener('dragleave', () => {
+    els.uploadArea.classList.remove('drag-over');
+  });
+
+  els.uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    els.uploadArea.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+
+  els.clearImage.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    state.imageData = null;
+    state.imageName = '';
+    els.imageFile.value = '';
+    els.uploadDefault.style.display = 'block';
+    els.uploadFilled.style.display = 'none';
+    els.uploadArea.classList.remove('has-image');
+    els.clearImage.style.display = 'none';
+    update();
+  });
+
+  // ─── Wire up all inputs ─────────────────────────────────────
+
+  ['titleEn','titleAr','price','currency','bgColor','goldColor','bannerColor','patternColor','centerBgColor','hueShift','imgScale','imgYOffset']
+    .forEach(key => els[key].addEventListener('input', update));
+
+  // ─── Reset ──────────────────────────────────────────────────
+
+  els.resetBtn.addEventListener('click', () => {
+    Object.assign(state, defaults);
+    state.imageData = null;
+    state.imageName = '';
+    els.titleEn.value = defaults.titleEn;
+    els.titleAr.value = defaults.titleAr;
+    els.price.value = defaults.price;
+    els.currency.value = defaults.currency;
+    els.bgColor.value = defaults.bgColor;
+    els.goldColor.value = defaults.goldColor;
+    els.bannerColor.value = defaults.bannerColor;
+    els.patternColor.value = defaults.patternColor;
+    els.centerBgColor.value = defaults.centerBgColor;
+    els.hueShift.value = defaults.hueShift;
+    els.imgScale.value = defaults.imgScale;
+    els.imgYOffset.value = defaults.imgYOffset;
+    els.imageFile.value = '';
+    els.uploadDefault.style.display = 'block';
+    els.uploadFilled.style.display = 'none';
+    els.uploadArea.classList.remove('has-image');
+    els.clearImage.style.display = 'none';
+    update();
+  });
+
+  // ─── Downloads ──────────────────────────────────────────────
+
+  function getFilename(ext) {
+    const safe = (state.titleEn || 'card').replace(/[^a-z0-9]+/gi, '-').toLowerCase().replace(/^-|-$/g, '') || 'card';
+    return safe + '-' + state.price + state.currency + '.' + ext;
+  }
+
+  els.downloadSvg.addEventListener('click', () => {
+    const svg = els.cardSvg.querySelector('svg');
+    const svgString = '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = getFilename('svg');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  els.downloadPng.addEventListener('click', async () => {
+    const btn = els.downloadPng;
+    const originalText = btn.textContent;
+    btn.textContent = 'Rendering...';
+    btn.disabled = true;
+
+    try {
+      const svg = els.cardSvg.querySelector('svg');
+      const svgString = new XMLSerializer().serializeToString(svg);
+      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = url;
+      });
+
+      // Wait an extra tick for any inner data-URL images to fully decode
+      if (img.decode) {
+        try { await img.decode(); } catch (_) { /* ignore */ }
+      }
+
+      const scale = 3;
+      const canvas = document.createElement('canvas');
+      canvas.width = 680 * scale;
+      canvas.height = 760 * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0, 680, 760);
+
+      await new Promise((resolve) => {
+        canvas.toBlob((pngBlob) => {
+          if (!pngBlob) { resolve(); return; }
+          const pngUrl = URL.createObjectURL(pngBlob);
+          const a = document.createElement('a');
+          a.href = pngUrl;
+          a.download = getFilename('png');
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(pngUrl), 1000);
+          resolve();
+        }, 'image/png');
+      });
+
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert('Could not render PNG. The SVG download still works — try that instead.');
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  });
+
+  // ─── Initial render ─────────────────────────────────────────
+
+  update();
+</script>
+</body>
+</html>
