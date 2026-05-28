@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slingshot Daily — Voltage</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070f;--bg2:#0e0e1a;--bg3:#14141f;
+  --red:#ff2244;--red2:#cc0022;--red3:rgba(255,34,68,.15);
+  --cyan:#00e5ff;--cyan2:rgba(0,229,255,.15);
+  --gold:#ffaa00;
+  --text:#e8eaf0;--muted:#6066a0;
+  --card:#111120;--border:rgba(100,100,200,.15);
+  --glow-r:0 0 20px rgba(255,34,68,.4);
+  --glow-c:0 0 20px rgba(0,229,255,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.012) 2px,rgba(255,255,255,.012) 4px);pointer-events:none;z-index:0}
+
+/* ── HEADER ──────────────────────────────────────── */
+header{position:sticky;top:0;z-index:200;background:rgba(7,7,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--red),var(--cyan),transparent)}
+.hd{max-width:1240px;margin:0 auto;padding:0 20px;display:flex;align-items:center;height:60px;gap:20px}
+.logo{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;letter-spacing:3px;text-decoration:none;display:flex;align-items:center;gap:8px;position:relative}
+.logo-text{background:linear-gradient(90deg,var(--red),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-sub{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+nav{display:flex;gap:2px;margin-left:auto}
+nav a{display:flex;align-items:center;gap:6px;padding:7px 14px;color:var(--muted);text-decoration:none;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border-radius:4px;transition:all .2s;border:1px solid transparent}
+nav a:hover{color:var(--text);border-color:var(--border);background:var(--bg3)}
+nav a.act{color:var(--cyan);border-color:rgba(0,229,255,.3);background:var(--cyan2)}
+.hd-btns{display:flex;gap:8px;margin-left:8px}
+.btn-srch{background:var(--bg3);border:1px solid var(--border);color:var(--muted);cursor:pointer;padding:8px 10px;border-radius:4px;transition:all .2s}
+.btn-srch:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:var(--glow-c)}
+.btn-login{background:var(--red);color:#fff;border:none;cursor:pointer;padding:8px 20px;border-radius:4px;font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:all .2s}
+.btn-login:hover{background:var(--red2);box-shadow:var(--glow-r)}
+
+/* ── HERO ────────────────────────────────────────── */
+.hero{position:relative;height:480px;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;transition:opacity .7s;pointer-events:none}
+.slide.on{opacity:1;pointer-events:auto}
+.s1 .hbg{background:radial-gradient(ellipse at 70% 50%,#3d0010 0%,#1a000a 40%,#07070f 100%)}
+.s2 .hbg{background:radial-gradient(ellipse at 70% 50%,#001a3d 0%,#000a1a 40%,#07070f 100%)}
+.s3 .hbg{background:radial-gradient(ellipse at 70% 50%,#1a2d00 0%,#0a1a00 40%,#07070f 100%)}
+.hbg{position:absolute;inset:0}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,34,68,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,34,68,.06) 1px,transparent 1px);background-size:60px 60px;background-position:center center}
+.s2 .hgrid{background-image:linear-gradient(rgba(0,229,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.06) 1px,transparent 1px)}
+.hring{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:380px;height:380px}
+.hring::before{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,34,68,.2);animation:spin 20s linear infinite}
+.hring::after{content:'';position:absolute;inset:30px;border-radius:50%;border:1px solid rgba(255,34,68,.1);animation:spin 14s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.s2 .hring::before{border-color:rgba(0,229,255,.2)} .s2 .hring::after{border-color:rgba(0,229,255,.1)}
+.hring-inner{position:absolute;inset:60px;border-radius:50%;border:1px dashed rgba(255,34,68,.15);animation:spin 30s linear infinite}
+.hglyph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:120px;font-weight:900;color:rgba(255,34,68,.06)}
+.slide-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(7,7,15,.98) 0%,rgba(7,7,15,.75) 50%,rgba(7,7,15,.1) 100%)}
+.slide-content{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 48px;width:100%}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px}
+.hero-tag-line{width:24px;height:2px;background:var(--red)}
+.s2 .hero-tag-line{background:var(--cyan)}
+.hero-tag span{font-size:10px;font-weight:700;color:var(--red);letter-spacing:3px;text-transform:uppercase;font-family:'Orbitron',monospace}
+.s2 .hero-tag span{color:var(--cyan)}
+.hero-title{font-family:'Orbitron',monospace;font-size:64px;font-weight:900;line-height:.9;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;text-shadow:0 0 40px rgba(255,34,68,.3)}
+.hero-title .hi{color:var(--red);text-shadow:var(--glow-r)}
+.s2 .hero-title .hi{color:var(--cyan);text-shadow:var(--glow-c)}
+.hero-sub{font-size:14px;color:rgba(232,234,240,.55);max-width:360px;line-height:1.7;margin-bottom:20px}
+.hero-stats{display:flex;gap:24px;margin-bottom:24px}
+.hstat{display:flex;flex-direction:column;gap:2px}
+.hstat-val{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--red);line-height:1}
+.s2 .hstat-val{color:var(--cyan)}
+.hstat-lbl{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.hero-ctas{display:flex;gap:12px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;padding:12px 28px;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-decoration:none;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:all .2s}
+.btn-primary:hover{box-shadow:var(--glow-r);transform:translateY(-2px)}
+.s2 .btn-primary{background:var(--cyan);color:#000}
+.s2 .btn-primary:hover{box-shadow:var(--glow-c)}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,34,68,.4);color:var(--red);padding:12px 20px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-decoration:none;transition:all .2s}
+.btn-outline:hover{background:var(--red3);box-shadow:var(--glow-r)}
+.hero-dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);border:none;cursor:pointer;transition:all .3s;padding:0}
+.dot.on{background:var(--red);width:20px;border-radius:3px;box-shadow:var(--glow-r)}
+
+/* ── MAIN ────────────────────────────────────────── */
+.main-wrap{max-width:1240px;margin:0 auto;padding:36px 20px;display:grid;grid-template-columns:1fr 276px;gap:28px;position:relative;z-index:1}
+
+/* ── SECTION HEADER ──────────────────────────────── */
+.sec-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.sec-hd h2{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.sec-hd h2::before{content:'//';color:var(--red);font-size:14px}
+.sec-hd a{font-size:11px;color:var(--cyan);text-decoration:none;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-family:'Orbitron',monospace}
+.sec-hd a:hover{text-shadow:var(--glow-c)}
+
+/* ── CARDS ───────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:8px}
+.card{background:var(--card);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all .25s;position:relative}
+.card:hover{border-color:var(--red);box-shadow:0 0 0 1px var(--red),var(--glow-r);transform:translateY(-4px)}
+.cover{aspect-ratio:3/4;position:relative;overflow:hidden}
+.cv1{background:linear-gradient(160deg,#5c2000,#c44000,#f7931e)}
+.cv2{background:linear-gradient(160deg,#0a1a3d,#1d5fa0,#0db4e8)}
+.cv3{background:linear-gradient(160deg,#1a1a1a,#444,#888)}
+.cv4{background:linear-gradient(160deg,#0f0722,#3b0764,#7c3aed)}
+.cv5{background:linear-gradient(160deg,#450a0a,#991b1b,#ef4444)}
+.cv6{background:linear-gradient(160deg,#042f2e,#065f46,#10b981)}
+.cv7{background:linear-gradient(160deg,#0c1445,#1d4ed8,#60a5fa)}
+.cv8{background:linear-gradient(160deg,#1c0030,#7c3aed,#c084fc)}
+.cv9{background:linear-gradient(160deg,#1c1917,#78350f,#f59e0b)}
+.cv10{background:linear-gradient(160deg,#0d1117,#be185d,#f9a8d4)}
+.cover-glyph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:60px;font-weight:900;color:rgba(255,255,255,.1)}
+.cover-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,7,15,.95) 0%,rgba(7,7,15,.2) 50%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:8px}
+.cover-name{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1px;color:#fff;text-shadow:0 0 10px rgba(255,255,255,.5)}
+.scan-line{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px);pointer-events:none}
+.bdg{position:absolute;top:6px;left:6px;font-size:9px;font-weight:700;padding:2px 7px;letter-spacing:1px;text-transform:uppercase;font-family:'Orbitron',monospace}
+.bdg-today{background:var(--red);color:#fff;box-shadow:var(--glow-r)}
+.bdg-new{background:#00cc44;color:#000}
+.bdg-hot{background:var(--gold);color:#000}
+.cinfo{padding:8px 10px;border-top:1px solid var(--border)}
+.ctitle{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;letter-spacing:.5px}
+.cmeta{display:flex;justify-content:space-between}
+.cch{font-size:10px;color:var(--red);font-weight:700;font-family:'Orbitron',monospace}
+.cvw{font-size:10px;color:var(--muted);font-family:'Orbitron',monospace}
+
+/* ── AD ──────────────────────────────────────────── */
+.ad-full{width:100%;height:72px;background:var(--card);border:1px solid var(--border);border-left:2px solid var(--red);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin:20px 0;font-family:'Orbitron',monospace}
+
+/* ── SIDEBAR ─────────────────────────────────────── */
+.sidebar{}
+.ad-box{background:var(--card);border:1px solid var(--border);height:200px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;font-family:'Orbitron',monospace}
+.rank-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);position:relative}
+.rank-hd::after{content:'';position:absolute;bottom:-1px;left:0;width:60px;height:1px;background:var(--red);box-shadow:var(--glow-r)}
+.rank-ttl{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+.view-all{font-size:10px;color:var(--cyan);text-decoration:none;font-weight:700;letter-spacing:2px;font-family:'Orbitron',monospace}
+.rank-list{display:flex;flex-direction:column;gap:6px}
+.rank-item{display:flex;align-items:center;gap:8px;padding:8px;background:var(--card);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.rank-item:hover{border-color:var(--red);box-shadow:0 0 8px rgba(255,34,68,.2)}
+.rn{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;min-width:24px;text-align:center;line-height:1}
+.rn.g{color:var(--red);text-shadow:var(--glow-r)}.rn.r{color:rgba(255,34,68,.7)}.rn.w{color:var(--muted)}
+.rthumb{width:36px;height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:14px;font-weight:900;color:rgba(255,255,255,.3)}
+.ri .rt{font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;letter-spacing:.5px}
+.ri .rv{font-size:10px;color:var(--muted);font-family:'Orbitron',monospace;margin-top:2px}
+
+/* ── FOOTER ──────────────────────────────────────── */
+footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:48px;position:relative;z-index:1}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--red),var(--cyan),transparent)}
+.ft-inner{max-width:1240px;margin:0 auto;padding:44px 20px 24px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.ft-brand .logo-text{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,var(--red),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:10px;text-decoration:none}
+.ft-brand p{font-size:13px;color:var(--muted);line-height:1.7;max-width:240px}
+.socials{display:flex;gap:8px;margin-top:14px}
+.soc{width:32px;height:32px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:all .2s;text-decoration:none;font-size:12px;font-weight:700}
+.soc:hover{border-color:var(--red);color:var(--red);box-shadow:var(--glow-r)}
+.ft-col h4{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--text);margin-bottom:14px;text-transform:uppercase}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.ft-col ul a{color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s}
+.ft-col ul a:hover{color:var(--cyan)}
+.founder{max-width:1240px;margin:0 auto;padding:16px 20px;display:flex;align-items:center;gap:14px;border-top:1px solid var(--border)}
+.founder img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:1px solid var(--red);box-shadow:var(--glow-r)}
+.fn{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:1px;background:linear-gradient(90deg,var(--red),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fr{font-size:11px;color:var(--muted);margin-top:3px}
+.ft-bottom{border-top:1px solid var(--border);padding:16px 20px;display:flex;justify-content:space-between;max-width:1240px;margin:0 auto}
+.ft-bottom p{font-size:11px;color:var(--muted);font-family:'Orbitron',monospace;letter-spacing:1px}
+/* ══ INTERACTIVE ══════════════════════════════════ */
+.cart-cnt{position:absolute;top:-7px;right:-7px;background:var(--red);color:#fff;font-size:9px;font-weight:900;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;opacity:0;transition:opacity .2s;pointer-events:none}
+.cart-cnt.show{opacity:1}
+.bk{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:500;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(5px)}
+.bk.on{opacity:1;pointer-events:auto}
+.mdl{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .3s;padding:16px}
+.mdl.on{opacity:1;pointer-events:auto}
+.mdl-box{background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--red);width:min(560px,100%);max-height:90vh;overflow-y:auto;transform:translateY(24px) scale(.97);transition:transform .35s cubic-bezier(.16,1,.3,1);scrollbar-width:thin;scrollbar-color:var(--red) transparent;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
+.mdl.on .mdl-box{transform:none}
+.mdl-hd{padding:20px 22px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:2}
+.mdl-hd h3{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;letter-spacing:3px;color:var(--text)}
+.mdl-close{background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;width:30px;height:30px;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.mdl-close:hover{border-color:var(--red);color:var(--red);box-shadow:var(--glow-r)}
+.mdl-body{padding:22px}
+#searchOvl{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:700;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;flex-direction:column;align-items:center;padding:70px 20px 40px;overflow-y:auto}
+#searchOvl.on{opacity:1;pointer-events:auto}
+.search-bar{width:min(700px,100%);position:relative;margin-bottom:20px}
+.search-bar input{width:100%;padding:14px 48px 14px 20px;background:var(--bg3);border:1px solid var(--red);color:var(--text);font-family:'Orbitron',monospace;font-size:14px;outline:none;letter-spacing:1px;transition:box-shadow .2s}
+.search-bar input:focus{box-shadow:var(--glow-r)}
+.search-bar input::placeholder{color:var(--muted)}
+.s-close{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;line-height:1}
+.s-close:hover{color:var(--red)}
+.s-label{color:var(--muted);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;width:min(700px,100%);font-family:'Orbitron',monospace}
+.search-results{width:min(700px,100%);display:flex;flex-direction:column;gap:8px}
+.s-hit{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.s-hit:hover{border-color:var(--red);box-shadow:var(--glow-r)}
+.s-thumb{width:38px;height:50px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:rgba(255,255,255,.4)}
+.s-info .si-t{font-size:13px;font-weight:700;color:var(--text);font-family:'Orbitron',monospace;letter-spacing:1px}
+.s-info .si-m{font-size:11px;color:var(--muted);margin-top:2px}
+.login-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:22px}
+.ltab{flex:1;padding:10px;text-align:center;background:none;border:none;color:var(--muted);cursor:pointer;font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:2px;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.ltab.on{color:var(--red);border-bottom-color:var(--red)}
+.form-field{margin-bottom:15px}
+.form-field label{display:block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-family:'Orbitron',monospace}
+.form-field input{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.form-field input:focus{border-color:var(--red)}
+.btn-submit{width:100%;padding:12px;background:var(--red);border:none;color:#fff;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:all .2s;margin-top:4px}
+.btn-submit:hover{box-shadow:var(--glow-r)}
+.or-div{text-align:center;color:var(--muted);font-size:10px;font-weight:700;margin:14px 0;position:relative;font-family:'Orbitron',monospace;letter-spacing:2px}
+.or-div::before,.or-div::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
+.or-div::before{left:0}.or-div::after{right:0}
+.btn-google{width:100%;padding:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Inter',sans-serif;font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .2s}
+.btn-google:hover{border-color:var(--cyan);box-shadow:var(--glow-c)}
+.manga-hd{display:flex;gap:16px;margin-bottom:20px}
+.manga-cv{width:88px;height:118px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:30px;font-weight:900;color:rgba(255,255,255,.4)}
+.manga-info .mi-ttl{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;letter-spacing:2px;margin-bottom:6px;color:var(--text)}
+.manga-info .mi-meta{font-size:12px;color:var(--muted);line-height:1.9}
+.manga-info .mi-desc{font-size:13px;line-height:1.7;margin-top:10px;color:var(--text);opacity:.7}
+.ch-list-hd{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--cyan);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.ch-list{display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--red) transparent}
+.ch-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.ch-row:hover{border-color:var(--red);box-shadow:inset 0 0 12px rgba(255,34,68,.05)}
+.ch-num{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--red);min-width:60px}
+.ch-ttl{font-size:12px;font-weight:600;flex:1;margin:0 10px}
+.ch-date{font-size:10px;color:var(--muted);font-weight:600;white-space:nowrap;font-family:'Orbitron',monospace}
+.btn-read-start{display:block;text-align:center;padding:12px;background:var(--red);color:#fff;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:2px;border:none;cursor:pointer;width:100%;margin-top:16px;transition:all .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.btn-read-start:hover{box-shadow:var(--glow-r)}
+#readerMdl{position:fixed;inset:0;background:#020207;z-index:800;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;flex-direction:column}
+#readerMdl.on{opacity:1;pointer-events:auto}
+.r-bar{background:var(--bg2);border-bottom:1px solid var(--red);padding:10px 18px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.r-ttl{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--red)}
+.r-ch{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;font-family:'Orbitron',monospace;letter-spacing:1px}
+.r-close{background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;padding:5px 14px;font-weight:700;font-size:10px;letter-spacing:2px;font-family:'Orbitron',monospace;transition:all .2s}
+.r-close:hover{border-color:var(--red);color:var(--red);box-shadow:var(--glow-r)}
+.r-pages{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:3px;padding:18px 20px;background:#000;scrollbar-width:thin;scrollbar-color:var(--red) transparent}
+.manga-page{width:min(680px,100%);aspect-ratio:2/3;position:relative;overflow:hidden;border:1px solid rgba(255,34,68,.15)}
+.r-nav{background:var(--bg2);border-top:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.r-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);cursor:pointer;padding:8px 20px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1px;transition:all .2s;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px))}
+.r-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.r-btn:disabled{opacity:.3;cursor:not-allowed}
+.r-pg{font-size:11px;color:var(--muted);font-weight:700;font-family:'Orbitron',monospace;letter-spacing:1px}
+#cartDr{position:fixed;right:0;top:0;height:100%;width:min(380px,96vw);background:var(--bg2);z-index:700;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);border-left:1px solid var(--red);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(255,34,68,.1)}
+#cartDr.on{transform:none}
+.cd-hd{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cd-hd h3{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;letter-spacing:3px;color:var(--text)}
+.cart-items{flex:1;overflow-y:auto;padding:14px 18px;scrollbar-width:thin;scrollbar-color:var(--red) transparent}
+.cart-empty{text-align:center;padding:48px 20px;color:var(--muted);font-size:12px;font-weight:700;font-family:'Orbitron',monospace;letter-spacing:1px;line-height:2}
+.cart-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.ci-thumb{width:46px;height:62px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:rgba(255,255,255,.4)}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-price{font-size:13px;color:var(--red);font-weight:700;margin-top:3px;font-family:'Orbitron',monospace}
+.ci-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:17px;padding:4px;transition:color .2s}
+.ci-rm:hover{color:var(--red)}
+.cd-foot{border-top:1px solid var(--border);padding:16px 18px;flex-shrink:0}
+.cd-sub{display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:14px;font-family:'Orbitron',monospace;letter-spacing:1px}
+.cd-sub span:last-child{color:var(--red)}
+.btn-checkout{width:100%;padding:13px;background:var(--red);border:none;color:#fff;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.btn-checkout:hover{box-shadow:var(--glow-r)}
+.btn-cnt{width:100%;padding:9px;background:none;border:1px solid var(--border);color:var(--muted);font-family:'Orbitron',monospace;font-weight:700;font-size:10px;letter-spacing:2px;cursor:pointer;margin-top:8px;transition:all .2s}
+.btn-cnt:hover{border-color:var(--cyan);color:var(--cyan)}
+.shop-section{padding:28px 0 24px}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.shop-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .25s}
+.shop-card:hover{border-color:var(--red);box-shadow:0 0 0 1px var(--red),var(--glow-r);transform:translateY(-4px)}
+.shop-cover{aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.shop-glyph{font-family:'Orbitron',monospace;font-size:48px;font-weight:900;color:rgba(255,255,255,.15)}
+.shop-sub{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:4px;font-family:'Orbitron',monospace}
+.shop-sticker{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;letter-spacing:1px;text-transform:uppercase;font-family:'Orbitron',monospace}
+.shop-info{padding:10px 12px 12px}
+.shop-name{font-size:12px;font-weight:700;margin-bottom:4px}
+.shop-price{font-size:14px;color:var(--red);font-weight:700;margin-bottom:9px;font-family:'Orbitron',monospace}
+.btn-add{width:100%;padding:8px;background:var(--red3);border:1px solid rgba(255,34,68,.3);color:var(--red);font-family:'Orbitron',monospace;font-weight:700;font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px))}
+.btn-add:hover,.btn-add.added{background:var(--red);color:#fff}
+.co-steps{display:flex;gap:0;margin-bottom:22px;border-bottom:1px solid var(--border)}
+.co-s{flex:1;text-align:center;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding-bottom:8px;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .3s;font-family:'Orbitron',monospace}
+.co-s.on{color:var(--red);border-bottom-color:var(--red)}
+.order-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.order-total{display:flex;justify-content:space-between;padding:12px 0;font-weight:700;font-size:14px;font-family:'Orbitron',monospace}
+.success-box{text-align:center;padding:28px 0}
+.success-icon{font-size:58px;display:block;margin-bottom:14px}
+.success-box h3{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;letter-spacing:3px;color:var(--red);margin-bottom:10px;text-shadow:var(--glow-r)}
+.success-box p{color:var(--muted);font-size:13px;line-height:1.8}
+#toast{position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--bg2);border:1px solid var(--red);border-radius:0;padding:11px 18px;font-size:12px;font-weight:700;transform:translateY(14px);opacity:0;transition:all .3s;pointer-events:none;max-width:280px;box-shadow:var(--glow-r);font-family:'Orbitron',monospace;letter-spacing:1px}
+#toast.on{transform:none;opacity:1}
+</style>
+</head>
+<body>
+
+<header>
+<div class="hd">
+  <a href="#" class="logo">
+    <div>
+      <div class="logo-text">SLINGSHOT DAILY</div>
+      <div class="logo-sub">Manga Platform</div>
+    </div>
+  </a>
+  <nav>
+    <a href="#" class="act" onclick="return false">News</a>
+    <a href="#" onclick="scrollToGrid();return false">Manga</a>
+    <a href="#" onclick="scrollToGrid();return false">Novels</a>
+    <a href="#" onclick="scrollToRankings();return false">Rankings</a>
+    <a href="#shop" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'});return false">Shop</a>
+  </nav>
+  <div class="hd-btns">
+    <button class="btn-srch" onclick="openSearch()" title="Search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button class="btn-srch" onclick="openCart()" title="Cart" style="position:relative">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.96-1.62L23 6H6"/></svg>
+      <span class="cart-cnt" id="cartCnt">0</span>
+    </button>
+    <button class="btn-login" id="loginBtn" onclick="openMdl('loginMdl')">ACCESS</button>
+  </div>
+</div>
+</header>
+
+<div class="hero">
+  <div class="slide s1 on">
+    <div class="hbg"></div><div class="hgrid"></div>
+    <div class="hring"><div class="hring-inner"></div></div>
+    <div class="hglyph">Z</div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <div class="hero-tag"><div class="hero-tag-line"></div><span>Featured Series</span></div>
+      <h1 class="hero-title">ZEZE<span class="hi">MARU</span></h1>
+      <p class="hero-sub">Strike gold with Zezemaru as he becomes the world's greatest stone-slinger — where must a Slinkster truly belong?</p>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-val">618.2K</div><div class="hstat-lbl">Views</div></div>
+        <div class="hstat"><div class="hstat-val">CH.44</div><div class="hstat-lbl">Latest</div></div>
+        <div class="hstat"><div class="hstat-val">9.4</div><div class="hstat-lbl">Rating</div></div>
+      </div>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>READ NOW</a>
+        <a href="#" class="btn-outline">DETAILS</a>
+      </div>
+    </div>
+  </div>
+  <div class="slide s2">
+    <div class="hbg"></div><div class="hgrid"></div>
+    <div class="hring"><div class="hring-inner"></div></div>
+    <div class="hglyph">X</div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <div class="hero-tag"><div class="hero-tag-line"></div><span>Latest Update</span></div>
+      <h1 class="hero-title">XECU<span class="hi">TIONER</span></h1>
+      <p class="hero-sub">A contract killer caught between justice and vengeance as the city burns around him.</p>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-val">720.7K</div><div class="hstat-lbl">Views</div></div>
+        <div class="hstat"><div class="hstat-val">CH.44</div><div class="hstat-lbl">Latest</div></div>
+        <div class="hstat"><div class="hstat-val">9.6</div><div class="hstat-lbl">Rating</div></div>
+      </div>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>READ NOW</a>
+        <a href="#" class="btn-outline">DETAILS</a>
+      </div>
+    </div>
+  </div>
+  <div class="slide s3">
+    <div class="hbg"></div><div class="hgrid"></div>
+    <div class="hring"><div class="hring-inner"></div></div>
+    <div class="hglyph">I</div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <div class="hero-tag"><div class="hero-tag-line"></div><span>New Chapter</span></div>
+      <h1 class="hero-title">IRON<span class="hi">FANG</span></h1>
+      <p class="hero-sub">In the ruins of the old world, one warrior carries the last iron blade.</p>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-val">341.5K</div><div class="hstat-lbl">Views</div></div>
+        <div class="hstat"><div class="hstat-val">CH.18</div><div class="hstat-lbl">Latest</div></div>
+        <div class="hstat"><div class="hstat-val">8.9</div><div class="hstat-lbl">Rating</div></div>
+      </div>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>READ NOW</a>
+        <a href="#" class="btn-outline">DETAILS</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-dots"><button class="dot on" data-i="0"></button><button class="dot" data-i="1"></button><button class="dot" data-i="2"></button></div>
+</div>
+
+<div class="main-wrap">
+  <div>
+    <div class="sec-hd"><h2>Updates</h2><a href="#">VIEW ALL //</a></div>
+    <div class="grid">
+      <div class="card"><div class="cover cv1"><div class="scan-line"></div><div class="cover-glyph">Z</div><span class="bdg bdg-today">TODAY</span><div class="cover-over"><div class="cover-name">ZEZEMARU</div></div></div><div class="cinfo"><div class="ctitle">Zezemaru</div><div class="cmeta"><span class="cch">#044</span><span class="cvw">618.2K</span></div></div></div>
+      <div class="card"><div class="cover cv2"><div class="scan-line"></div><div class="cover-glyph">X</div><span class="bdg bdg-today">TODAY</span><div class="cover-over"><div class="cover-name">XECITIONER</div></div></div><div class="cinfo"><div class="ctitle">Xecitioner</div><div class="cmeta"><span class="cch">#044</span><span class="cvw">720.7K</span></div></div></div>
+      <div class="card"><div class="cover cv3"><div class="scan-line"></div><div class="cover-glyph">I</div><span class="bdg bdg-hot">HOT</span><div class="cover-over"><div class="cover-name">IRON FANG</div></div></div><div class="cinfo"><div class="ctitle">Iron Fang</div><div class="cmeta"><span class="cch">#018</span><span class="cvw">341.5K</span></div></div></div>
+      <div class="card"><div class="cover cv4"><div class="scan-line"></div><div class="cover-glyph">S</div><div class="cover-over"><div class="cover-name">SHADOW WALKER</div></div></div><div class="cinfo"><div class="ctitle">Shadow Walker</div><div class="cmeta"><span class="cch">#029</span><span class="cvw">287.1K</span></div></div></div>
+      <div class="card"><div class="cover cv5"><div class="scan-line"></div><div class="cover-glyph">C</div><div class="cover-over"><div class="cover-name">CRIMSON TIDE</div></div></div><div class="cinfo"><div class="ctitle">Crimson Tide</div><div class="cmeta"><span class="cch">#011</span><span class="cvw">198.4K</span></div></div></div>
+      <div class="card"><div class="cover cv6"><div class="scan-line"></div><div class="cover-glyph">N</div><span class="bdg bdg-new">NEW</span><div class="cover-over"><div class="cover-name">NEXUS BREAKER</div></div></div><div class="cinfo"><div class="ctitle">Nexus Breaker</div><div class="cmeta"><span class="cch">#007</span><span class="cvw">142.9K</span></div></div></div>
+      <div class="card"><div class="cover cv7"><div class="scan-line"></div><div class="cover-glyph">P</div><div class="cover-over"><div class="cover-name">PHANTOM CODE</div></div></div><div class="cinfo"><div class="ctitle">Phantom Code</div><div class="cmeta"><span class="cch">#033</span><span class="cvw">219.8K</span></div></div></div>
+      <div class="card"><div class="cover cv8"><div class="scan-line"></div><div class="cover-glyph">V</div><span class="bdg bdg-hot">HOT</span><div class="cover-over"><div class="cover-name">VOID STRIKER</div></div></div><div class="cinfo"><div class="ctitle">Void Striker</div><div class="cmeta"><span class="cch">#022</span><span class="cvw">304.6K</span></div></div></div>
+    </div>
+    <div class="ad-full">// ADVERTISEMENT //</div>
+    <div class="sec-hd"><h2>Rookies</h2><a href="#">DISCOVER //</a></div>
+    <div class="grid">
+      <div class="card"><div class="cover cv9"><div class="scan-line"></div><div class="cover-glyph">B</div><span class="bdg bdg-new">NEW</span><div class="cover-over"><div class="cover-name">BLADE ECHO</div></div></div><div class="cinfo"><div class="ctitle">Blade Echo</div><div class="cmeta"><span class="cch">#001</span><span class="cvw">41.2K</span></div></div></div>
+      <div class="card"><div class="cover cv10"><div class="scan-line"></div><div class="cover-glyph">N</div><span class="bdg bdg-new">NEW</span><div class="cover-over"><div class="cover-name">NEON HUNTER</div></div></div><div class="cinfo"><div class="ctitle">Neon Hunter</div><div class="cmeta"><span class="cch">#003</span><span class="cvw">58.7K</span></div></div></div>
+      <div class="card"><div class="cover" style="background:linear-gradient(160deg,#042f2e,#0f766e,#14b8a6)"><div class="scan-line"></div><div class="cover-glyph">C</div><span class="bdg bdg-new">NEW</span><div class="cover-over"><div class="cover-name">CIRCUIT BREAKER</div></div></div><div class="cinfo"><div class="ctitle">Circuit Breaker</div><div class="cmeta"><span class="cch">#002</span><span class="cvw">33.4K</span></div></div></div>
+      <div class="card"><div class="cover" style="background:linear-gradient(160deg,#111827,#374151,#9ca3af)"><div class="scan-line"></div><div class="cover-glyph">G</div><span class="bdg bdg-new">NEW</span><div class="cover-over"><div class="cover-name">GHOST PROTOCOL</div></div></div><div class="cinfo"><div class="ctitle">Ghost Protocol</div><div class="cmeta"><span class="cch">#001</span><span class="cvw">27.1K</span></div></div></div>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="ad-box">// ADVERTISEMENT //</div>
+    <div class="rank-hd"><span class="rank-ttl">Rankings</span><a href="#" class="view-all">ALL //</a></div>
+    <div class="rank-list">
+      <div class="rank-item"><span class="rn g">01</span><div class="rthumb cv1">Z</div><div class="ri"><div class="rt">Zezemaru</div><div class="rv">1.2M</div></div></div>
+      <div class="rank-item"><span class="rn g">02</span><div class="rthumb cv2">X</div><div class="ri"><div class="rt">Xecitioner</div><div class="rv">987K</div></div></div>
+      <div class="rank-item"><span class="rn r">03</span><div class="rthumb cv3">I</div><div class="ri"><div class="rt">Iron Fang</div><div class="rv">754K</div></div></div>
+      <div class="rank-item"><span class="rn w">04</span><div class="rthumb cv8">V</div><div class="ri"><div class="rt">Void Striker</div><div class="rv">621K</div></div></div>
+      <div class="rank-item"><span class="rn w">05</span><div class="rthumb cv7">P</div><div class="ri"><div class="rt">Phantom Code</div><div class="rv">498K</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SHOP -->
+<section id="shop" style="max-width:1240px;margin:0 auto;padding:0 20px">
+  <div class="shop-section">
+    <div class="sec-hd"><h2>SHOP</h2><a href="#">BROWSE ALL //</a></div>
+    <div class="shop-grid">
+      <div class="shop-card"><div class="shop-cover cv1"><div class="shop-glyph">Z</div><div class="shop-sub">MANGA VOL.</div><span class="shop-sticker">HOT</span></div><div class="shop-info"><div class="shop-name">Zezemaru Vol. 1</div><div class="shop-price">$12.99</div><button class="btn-add" onclick="atc(this,'Zezemaru Vol. 1',12.99,'Z','cv1')">ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-cover cv2"><div class="shop-glyph">X</div><div class="shop-sub">MANGA VOL.</div><span class="shop-sticker">NEW</span></div><div class="shop-info"><div class="shop-name">Xecitioner Vol. 1</div><div class="shop-price">$12.99</div><button class="btn-add" onclick="atc(this,'Xecitioner Vol. 1',12.99,'X','cv2')">ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-cover cv3"><div class="shop-glyph">I</div><div class="shop-sub">MANGA VOL.</div></div><div class="shop-info"><div class="shop-name">Iron Fang Vol. 1</div><div class="shop-price">$12.99</div><button class="btn-add" onclick="atc(this,'Iron Fang Vol. 1',12.99,'I','cv3')">ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-cover" style="background:linear-gradient(160deg,#1a000a,#3d0010,#660020)"><div class="shop-glyph">👕</div><div class="shop-sub">APPAREL</div></div><div class="shop-info"><div class="shop-name">Slingshot Daily Hoodie</div><div class="shop-price">$39.99</div><button class="btn-add" onclick="atc(this,'SD Hoodie',39.99,'👕','')">ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-cover" style="background:linear-gradient(160deg,#00000f,#000d3d,#001a66)"><div class="shop-glyph">🖼️</div><div class="shop-sub">ART PRINT</div><span class="shop-sticker">LIMITED</span></div><div class="shop-info"><div class="shop-name">ZEZEMARU Panel Print A3</div><div class="shop-price">$19.99</div><button class="btn-add" onclick="atc(this,'Panel Print A3',19.99,'🖼️','')">ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-cover" style="background:linear-gradient(160deg,#07070f,#0e0e1a,#14141f)"><div class="shop-glyph">🧢</div><div class="shop-sub">APPAREL</div></div><div class="shop-info"><div class="shop-name">Slingshot Daily Cap</div><div class="shop-price">$24.99</div><button class="btn-add" onclick="atc(this,'Slingshot Daily Cap',24.99,'🧢','')">ADD TO CART</button></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <a href="#" class="logo-text">SLINGSHOT DAILY</a>
+      <p>Your destination for original manga and graphic novels from the world's best indie creators.</p>
+      <div class="socials"><a href="#" class="soc">𝕏</a><a href="#" class="soc">IG</a><a href="#" class="soc">FB</a><a href="#" class="soc">YT</a></div>
+    </div>
+    <div class="ft-col"><h4>Explore</h4><ul><li><a href="#">News</a></li><li><a href="#">Manga</a></li><li><a href="#">Novels</a></li><li><a href="#">Rankings</a></li><li><a href="#">Shop</a></li></ul></div>
+    <div class="ft-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Creators</a></li><li><a href="#">Careers</a></li><li><a href="#">Advertise</a></li></ul></div>
+    <div class="ft-col"><h4>Help</h4><ul><li><a href="#">Support</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+  </div>
+  <div class="founder">
+    <img src="info about the owner.png" alt="Michael Madlock" onerror="this.style.background='linear-gradient(135deg,#8b0000,#c44000)';this.removeAttribute('src')">
+    <div><div class="fn">MICHAEL MADLOCK</div><div class="fr">Founder · Developmental Editor · Creator of ZEZEMARU · michael@slingshotdaily.com</div></div>
+  </div>
+  <div class="ft-bottom"><p>© 2025 SLINGSHOT DAILY</p><p>ALL RIGHTS RESERVED</p></div>
+</footer>
+
+<div class="bk" id="bk" onclick="bkClick(event)"></div>
+<div id="searchOvl"><div class="search-bar"><input id="searchInp" placeholder="SEARCH TITLES..." autocomplete="off"><button class="s-close" onclick="closeSearch()">✕</button></div><div class="s-label">// POPULAR TITLES</div><div class="search-results" id="searchRes"></div></div>
+<div class="mdl" id="loginMdl"><div class="mdl-box"><div class="mdl-hd"><h3 id="loginTitle">SYSTEM ACCESS</h3><button class="mdl-close" onclick="closeMdl('loginMdl')">✕</button></div><div class="mdl-body"><div class="login-tabs"><button class="ltab on" onclick="loginTab(0,this)">SIGN IN</button><button class="ltab" onclick="loginTab(1,this)">REGISTER</button></div><div class="form-field"><label>Email</label><input type="email" placeholder="user@slingshotdaily.com"></div><div class="form-field"><label>Password</label><input type="password" placeholder="••••••••"></div><div id="signupExtra" style="display:none"><div class="form-field"><label>Call Sign</label><input type="text" placeholder="VoltRider_99"></div></div><button class="btn-submit" onclick="fakeLogin()">AUTHENTICATE</button><div class="or-div">// OR //</div><button class="btn-google" onclick="fakeLogin()"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google Auth</button></div></div></div>
+<div class="mdl" id="mangaMdl"><div class="mdl-box" style="width:min(640px,100%)"><div class="mdl-hd"><h3 id="mdlTitle">ZEZEMARU</h3><button class="mdl-close" onclick="closeMdl('mangaMdl')">✕</button></div><div class="mdl-body" id="mangaBody"></div></div></div>
+<div id="readerMdl"><div class="r-bar"><span class="r-ttl" id="rTitle">ZEZEMARU</span><span class="r-ch" id="rCh">CHAPTER #44</span><button class="r-close" onclick="closeReader()">CLOSE //</button></div><div class="r-pages" id="rPages"></div><div class="r-nav"><button class="r-btn" id="rPrev" onclick="rChangePage(-1)">← PREV</button><span class="r-pg" id="rPgInfo">01 / 18</span><button class="r-btn" id="rNext" onclick="rChangePage(1)">NEXT →</button></div></div>
+<div id="cartDr"><div class="cd-hd"><h3>CART</h3><button class="mdl-close" onclick="closeCart()">✕</button></div><div class="cart-items" id="cartItems"><div class="cart-empty">CART EMPTY<br>// ADD ITEMS TO CONTINUE</div></div><div class="cd-foot"><div class="cd-sub"><span>TOTAL</span><span id="cartTotal">$0.00</span></div><button class="btn-checkout" onclick="openCheckout()">CHECKOUT →</button><button class="btn-cnt" onclick="closeCart()">CONTINUE BROWSING</button></div></div>
+<div class="mdl" id="checkoutMdl"><div class="mdl-box" style="width:min(540px,100%)"><div class="mdl-hd"><h3 id="coTitle">CHECKOUT</h3><button class="mdl-close" onclick="closeMdl('checkoutMdl')">✕</button></div><div class="mdl-body" id="coBody"></div></div></div>
+<div id="toast"></div>
+
+<script>
+let cur=0;const slides=document.querySelectorAll('.slide'),dots=document.querySelectorAll('.dot');
+function go(n){slides[cur].classList.remove('on');dots[cur].classList.remove('on');cur=(n+slides.length)%slides.length;slides[cur].classList.add('on');dots[cur].classList.add('on')}
+dots.forEach(d=>d.addEventListener('click',()=>go(+d.dataset.i)));
+setInterval(()=>go(cur+1),5000);
+const MANGA={Zezemaru:{g:'Z',cl:'cv1',genre:'Action · Adventure',views:'1.2M',ch:44,desc:'Strike gold with Zezemaru across the Sling Isles in this action-packed adventure that\'s taken the world by storm.'},Xecitioner:{g:'X',cl:'cv2',genre:'Action · Thriller',views:'987K',ch:44,desc:'A contract killer caught between justice and vengeance. Every chapter is a bullet fired in style.'},'Iron Fang':{g:'I',cl:'cv3',genre:'Fantasy · Action',views:'754K',ch:18,desc:'In the ruins of the old world, one warrior carries the last iron blade — and the fate of civilization.'},'Shadow Walker':{g:'S',cl:'cv4',genre:'Action · Mystery',views:'621K',ch:29,desc:'Shadows are his allies. Shadow Walker navigates a city of crime where every footstep could be his last.'},'Crimson Tide':{g:'C',cl:'cv5',genre:'Action · Drama',views:'498K',ch:11,desc:'The ocean runs red. The crew fights for survival across treacherous seas.'},'Nexus Breaker':{g:'N',cl:'cv6',genre:'Sci-Fi · Action',views:'312K',ch:7,desc:'In a world of broken networks and rogue AI, one hacker carries the code that could reset everything.'},'Phantom Code':{g:'P',cl:'cv7',genre:'Thriller · Tech',views:'287K',ch:33,desc:'Hidden in encrypted channels, a phantom coder sends messages governments cannot ignore.'},'Void Striker':{g:'V',cl:'cv8',genre:'Sci-Fi · Action',views:'401K',ch:22,desc:'From the void between stars, a lone striker emerges with powers no one understands.'},'Blade Echo':{g:'B',cl:'cv9',genre:'Action · Fantasy',views:'41K',ch:1,desc:'A rookie debut — raw energy that punches above its weight class.'},'Neon Hunter':{g:'N',cl:'cv10',genre:'Cyberpunk · Action',views:'58K',ch:3,desc:'Neon lights, faster reflexes, a bounty on every corner.'},'Circuit Breaker':{g:'C',cl:'',genre:'Tech · Thriller',views:'33K',ch:2,desc:'A circuit that shouldn\'t exist is trying to communicate.'},'Ghost Protocol':{g:'G',cl:'',genre:'Stealth · Action',views:'27K',ch:1,desc:'Protocol: Disappear. Vanish from every database — and every memory.'}};
+const CH_NAMES=['The Beginning','Rising Storm','Blood & Gold','Into Darkness','Shadow Falls','Crimson Dawn','The Long Road','Iron Will','Breaking Point','The Reckoning','Final Stand','Beyond the Veil','New World Order','Edge of Chaos','Last Light','Convergence','Eye of the Storm','All or Nothing','The Return','Legacy'];
+let toastTmr;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastTmr);toastTmr=setTimeout(()=>t.classList.remove('on'),2800)}
+function scrollToGrid(){document.querySelector('.grid').scrollIntoView({behavior:'smooth'})}
+function scrollToRankings(){document.querySelector('.sidebar').scrollIntoView({behavior:'smooth'})}
+function bkClick(e){if(e.target===document.getElementById('bk'))closeAll()}
+function closeAll(){['loginMdl','mangaMdl','checkoutMdl'].forEach(id=>document.getElementById(id).classList.remove('on'));document.getElementById('cartDr').classList.remove('on');document.getElementById('bk').classList.remove('on')}
+function openMdl(id){document.getElementById(id).classList.add('on');document.getElementById('bk').classList.add('on')}
+function closeMdl(id){document.getElementById(id).classList.remove('on');const a=['loginMdl','mangaMdl','checkoutMdl'].some(i=>document.getElementById(i).classList.contains('on'));if(!a&&!document.getElementById('cartDr').classList.contains('on'))document.getElementById('bk').classList.remove('on')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSearch();closeAll();closeReader()}});
+const SD=[{t:'Zezemaru',m:'CH.44 · Action · 1.2M views',g:'Z',cl:'cv1'},{t:'Xecitioner',m:'CH.44 · Thriller · 987K views',g:'X',cl:'cv2'},{t:'Iron Fang',m:'CH.18 · Fantasy · 754K views',g:'I',cl:'cv3'},{t:'Shadow Walker',m:'CH.29 · Mystery · 621K views',g:'S',cl:'cv4'},{t:'Void Striker',m:'CH.22 · Sci-Fi · 401K views',g:'V',cl:'cv8'}];
+function renderSearch(q){const res=document.getElementById('searchRes');const hits=q?Object.keys(MANGA).filter(t=>t.toLowerCase().includes(q.toLowerCase())).map(t=>({t,m:MANGA[t].genre+' · '+MANGA[t].ch+' chs',g:MANGA[t].g,cl:MANGA[t].cl})):SD;document.querySelector('.s-label').textContent=q?'// RESULTS':'// POPULAR TITLES';res.innerHTML=hits.map(d=>`<div class="s-hit" onclick="closeSearch();openManga('${d.t}')"><div class="s-thumb ${d.cl}">${d.g}</div><div class="s-info"><div class="si-t">${d.t.toUpperCase()}</div><div class="si-m">${d.m}</div></div></div>`).join('')||'<div style="text-align:center;padding:20px;color:var(--muted)">// NO RESULTS</div>'}
+function openSearch(){document.getElementById('searchOvl').classList.add('on');setTimeout(()=>document.getElementById('searchInp').focus(),80);renderSearch('')}
+function closeSearch(){document.getElementById('searchOvl').classList.remove('on')}
+document.getElementById('searchInp').addEventListener('input',e=>renderSearch(e.target.value));
+function loginTab(i,el){document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.getElementById('loginTitle').textContent=i===0?'SYSTEM ACCESS':'NEW OPERATOR';document.getElementById('signupExtra').style.display=i===1?'block':'none';document.querySelector('.btn-submit').textContent=i===0?'AUTHENTICATE':'REGISTER'}
+function fakeLogin(){closeMdl('loginMdl');showToast('ACCESS GRANTED //');document.getElementById('loginBtn').textContent='PROFILE';document.getElementById('loginBtn').onclick=()=>showToast('PROFILE SYSTEM ONLINE')}
+function openManga(title){
+  const m=MANGA[title]||MANGA['Zezemaru'];
+  document.getElementById('mdlTitle').textContent=title.toUpperCase();
+  const maxCh=Math.min(m.ch,12);
+  const chaps=Array.from({length:maxCh},(_,i)=>m.ch-i).map(n=>`<div class="ch-row" onclick="openReader('${title}',${n})"><span class="ch-num">CH.${String(n).padStart(3,'0')}</span><span class="ch-ttl">${CH_NAMES[(n-1)%CH_NAMES.length]}</span><span class="ch-date">${n===m.ch?'TODAY':n>=m.ch-3?`-${m.ch-n+1}D`:'ARCHIVE'}</span></div>`).join('');
+  document.getElementById('mangaBody').innerHTML=`<div class="manga-hd"><div class="manga-cv ${m.cl}">${m.g}</div><div class="manga-info"><div class="mi-ttl">${title.toUpperCase()}</div><div class="mi-meta">${m.genre}<br>${m.ch} CHAPTERS // ${m.views} VIEWS</div><div class="mi-desc">${m.desc}</div></div></div><div class="ch-list-hd">// CHAPTERS</div><div class="ch-list">${chaps}</div><button class="btn-read-start" onclick="openReader('${title}',${m.ch})">▶ READ CH.${String(m.ch).padStart(3,'0')}</button>`;
+  openMdl('mangaMdl');
+}
+let rPage=0,rTotal=18,rTitle='';
+function buildPage(n,g){const lay=[[{t:'0%',l:'0%',w:'50%',h:'46%'},{t:'0%',l:'51%',w:'49%',h:'46%'},{t:'47%',l:'0%',w:'100%',h:'53%'}],[{t:'0%',l:'0%',w:'100%',h:'54%'},{t:'55%',l:'0%',w:'49%',h:'45%'},{t:'55%',l:'51%',w:'49%',h:'45%'}],[{t:'0%',l:'0%',w:'55%',h:'100%'},{t:'0%',l:'56%',w:'44%',h:'48%'},{t:'52%',l:'56%',w:'44%',h:'48%'}]][n%3];const PCOLS=['#07070f','#0e0e1a','#14141f','#0d000a','#00040f'];return`<div class="manga-page">${lay.map((p,i)=>`<div style="position:absolute;top:${p.t};left:${p.l};width:${p.w};height:${p.h};background:${PCOLS[(n*3+i)%PCOLS.length]};border:2px solid #000;box-sizing:border-box;overflow:hidden;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Orbitron',monospace;font-size:clamp(30px,7%,70px);font-weight:900;color:rgba(255,34,68,.05)">${g}</span>${i===0?`<span style="position:absolute;top:8px;left:10px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:rgba(255,34,68,.2);letter-spacing:2px">PAGE ${String(n+1).padStart(2,'0')}</span>`:''}<div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,229,255,.015) 3px,rgba(0,229,255,.015) 4px)"></div></div>`).join('')}</div>`}
+function renderRPage(){const m=MANGA[rTitle]||MANGA['Zezemaru'];document.getElementById('rPages').innerHTML=buildPage(rPage,m.g);document.getElementById('rPgInfo').textContent=`${String(rPage+1).padStart(2,'0')} / ${rTotal}`;document.getElementById('rPrev').disabled=rPage===0;document.getElementById('rNext').disabled=rPage===rTotal-1;document.getElementById('rPages').scrollTo(0,0)}
+function rChangePage(d){rPage=Math.max(0,Math.min(rTotal-1,rPage+d));renderRPage()}
+function openReader(title,ch){closeMdl('mangaMdl');rPage=0;rTitle=title;document.getElementById('rTitle').textContent=title.toUpperCase();document.getElementById('rCh').textContent=`CHAPTER #${String(ch).padStart(3,'0')}`;renderRPage();document.getElementById('readerMdl').classList.add('on')}
+function closeReader(){document.getElementById('readerMdl').classList.remove('on')}
+let cart=[];
+function cartSum(){return cart.reduce((s,i)=>s+i.price,0)}
+function renderCart(){const el=document.getElementById('cartItems');el.innerHTML=cart.length?cart.map(i=>`<div class="cart-item"><div class="ci-thumb ${i.cl}" style="${i.cl?'':'background:#1a000a'}">${i.g}</div><div class="ci-info"><div class="ci-name">${i.name}</div><div class="ci-price">$${i.price.toFixed(2)}</div></div><button class="ci-rm" onclick="rmCart(${i.id})">✕</button></div>`).join(''):'<div class="cart-empty">CART EMPTY<br>// ADD ITEMS TO CONTINUE</div>';document.getElementById('cartTotal').textContent='$'+cartSum().toFixed(2);const cnt=document.getElementById('cartCnt');cnt.textContent=cart.length;cnt.classList.toggle('show',cart.length>0)}
+function atc(btn,name,price,g,cl){cart.push({name,price,g,cl,id:Date.now()+Math.random()});renderCart();showToast(`ADDED: ${name}`);btn.textContent='✓ ADDED';btn.classList.add('added');setTimeout(()=>{btn.textContent='ADD TO CART';btn.classList.remove('added')},1800)}
+function rmCart(id){cart=cart.filter(i=>i.id!==id);renderCart()}
+function openCart(){document.getElementById('cartDr').classList.add('on');document.getElementById('bk').classList.add('on')}
+function closeCart(){document.getElementById('cartDr').classList.remove('on');const a=['loginMdl','mangaMdl','checkoutMdl'].some(i=>document.getElementById(i).classList.contains('on'));if(!a)document.getElementById('bk').classList.remove('on')}
+function openCheckout(){closeCart();renderCo(0);openMdl('checkoutMdl')}
+function renderCo(step){const body=document.getElementById('coBody');const title=document.getElementById('coTitle');const st=`<div class="co-steps"><div class="co-s ${step>=0?'on':''}">// DETAILS</div><div class="co-s ${step>=1?'on':''}">// REVIEW</div><div class="co-s ${step>=2?'on':''}">// CONFIRM</div></div>`;if(step===2){title.textContent='ORDER SENT';body.innerHTML=`<div class="success-box"><span class="success-icon">⚡</span><h3>ORDER CONFIRMED</h3><p>Your order has been received.<br>Check comms for tracking info.<br><br><strong style="color:var(--cyan)">// ORDER #SD-${Math.floor(Math.random()*9e4)+1e4}</strong></p><button class="btn-submit" style="margin-top:22px" onclick="cart=[];renderCart();closeMdl('checkoutMdl')">BACK TO SYSTEM</button></div>`;return}if(step===0){title.textContent='CHECKOUT';body.innerHTML=st+`<div class="form-field"><label>Operator Name</label><input type="text" placeholder="John Doe"></div><div class="form-field"><label>Comms Address</label><input type="email" placeholder="user@email.com"></div><div class="form-field"><label>Shipping Coords</label><input type="text" placeholder="123 Street, City, Country"></div><button class="btn-submit" onclick="renderCo(1)">PROCEED →</button>`}else{title.textContent='REVIEW';body.innerHTML=st+cart.map(i=>`<div class="order-line"><span>${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`).join('')+`<div class="order-total"><span>TOTAL</span><span style="color:var(--red)">$${cartSum().toFixed(2)}</span></div><button class="btn-submit" onclick="renderCo(2)">CONFIRM ORDER →</button><button class="btn-cnt" style="margin-top:8px" onclick="renderCo(0)">← EDIT</button>`}}
+document.querySelectorAll('.card').forEach(card=>{card.addEventListener('click',e=>{if(e.target.closest('.btn-add'))return;const title=card.querySelector('.ctitle')?.textContent?.trim();if(title&&MANGA[title])openManga(title)});card.style.cursor='pointer'});
+document.querySelectorAll('.btn-primary,.btn-outline').forEach((btn,i)=>{const titles=['Zezemaru','Xecitioner','Iron Fang'];btn.addEventListener('click',e=>{e.preventDefault();openManga(titles[Math.floor(i/2)]||'Zezemaru')})});
+document.querySelectorAll('.rank-item').forEach(item=>{item.addEventListener('click',()=>{const title=item.querySelector('.rt')?.textContent?.trim();if(title&&MANGA[title])openManga(title)})});
+</script>
+</body>
+</html>

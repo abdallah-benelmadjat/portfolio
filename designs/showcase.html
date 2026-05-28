@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abe — Design Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & ROOT ────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #06060a;
+  --surface: #0e0e14;
+  --border: rgba(255,255,255,0.07);
+  --text: #e8e8f0;
+  --muted: #52526a;
+  --c1: #cc1a1a;   /* dark forge red */
+  --c2: #e63329;   /* clean cut red */
+  --c3: #00e5ff;   /* voltage cyan */
+  --c4: #cc4422;   /* grunge ink */
+  --c5: #d4a017;   /* obsidian gold */
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ───────────────────────────────── */
+.cur {
+  position: fixed; top: 0; left: 0; z-index: 9999;
+  pointer-events: none; mix-blend-mode: difference;
+}
+.cur-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #fff; margin: -4px 0 0 -4px;
+  transition: transform 0.1s, opacity 0.2s;
+}
+.cur-ring {
+  position: absolute;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  margin: -18px 0 0 -18px;
+  transition: transform 0.08s ease;
+}
+.cur-glow {
+  position: fixed; top: 0; left: 0; z-index: 9990;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(204,26,26,0.08) 0%, transparent 70%);
+  pointer-events: none; margin: -150px 0 0 -150px;
+  transition: transform 0.25s ease;
+}
+body:hover .cur-dot { opacity: 1; }
+
+/* ── BACKGROUND ──────────────────────────────────── */
+.bg-orbs {
+  position: fixed; inset: 0; z-index: 0;
+  overflow: hidden; pointer-events: none;
+}
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(120px); opacity: 0.7;
+}
+.orb-1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(204,26,26,0.12) 0%, transparent 70%);
+  top: -200px; left: -150px;
+  animation: drift1 18s ease-in-out infinite;
+}
+.orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,180,255,0.07) 0%, transparent 70%);
+  bottom: -150px; right: -100px;
+  animation: drift2 22s ease-in-out infinite;
+}
+.orb-3 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(212,160,23,0.06) 0%, transparent 70%);
+  top: 35%; right: 25%;
+  animation: drift3 26s ease-in-out infinite;
+}
+@keyframes drift1 {
+  0%,100% { transform: translate(0,0); }
+  33% { transform: translate(60px,-40px); }
+  66% { transform: translate(-30px,50px); }
+}
+@keyframes drift2 {
+  0%,100% { transform: translate(0,0); }
+  33% { transform: translate(-50px,30px); }
+  66% { transform: translate(40px,-60px); }
+}
+@keyframes drift3 {
+  0%,100% { transform: translate(0,0); }
+  50% { transform: translate(-40px,-30px); }
+}
+
+/* Noise texture */
+.bg-noise {
+  position: fixed; inset: 0; z-index: 0;
+  opacity: 0.025; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── PAGE ────────────────────────────────────────── */
+.page {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ── HEADER ──────────────────────────────────────── */
+.hd {
+  padding: 36px 48px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  opacity: 0; animation: fadeDown 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+}
+.logo {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 20px; font-weight: 400;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: #fff; text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.logo-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #f7931e; display: inline-block;
+  animation: pulse 2.5s ease infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+.hd-meta { text-align: right; }
+.hd-meta p { font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0.5px; }
+.hd-meta p:first-child { color: rgba(255,255,255,0.35); font-weight: 500; }
+
+/* ── HERO TEXT ───────────────────────────────────── */
+.hero-text {
+  text-align: center; padding: 52px 48px 44px;
+  opacity: 0; animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.25s forwards;
+}
+.hero-text h1 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 400; letter-spacing: 3px; line-height: 0.95;
+  color: #fff; margin-bottom: 14px;
+}
+.hero-text h1 span {
+  background: linear-gradient(135deg, var(--c1) 0%, #ff6644 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-text p {
+  font-size: 15px; color: var(--muted); font-weight: 400;
+  letter-spacing: 0.3px; max-width: 420px; margin: 0 auto;
+  line-height: 1.6;
+}
+.hero-text .divider {
+  width: 40px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--c1), transparent);
+  margin: 18px auto 18px;
+}
+
+/* ── CARDS GRID ──────────────────────────────────── */
+.cards-wrap {
+  padding: 0 32px 60px;
+  flex: 1;
+  display: flex; align-items: flex-start;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* ── SAMPLE CARD ─────────────────────────────────── */
+.card {
+  --accent: rgba(255,255,255,0.1);
+  --mx: 50%; --my: 50%; --glow: 0;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: none;
+  transform-style: preserve-3d;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+  opacity: 0;
+  animation: materialize 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.card:nth-child(1) { animation-delay: 0.35s; }
+.card:nth-child(2) { animation-delay: 0.48s; }
+.card:nth-child(3) { animation-delay: 0.61s; }
+.card:nth-child(4) { animation-delay: 0.74s; }
+.card:nth-child(5) { animation-delay: 0.87s; }
+@keyframes materialize {
+  from { opacity: 0; transform: translateY(50px) scale(0.94); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Spotlight glow */
+.card::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 2;
+  border-radius: inherit;
+  background: radial-gradient(500px circle at var(--mx) var(--my), rgba(255,255,255,0.055), transparent 50%);
+  opacity: var(--glow);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+/* Border glow */
+.card::after {
+  content: '';
+  position: absolute; inset: -1px; z-index: 0;
+  border-radius: 15px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* ── CARD PREVIEW ────────────────────────────────── */
+.c-preview {
+  position: relative; height: 220px; overflow: hidden;
+  flex-shrink: 0;
+}
+.c-preview-bg {
+  position: absolute; inset: 0;
+  transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.card:hover .c-preview-bg { transform: scale(1.04); }
+
+/* Mini website mockup CSS */
+.mini-site {
+  position: absolute; inset: 0;
+  padding: 12px; display: flex; flex-direction: column; gap: 6px;
+  z-index: 1;
+}
+.mini-nav {
+  height: 9px; border-radius: 3px;
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 4px;
+}
+.mini-nav-dot { width: 18px; height: 5px; border-radius: 3px; opacity: 0.6; }
+.mini-nav-links { margin-left: auto; display: flex; gap: 3px; }
+.mini-nav-link { width: 12px; height: 3px; border-radius: 2px; opacity: 0.3; }
+.mini-hero { height: 52px; border-radius: 5px; flex-shrink: 0; overflow: hidden; position: relative; }
+.mini-hero-text { position: absolute; bottom: 5px; left: 6px; }
+.mini-hero-text div { border-radius: 2px; margin-bottom: 2px; }
+.mini-content { display: flex; gap: 6px; flex: 1; }
+.mini-main { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.mini-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; }
+.mini-card { border-radius: 3px; height: 40px; }
+.mini-ad { height: 10px; border-radius: 2px; opacity: 0.3; }
+.mini-side { width: 52px; display: flex; flex-direction: column; gap: 4px; }
+.mini-side-box { border-radius: 3px; }
+
+/* Large background number */
+.preview-num {
+  position: absolute; bottom: -10px; right: 6px; z-index: 0;
+  font-family: 'Bebas Neue', cursive; font-size: 110px; font-weight: 400;
+  line-height: 1; letter-spacing: 2px;
+  color: rgba(255,255,255,0.04);
+  user-select: none; pointer-events: none;
+  transition: color 0.4s ease;
+}
+.card:hover .preview-num { color: rgba(255,255,255,0.06); }
+
+/* Gradient overlays per card */
+.card-1 .c-preview-bg { background: linear-gradient(160deg,#0d0507 0%,#2a0a0e 50%,#4a1010 100%); }
+.card-2 .c-preview-bg { background: linear-gradient(160deg,#f0f0f5 0%,#e0e0ec 100%); }
+.card-3 .c-preview-bg { background: linear-gradient(160deg,#07070f 0%,#0e0e1a 50%,#12121f 100%); }
+.card-4 .c-preview-bg { background: linear-gradient(160deg,#f0ebe0 0%,#e5dfd5 100%); }
+.card-5 .c-preview-bg { background: linear-gradient(160deg,#080808 0%,#121212 50%,#181818 100%); }
+
+/* Card-specific mini-site styles */
+.card-1 .mini-nav { background: rgba(0,0,0,0.5); }
+.card-1 .mini-nav-dot { background: #cc1a1a; }
+.card-1 .mini-nav-link { background: #fff; }
+.card-1 .mini-hero { background: linear-gradient(90deg,#8b0000,#cc1a1a,#f7931e); }
+.card-1 .mini-card { background: rgba(255,255,255,0.06); }
+.card-1 .mini-ad { background: rgba(255,255,255,0.08); }
+.card-1 .mini-side-box { background: rgba(255,255,255,0.05); }
+
+.card-2 .mini-nav { background: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(0,0,0,0.08); }
+.card-2 .mini-nav-dot { background: #e63329; }
+.card-2 .mini-nav-link { background: #555; opacity: 0.25; }
+.card-2 .mini-hero { background: linear-gradient(90deg,#111,#e63329); }
+.card-2 .mini-card { background: rgba(0,0,0,0.07); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.card-2 .mini-ad { background: rgba(0,0,0,0.08); }
+.card-2 .mini-side-box { background: rgba(0,0,0,0.06); }
+
+.card-3 .mini-nav { background: rgba(0,0,0,0.6); border-bottom: 1px solid rgba(0,229,255,0.15); }
+.card-3 .mini-nav-dot { background: linear-gradient(90deg,#ff2244,#00e5ff); }
+.card-3 .mini-nav-link { background: #00e5ff; opacity: 0.3; }
+.card-3 .mini-hero { background: linear-gradient(90deg,#ff2244,#001a2a,#00e5ff); position: relative; overflow: hidden; }
+.card-3 .mini-hero::before { content:''; position:absolute; inset:0; background: repeating-linear-gradient(90deg,transparent,transparent 8px,rgba(0,229,255,0.08) 8px,rgba(0,229,255,0.08) 9px); }
+.card-3 .mini-card { background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.1); }
+.card-3 .mini-ad { background: rgba(0,229,255,0.08); }
+.card-3 .mini-side-box { background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.08); }
+
+.card-4 .mini-nav { background: #1a1a1a; border-bottom: 3px solid #cc1a00; }
+.card-4 .mini-nav-dot { background: #cc1a00; }
+.card-4 .mini-nav-link { background: #fff; opacity: 0.3; }
+.card-4 .mini-hero { background: linear-gradient(90deg,#1a1a1a,#6b1a00); border: 2px solid #1a1a1a; }
+.card-4 .mini-card { background: rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.3); }
+.card-4 .mini-ad { background: rgba(0,0,0,0.1); }
+.card-4 .mini-side-box { background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.2); }
+
+.card-5 .mini-nav { background: rgba(0,0,0,0.8); border-bottom: 1px solid rgba(212,160,23,0.2); }
+.card-5 .mini-nav-dot { background: linear-gradient(90deg,#a07010,#d4a017); }
+.card-5 .mini-nav-link { background: #d4a017; opacity: 0.3; }
+.card-5 .mini-hero { background: linear-gradient(90deg,#0a0800,#d4a017); }
+.card-5 .mini-card { background: rgba(212,160,23,0.06); border: 1px solid rgba(212,160,23,0.1); }
+.card-5 .mini-ad { background: rgba(212,160,23,0.08); }
+.card-5 .mini-side-box { background: rgba(212,160,23,0.05); border: 1px solid rgba(212,160,23,0.1); }
+
+/* ── CARD INFO ───────────────────────────────────── */
+.c-info {
+  padding: 20px 20px 18px;
+  position: relative; z-index: 3;
+  display: flex; flex-direction: column; gap: 0;
+}
+.c-num {
+  font-size: 10px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+.card-1 .c-num { color: var(--c1); }
+.card-2 .c-num { color: var(--c2); }
+.card-3 .c-num { color: var(--c3); }
+.card-4 .c-num { color: var(--c4); }
+.card-5 .c-num { color: var(--c5); }
+
+.c-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 24px; font-weight: 400; line-height: 1;
+  color: #fff; margin-bottom: 10px; letter-spacing: 2px; text-transform: uppercase;
+}
+.c-desc {
+  font-size: 12px; color: var(--muted);
+  line-height: 1.65; font-weight: 400; margin-bottom: 14px;
+  transition: color 0.3s ease;
+}
+.card:hover .c-desc { color: rgba(255,255,255,0.45); }
+
+/* Swatches */
+.swatches {
+  display: flex; gap: 5px; margin-bottom: 14px;
+}
+.sw {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  transition: transform 0.2s ease, border-color 0.3s ease;
+}
+.card:hover .sw { border-color: rgba(255,255,255,0.15); }
+.card:hover .sw:hover { transform: scale(1.3); }
+
+/* Tags */
+.tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 16px; }
+.tag {
+  font-size: 9.5px; font-weight: 600; letter-spacing: 0.5px;
+  padding: 3px 8px; border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--muted); text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+.card:hover .tag { border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.4); }
+
+/* Open button */
+.c-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.3px;
+  text-decoration: none; border: 1px solid;
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  position: relative; overflow: hidden;
+}
+.c-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: currentColor; opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.c-btn:hover::before { opacity: 0.08; }
+.c-btn svg { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.25s ease; }
+.c-btn:hover svg { transform: translate(2px,-2px); }
+.card-1 .c-btn { color: var(--c1); border-color: rgba(204,26,26,0.3); }
+.card-1 .c-btn:hover { border-color: var(--c1); background: rgba(204,26,26,0.1); }
+.card-2 .c-btn { color: var(--c2); border-color: rgba(230,51,41,0.3); }
+.card-2 .c-btn:hover { border-color: var(--c2); background: rgba(230,51,41,0.1); }
+.card-3 .c-btn { color: var(--c3); border-color: rgba(0,229,255,0.3); }
+.card-3 .c-btn:hover { border-color: var(--c3); background: rgba(0,229,255,0.08); }
+.card-4 .c-btn { color: var(--c4); border-color: rgba(204,68,34,0.3); }
+.card-4 .c-btn:hover { border-color: var(--c4); background: rgba(204,68,34,0.1); }
+.card-5 .c-btn { color: var(--c5); border-color: rgba(212,160,23,0.3); }
+.card-5 .c-btn:hover { border-color: var(--c5); background: rgba(212,160,23,0.08); }
+
+/* Hover box shadows */
+.card-1:hover { box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(204,26,26,0.4), 0 0 60px rgba(204,26,26,0.12); border-color: rgba(204,26,26,0.35); }
+.card-2:hover { box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(230,51,41,0.35), 0 0 60px rgba(230,51,41,0.1); border-color: rgba(230,51,41,0.3); }
+.card-3:hover { box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,229,255,0.35), 0 0 60px rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.3); }
+.card-4:hover { box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(204,68,34,0.35), 0 0 60px rgba(204,68,34,0.1); border-color: rgba(204,68,34,0.3); }
+.card-5:hover { box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,160,23,0.4), 0 0 60px rgba(212,160,23,0.12); border-color: rgba(212,160,23,0.35); }
+
+/* ── FOOTER ──────────────────────────────────────── */
+.footer {
+  padding: 24px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 1.1s forwards;
+}
+.footer p { font-size: 12px; color: var(--muted); font-weight: 400; }
+.footer .owner-mini {
+  display: flex; align-items: center; gap: 10px;
+}
+.owner-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  object-fit: cover; border: 1px solid rgba(204,26,26,0.4);
+}
+.owner-avatar-ph {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg,#4a0a0a,#8b2000);
+  border: 1px solid rgba(204,26,26,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4);
+}
+.owner-mini-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.45); }
+.owner-mini-role { font-size: 11px; color: var(--muted); }
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 1200px) {
+  .cards { grid-template-columns: repeat(3,1fr); }
+  .card:nth-child(4),
+  .card:nth-child(5) { animation-delay: 0.65s; }
+}
+@media (max-width: 800px) {
+  .cards { grid-template-columns: repeat(2,1fr); }
+  .hero-text h1 { font-size: 32px; }
+  .hd, .cards-wrap, .footer { padding-left: 20px; padding-right: 20px; }
+  .cards-wrap { padding-left: 16px; padding-right: 16px; }
+  body { cursor: auto; }
+  .cur { display: none; }
+}
+@media (max-width: 500px) {
+  .cards { grid-template-columns: 1fr; }
+}
+
+/* ── EXTENDED SECTION ──────────────────────────────── */
+:root{--c6:#60A5FA;--c7:#C084FC;--c8:#FF2200;--c9:#C89614;--c10:#00CFFF}
+.show-more-wrap{width:100%;padding:32px 32px 28px;display:flex;align-items:center;gap:18px}
+.smw-line{flex:1;height:1px;background:rgba(255,255,255,.08)}
+.show-more-btn{display:flex;align-items:center;gap:10px;padding:12px 28px;border-radius:100px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:.5px;transition:all .3s ease;white-space:nowrap;flex-shrink:0}
+.show-more-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.7)}
+.show-more-btn svg{transition:transform .4s ease}
+.show-more-btn.open svg{transform:rotate(180deg)}
+.cards-extended{display:none;grid-template-columns:repeat(5,1fr);gap:16px;width:100%;padding:0 32px 60px}
+
+.card-6 .c-preview-bg{background:linear-gradient(160deg,#070A10,#10182A,#1C2840)}
+.card-6 .mini-nav{background:rgba(12,18,28,.95);border-bottom:1px solid rgba(96,165,250,.12)}
+.card-6 .mini-nav-dot{background:linear-gradient(90deg,#3B82F6,#93C5FD)}
+.card-6 .mini-nav-link{background:#60A5FA;opacity:.2}
+.card-6 .mini-hero{background:linear-gradient(135deg,#08090E,#182038,#2A4080)}
+.card-6 .mini-card{background:rgba(96,165,250,.05);border:1px solid rgba(96,165,250,.1)}
+.card-6 .mini-ad{background:rgba(96,165,250,.07)}
+.card-6 .mini-side-box{background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.08)}
+.card-6:hover{box-shadow:0 24px 60px rgba(0,0,0,.8),0 0 0 1px rgba(96,165,250,.3),0 0 60px rgba(96,165,250,.1);border-color:rgba(96,165,250,.25)}
+.card-6 .c-num{color:var(--c6)}.card-6 .c-btn{color:var(--c6);border-color:rgba(96,165,250,.3)}
+.card-6 .c-btn:hover{border-color:var(--c6);background:rgba(96,165,250,.08)}
+
+.card-7 .c-preview-bg{background:linear-gradient(160deg,#050812,#0D082A,#100A30)}
+.card-7 .mini-nav{background:rgba(5,8,20,.9);border-bottom:1px solid rgba(192,132,252,.12)}
+.card-7 .mini-nav-dot{background:linear-gradient(90deg,#6B35C4,#00D4A8)}
+.card-7 .mini-nav-link{background:#C084FC;opacity:.2}
+.card-7 .mini-hero{background:linear-gradient(135deg,#1A0038,#3D0070,#003A30)}
+.card-7 .mini-card{background:rgba(255,255,255,.04);border:1px solid rgba(192,132,252,.12)}
+.card-7 .mini-ad{background:rgba(192,132,252,.07)}
+.card-7 .mini-side-box{background:rgba(255,255,255,.03);border:1px solid rgba(0,212,168,.08)}
+.card-7:hover{box-shadow:0 24px 60px rgba(0,0,0,.9),0 0 0 1px rgba(192,132,252,.3),0 0 80px rgba(107,53,196,.15);border-color:rgba(192,132,252,.25)}
+.card-7 .c-num{color:var(--c7)}.card-7 .c-btn{color:var(--c7);border-color:rgba(192,132,252,.3)}
+.card-7 .c-btn:hover{border-color:var(--c7);background:rgba(192,132,252,.08)}
+
+.card-8 .c-preview-bg{background:#EDEBE5}
+.card-8 .mini-nav{background:#fff;border-bottom:3px solid #000}
+.card-8 .mini-nav-dot{background:#FF2200}
+.card-8 .mini-nav-link{background:#000;opacity:.5}
+.card-8 .mini-hero{background:linear-gradient(133deg,#FF2200 42%,#111 42%)}
+.card-8 .mini-card{background:#fff;border:2px solid #000;box-shadow:2px 2px 0 #000;border-radius:0!important}
+.card-8 .mini-ad{background:#000;opacity:.06}
+.card-8 .mini-side-box{background:#fff;border:2px solid #000;border-radius:0!important}
+.card-8 .c-title{color:#fff}
+.card-8:hover{box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 2px #FF2200,5px 5px 0 #FF2200;border-color:#FF2200}
+.card-8 .c-num{color:var(--c8)}.card-8 .c-btn{color:var(--c8);border-color:rgba(255,34,0,.3)}
+.card-8 .c-btn:hover{border-color:var(--c8);background:rgba(255,34,0,.08)}
+
+.card-9 .c-preview-bg{background:linear-gradient(160deg,#080006,#160010,#220016)}
+.card-9 .mini-nav{background:#080006;border-bottom:1px solid rgba(200,150,20,.2)}
+.card-9 .mini-nav-dot{background:linear-gradient(90deg,#6B0020,#C89614)}
+.card-9 .mini-nav-link{background:#C89614;opacity:.25}
+.card-9 .mini-hero{background:linear-gradient(90deg,#080006,#3A0010,#1A0800)}
+.card-9 .mini-card{background:rgba(200,150,20,.05);border:1px solid rgba(200,150,20,.15)}
+.card-9 .mini-ad{background:rgba(200,150,20,.07)}
+.card-9 .mini-side-box{background:rgba(200,150,20,.04);border:1px solid rgba(200,150,20,.1)}
+.card-9:hover{box-shadow:0 24px 60px rgba(0,0,0,.9),0 0 0 1px rgba(200,150,20,.35),0 0 60px rgba(200,150,20,.12);border-color:rgba(200,150,20,.3)}
+.card-9 .c-num{color:var(--c9)}.card-9 .c-btn{color:var(--c9);border-color:rgba(200,150,20,.3)}
+.card-9 .c-btn:hover{border-color:var(--c9);background:rgba(200,150,20,.08)}
+
+.card-10 .c-preview-bg{background:linear-gradient(160deg,#011828,#01243A,#013060)}
+.card-10 .mini-nav{background:#011828;border-bottom:1px solid rgba(255,255,255,.15)}
+.card-10 .mini-nav-dot{background:#00CFFF}
+.card-10 .mini-nav-link{background:#fff;opacity:.3}
+.card-10 .mini-hero{background:#012244;overflow:hidden;position:relative}
+.card-10 .mini-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 5px,rgba(255,255,255,.05) 5px,rgba(255,255,255,.05) 6px),repeating-linear-gradient(90deg,transparent,transparent 5px,rgba(255,255,255,.05) 5px,rgba(255,255,255,.05) 6px)}
+.card-10 .mini-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.2)}
+.card-10 .mini-ad{background:rgba(0,207,255,.08)}
+.card-10 .mini-side-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12)}
+.card-10:hover{box-shadow:0 24px 60px rgba(0,0,0,.8),0 0 0 1px rgba(0,207,255,.3),0 0 60px rgba(0,207,255,.1);border-color:rgba(0,207,255,.3)}
+.card-10 .c-num{color:var(--c10)}.card-10 .c-btn{color:var(--c10);border-color:rgba(0,207,255,.3)}
+.card-10 .c-btn:hover{border-color:var(--c10);background:rgba(0,207,255,.08)}
+
+@media(max-width:1200px){.cards-extended{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.cards-extended{grid-template-columns:repeat(2,1fr);padding-left:16px;padding-right:16px}}
+@media(max-width:500px){.cards-extended{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cur" id="cur">
+  <div class="cur-ring" id="curRing"></div>
+  <div class="cur-dot" id="curDot"></div>
+</div>
+<div class="cur-glow" id="curGlow"></div>
+
+<!-- Animated background -->
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<div class="bg-noise"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="hd">
+    <a href="#" class="logo">
+      ABE<span class="logo-dot"></span>
+    </a>
+    <div class="hd-meta">
+      <p>10 Design Samples</p>
+      <p>Click any card to explore</p>
+    </div>
+  </header>
+
+  <!-- Hero text -->
+  <div class="hero-text">
+    <h1>Choose Your <span>Direction</span></h1>
+    <div class="divider"></div>
+    <p>Five distinct website designs — hover to explore, click to open. Each is fully interactive.</p>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards-wrap">
+    <div class="cards">
+
+      <!-- CARD 1 -->
+      <div class="card card-1" data-href="sample1.html">
+        <div class="c-preview">
+          <div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav">
+              <div class="mini-nav-dot"></div>
+              <div class="mini-nav-links">
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+              </div>
+            </div>
+            <div class="mini-hero">
+              <div class="mini-hero-text">
+                <div style="width:50px;height:4px;background:rgba(247,147,30,0.7);border-radius:1px"></div>
+                <div style="width:80px;height:3px;background:rgba(255,255,255,0.25);border-radius:1px;margin-top:3px"></div>
+              </div>
+            </div>
+            <div class="mini-content">
+              <div class="mini-main">
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card" style="background:rgba(204,26,26,0.2)"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+                <div class="mini-ad"></div>
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+              </div>
+              <div class="mini-side">
+                <div class="mini-side-box" style="height:44px"></div>
+                <div class="mini-side-box" style="flex:1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-num">01</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 01</div>
+          <div class="c-title">Dark Forge</div>
+          <div class="c-desc">Closest to your mockup. Manga-heavy dark maroon atmosphere, Bangers display font, speech-bubble labels.</div>
+          <div class="swatches">
+            <div class="sw" style="background:#0d0507"></div>
+            <div class="sw" style="background:#cc1a1a"></div>
+            <div class="sw" style="background:#8b0000"></div>
+            <div class="sw" style="background:#f7931e"></div>
+          </div>
+          <div class="tags">
+            <span class="tag">Dark</span>
+            <span class="tag">Manga</span>
+            <span class="tag">Closest Match</span>
+          </div>
+          <a class="c-btn" href="sample1.html" onclick="event.stopPropagation()">
+            Open Sample
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="card card-2" data-href="sample2.html">
+        <div class="c-preview">
+          <div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav">
+              <div class="mini-nav-dot"></div>
+              <div class="mini-nav-links">
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+              </div>
+            </div>
+            <div class="mini-hero">
+              <div class="mini-hero-text">
+                <div style="width:50px;height:4px;background:rgba(255,255,255,0.9);border-radius:1px"></div>
+                <div style="width:70px;height:3px;background:rgba(255,255,255,0.5);border-radius:1px;margin-top:3px"></div>
+              </div>
+            </div>
+            <div class="mini-content">
+              <div class="mini-main">
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+                <div class="mini-ad"></div>
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+              </div>
+              <div class="mini-side">
+                <div class="mini-side-box" style="height:44px"></div>
+                <div class="mini-side-box" style="flex:1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-num">02</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 02</div>
+          <div class="c-title">Clean Cut</div>
+          <div class="c-desc">Light editorial theme, Webtoons-inspired layout. Clean white grid with sharp red accents and Poppins typography.</div>
+          <div class="swatches">
+            <div class="sw" style="background:#ffffff;border-color:rgba(255,255,255,0.25)"></div>
+            <div class="sw" style="background:#e63329"></div>
+            <div class="sw" style="background:#111111"></div>
+            <div class="sw" style="background:#f7f7f7;border-color:rgba(255,255,255,0.2)"></div>
+          </div>
+          <div class="tags">
+            <span class="tag">Light</span>
+            <span class="tag">Editorial</span>
+            <span class="tag">Broad Appeal</span>
+          </div>
+          <a class="c-btn" href="sample2.html" onclick="event.stopPropagation()">
+            Open Sample
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="card card-3" data-href="sample3.html">
+        <div class="c-preview">
+          <div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav">
+              <div class="mini-nav-dot"></div>
+              <div class="mini-nav-links">
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+              </div>
+            </div>
+            <div class="mini-hero">
+              <div class="mini-hero-text">
+                <div style="width:55px;height:4px;background:rgba(0,229,255,0.9);border-radius:1px"></div>
+                <div style="width:70px;height:3px;background:rgba(255,34,68,0.5);border-radius:1px;margin-top:3px"></div>
+              </div>
+            </div>
+            <div class="mini-content">
+              <div class="mini-main">
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card" style="border-color:rgba(0,229,255,0.3)"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+                <div class="mini-ad"></div>
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+              </div>
+              <div class="mini-side">
+                <div class="mini-side-box" style="height:44px"></div>
+                <div class="mini-side-box" style="flex:1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-num">03</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 03</div>
+          <div class="c-title">Voltage</div>
+          <div class="c-desc">Electric dark theme. Neon red/cyan glows, Orbitron mono font, scanline textures, animated rotating rings.</div>
+          <div class="swatches">
+            <div class="sw" style="background:#07070f"></div>
+            <div class="sw" style="background:#ff2244"></div>
+            <div class="sw" style="background:#00e5ff"></div>
+            <div class="sw" style="background:#ffaa00"></div>
+          </div>
+          <div class="tags">
+            <span class="tag">Dark</span>
+            <span class="tag">Neon</span>
+            <span class="tag">Animated</span>
+          </div>
+          <a class="c-btn" href="sample3.html" onclick="event.stopPropagation()">
+            Open Sample
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="card card-4" data-href="sample4.html">
+        <div class="c-preview">
+          <div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav">
+              <div class="mini-nav-dot"></div>
+              <div class="mini-nav-links">
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+              </div>
+            </div>
+            <div class="mini-hero">
+              <div class="mini-hero-text">
+                <div style="width:55px;height:5px;background:rgba(255,255,255,0.85);border-radius:1px"></div>
+                <div style="width:80px;height:3px;background:rgba(255,255,255,0.5);border-radius:1px;margin-top:3px"></div>
+              </div>
+            </div>
+            <div class="mini-content">
+              <div class="mini-main">
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+                <div class="mini-ad"></div>
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+              </div>
+              <div class="mini-side">
+                <div class="mini-side-box" style="height:44px"></div>
+                <div class="mini-side-box" style="flex:1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-num">04</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 04</div>
+          <div class="c-title">Grunge Ink</div>
+          <div class="c-desc">Off-white paper texture, thick ink borders, halftone patterns. Classic manga print magazine energy.</div>
+          <div class="swatches">
+            <div class="sw" style="background:#f5f0e8;border-color:rgba(255,255,255,0.25)"></div>
+            <div class="sw" style="background:#1a1a1a"></div>
+            <div class="sw" style="background:#cc1a00"></div>
+            <div class="sw" style="background:#e3ddd5;border-color:rgba(255,255,255,0.2)"></div>
+          </div>
+          <div class="tags">
+            <span class="tag">Retro</span>
+            <span class="tag">Ink</span>
+            <span class="tag">Textured</span>
+          </div>
+          <a class="c-btn" href="sample4.html" onclick="event.stopPropagation()">
+            Open Sample
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="card card-5" data-href="sample5.html">
+        <div class="c-preview">
+          <div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav">
+              <div class="mini-nav-dot"></div>
+              <div class="mini-nav-links">
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+              </div>
+            </div>
+            <div class="mini-hero">
+              <div class="mini-hero-text">
+                <div style="width:55px;height:4px;background:rgba(212,160,23,0.9);border-radius:1px"></div>
+                <div style="width:75px;height:3px;background:rgba(212,160,23,0.4);border-radius:1px;margin-top:3px"></div>
+              </div>
+            </div>
+            <div class="mini-content">
+              <div class="mini-main">
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card" style="border-color:rgba(212,160,23,0.25)"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+                <div class="mini-ad"></div>
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+              </div>
+              <div class="mini-side">
+                <div class="mini-side-box" style="height:44px"></div>
+                <div class="mini-side-box" style="flex:1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-num">05</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 05</div>
+          <div class="c-title">Obsidian Gold</div>
+          <div class="c-desc">Pure black with luxe gold accents. Cinzel serif, animated gold rings, Roman numeral rankings. Prestige platform energy.</div>
+          <div class="swatches">
+            <div class="sw" style="background:#080808"></div>
+            <div class="sw" style="background:#d4a017"></div>
+            <div class="sw" style="background:#f0c040"></div>
+            <div class="sw" style="background:#a07010"></div>
+          </div>
+          <div class="tags">
+            <span class="tag">Luxury</span>
+            <span class="tag">Gold</span>
+            <span class="tag">Cinematic</span>
+          </div>
+          <a class="c-btn" href="sample5.html" onclick="event.stopPropagation()">
+            Open Sample
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /cards -->
+
+    <!-- Show More Toggle -->
+    <div class="show-more-wrap">
+      <div class="smw-line"></div>
+      <button class="show-more-btn" id="showMoreBtn" onclick="toggleMore()">
+        <span id="showMoreLabel">Show More · Less Ideal Options</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="smw-line"></div>
+    </div>
+
+    <!-- Extended Cards -->
+    <div class="cards-extended" id="cardsExtended">
+
+      <!-- CARD 6 — Mercury -->
+      <div class="card card-6" data-href="sample6.html">
+        <div class="c-preview"><div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
+            <div class="mini-hero"><div class="mini-hero-text"><div style="width:60px;height:4px;background:rgba(96,165,250,.9);border-radius:1px"></div><div style="width:80px;height:3px;background:rgba(255,255,255,.2);border-radius:1px;margin-top:3px"></div></div></div>
+            <div class="mini-content"><div class="mini-main"><div class="mini-grid"><div class="mini-card"></div><div class="mini-card" style="border-color:rgba(96,165,250,.3)"></div><div class="mini-card"></div><div class="mini-card"></div></div><div class="mini-ad"></div><div class="mini-grid"><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div></div></div><div class="mini-side"><div class="mini-side-box" style="height:44px"></div><div class="mini-side-box" style="flex:1"></div></div></div>
+          </div>
+          <div class="preview-num">06</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 06</div>
+          <div class="c-title">Mercury</div>
+          <div class="c-desc">Liquid chrome aesthetic. Cold silver-blue palette, Exo 2 typeface, precision-engineered UI. Feels like a luxury tech brand built a manga platform.</div>
+          <div class="swatches"><div class="sw" style="background:#070A10"></div><div class="sw" style="background:#60A5FA"></div><div class="sw" style="background:#B0C4D8;border-color:rgba(255,255,255,.2)"></div><div class="sw" style="background:#3B82F6"></div></div>
+          <div class="tags"><span class="tag">Chrome</span><span class="tag">Futuristic</span><span class="tag">Precision</span></div>
+          <a class="c-btn" href="sample6.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </div>
+
+      <!-- CARD 7 — Aurora Codex -->
+      <div class="card card-7" data-href="sample7.html">
+        <div class="c-preview"><div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
+            <div class="mini-hero"><div class="mini-hero-text"><div style="width:55px;height:4px;background:rgba(192,132,252,.9);border-radius:1px"></div><div style="width:75px;height:3px;background:rgba(0,212,168,.4);border-radius:1px;margin-top:3px"></div></div></div>
+            <div class="mini-content"><div class="mini-main"><div class="mini-grid"><div class="mini-card"></div><div class="mini-card" style="border-color:rgba(192,132,252,.3)"></div><div class="mini-card"></div><div class="mini-card"></div></div><div class="mini-ad"></div><div class="mini-grid"><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div></div></div><div class="mini-side"><div class="mini-side-box" style="height:44px"></div><div class="mini-side-box" style="flex:1"></div></div></div>
+          </div>
+          <div class="preview-num">07</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 07</div>
+          <div class="c-title">Aurora Codex</div>
+          <div class="c-desc">Animated aurora borealis fills the background. Real glassmorphism, Cormorant Garamond, holographic gradients. Like a mystical living library.</div>
+          <div class="swatches"><div class="sw" style="background:#050812"></div><div class="sw" style="background:#6B35C4"></div><div class="sw" style="background:#00D4A8"></div><div class="sw" style="background:#FF4FA0"></div></div>
+          <div class="tags"><span class="tag">Holographic</span><span class="tag">Glass</span><span class="tag">Mystical</span></div>
+          <a class="c-btn" href="sample7.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </div>
+
+      <!-- CARD 8 — Manifesto -->
+      <div class="card card-8" data-href="sample8.html">
+        <div class="c-preview"><div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
+            <div class="mini-hero"><div class="mini-hero-text"><div style="width:55px;height:5px;background:#111;border-radius:0"></div><div style="width:80px;height:3px;background:rgba(0,0,0,.4);border-radius:0;margin-top:3px"></div></div></div>
+            <div class="mini-content"><div class="mini-main"><div class="mini-grid"><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div></div><div class="mini-ad"></div><div class="mini-grid"><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div></div></div><div class="mini-side"><div class="mini-side-box" style="height:44px"></div><div class="mini-side-box" style="flex:1"></div></div></div>
+          </div>
+          <div class="preview-num">08</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 08</div>
+          <div class="c-title">Manifesto</div>
+          <div class="c-desc">Pure white background, jet black, pure red. Neo-brutalist constructivism — like a Bauhaus protest poster became a manga platform. The most visually shocking of all ten.</div>
+          <div class="swatches"><div class="sw" style="background:#fff;border-color:rgba(255,255,255,.25)"></div><div class="sw" style="background:#000"></div><div class="sw" style="background:#FF2200"></div><div class="sw" style="background:#FFE500"></div></div>
+          <div class="tags"><span class="tag">Brutalist</span><span class="tag">Striking</span><span class="tag">Avant-Garde</span></div>
+          <a class="c-btn" href="sample8.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </div>
+
+      <!-- CARD 9 — Velvet Curtain -->
+      <div class="card card-9" data-href="sample9.html">
+        <div class="c-preview"><div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
+            <div class="mini-hero"><div class="mini-hero-text"><div style="width:50px;height:4px;background:rgba(200,150,20,.9);border-radius:1px"></div><div style="width:75px;height:3px;background:rgba(240,223,192,.3);border-radius:1px;margin-top:3px"></div></div></div>
+            <div class="mini-content"><div class="mini-main"><div class="mini-grid"><div class="mini-card"></div><div class="mini-card" style="border-color:rgba(200,150,20,.3)"></div><div class="mini-card"></div><div class="mini-card"></div></div><div class="mini-ad"></div><div class="mini-grid"><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div></div></div><div class="mini-side"><div class="mini-side-box" style="height:44px"></div><div class="mini-side-box" style="flex:1"></div></div></div>
+          </div>
+          <div class="preview-num">09</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 09</div>
+          <div class="c-title">Velvet Curtain</div>
+          <div class="c-desc">Grand opera meets manga. Deep velvet crimson, aged gold ornaments, Playfair Display, theatrical spotlight effects. The most prestige-coded design of all.</div>
+          <div class="swatches"><div class="sw" style="background:#080006"></div><div class="sw" style="background:#6B0020"></div><div class="sw" style="background:#C89614"></div><div class="sw" style="background:#F0DFC0;border-color:rgba(255,255,255,.2)"></div></div>
+          <div class="tags"><span class="tag">Theatrical</span><span class="tag">Baroque</span><span class="tag">Prestige</span></div>
+          <a class="c-btn" href="sample9.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </div>
+
+      <!-- CARD 10 — Blueprint -->
+      <div class="card card-10" data-href="sample10.html">
+        <div class="c-preview"><div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
+            <div class="mini-hero"><div class="mini-hero-text"><div style="width:55px;height:4px;background:rgba(0,207,255,.9);border-radius:1px"></div><div style="width:75px;height:3px;background:rgba(255,255,255,.3);border-radius:1px;margin-top:3px"></div></div></div>
+            <div class="mini-content"><div class="mini-main"><div class="mini-grid"><div class="mini-card"></div><div class="mini-card" style="border-color:rgba(0,207,255,.4)"></div><div class="mini-card"></div><div class="mini-card"></div></div><div class="mini-ad"></div><div class="mini-grid"><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div></div></div><div class="mini-side"><div class="mini-side-box" style="height:44px"></div><div class="mini-side-box" style="flex:1"></div></div></div>
+          </div>
+          <div class="preview-num">10</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 10</div>
+          <div class="c-title">Blueprint</div>
+          <div class="c-desc">Architectural blueprint on deep navy. Monospace type, white line grids, cyan callouts. Like reading the technical drawings of a secret manga empire.</div>
+          <div class="swatches"><div class="sw" style="background:#011828"></div><div class="sw" style="background:#00CFFF"></div><div class="sw" style="background:#fff;border-color:rgba(255,255,255,.3)"></div><div class="sw" style="background:#FF9500"></div></div>
+          <div class="tags"><span class="tag">Technical</span><span class="tag">Architectural</span><span class="tag">Singular</span></div>
+          <a class="c-btn" href="sample10.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </div>
+
+    </div><!-- /cards-extended -->
+  </div><!-- /cards-wrap -->
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Designed by Abe · <a href="mailto:abe.benelmad@gmail.com" style="color:inherit;text-decoration:none">abe.benelmad@gmail.com</a></p>
+    <div class="owner-mini">
+      <div class="owner-avatar-ph" style="display:flex">A</div>
+      <div>
+        <div class="owner-mini-name">Abe Benelmadjat</div>
+        <div class="owner-mini-role">Web Designer</div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+/* ── TOGGLE ────────────────────────────────────── */
+function toggleMore(){
+  const el=document.getElementById('cardsExtended');
+  const btn=document.getElementById('showMoreBtn');
+  const label=document.getElementById('showMoreLabel');
+  const open=el.style.display==='grid';
+  el.style.display=open?'none':'grid';
+  btn.classList.toggle('open',!open);
+  label.textContent=open?'Show More · Less Ideal Options':'Show Less';
+  if(!open)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),60);
+}
+
+/* ── CUSTOM CURSOR ─────────────────────────────── */
+const cur = document.getElementById('cur');
+const curRing = document.getElementById('curRing');
+const curDot = document.getElementById('curDot');
+const curGlow = document.getElementById('curGlow');
+let mx = 0, my = 0, rx = 0, ry = 0, gx = 0, gy = 0;
+let isHovering = false;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  // Glow has more lag
+  gx += (mx - gx) * 0.08;
+  gy += (my - gy) * 0.08;
+  cur.style.transform = `translate(${mx}px,${my}px)`;
+  curGlow.style.transform = `translate(${gx}px,${gy}px)`;
+});
+
+// Ring lags behind cursor
+function animRing() {
+  rx += (mx - rx) * 0.18;
+  ry += (my - ry) * 0.18;
+  curRing.style.transform = `translate(${rx - mx}px,${ry - my}px)`;
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+// Cursor state on hover
+document.querySelectorAll('.card, .c-btn, a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    curDot.style.transform = 'scale(2.5)';
+    curRing.style.transform += ' scale(1.4)';
+  });
+  el.addEventListener('mouseleave', () => {
+    curDot.style.transform = '';
+  });
+});
+
+/* ── 3D TILT + SPOTLIGHT ───────────────────────── */
+document.querySelectorAll('.card').forEach(card => {
+  const MAX_TILT = 12;
+
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const cx = r.width / 2;
+    const cy = r.height / 2;
+    const rotX = ((y - cy) / cy) * -MAX_TILT;
+    const rotY = ((x - cx) / cx) * MAX_TILT;
+
+    card.style.transform =
+      `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(12px)`;
+
+    // Spotlight glow follows cursor
+    card.style.setProperty('--mx', x + 'px');
+    card.style.setProperty('--my', y + 'px');
+    card.style.setProperty('--glow', '1');
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform =
+      'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+    card.style.transition =
+      'transform 0.6s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease, border-color 0.4s ease';
+    card.style.setProperty('--glow', '0');
+    setTimeout(() => { card.style.transition = ''; }, 600);
+  });
+
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'box-shadow 0.4s ease, border-color 0.4s ease';
+  });
+
+  // Click navigates to sample
+  card.addEventListener('click', e => {
+    if (e.target.closest('.c-btn')) return;
+    const href = card.dataset.href;
+    if (href) {
+      // Smooth exit animation
+      card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      card.style.transform = 'scale(0.97)';
+      card.style.opacity = '0.7';
+      setTimeout(() => window.location.href = href, 260);
+    }
+  });
+});
+
+/* ── BACKGROUND ORB → FOLLOWS CURSOR SUBTLY ──── */
+const orb1 = document.querySelector('.orb-1');
+const orb3 = document.querySelector('.orb-3');
+let lastX = 0, lastY = 0;
+document.addEventListener('mousemove', e => {
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+  lastX = e.clientX; lastY = e.clientY;
+  const ox = parseFloat(orb3.style.transform?.match(/translate\(([^,]+)/)?.[1] || 0) + dx * 0.012;
+  const oy = parseFloat(orb3.style.transform?.match(/,([^)]+)/)?.[1] || 0) + dy * 0.012;
+  orb3.style.transform = `translate(${Math.max(-80, Math.min(80, ox))}px,${Math.max(-60, Math.min(60, oy))}px)`;
+});
+
+/* ── MAGNETIC BUTTON ───────────────────────────── */
+document.querySelectorAll('.c-btn').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    btn.style.transform = `translate(${dx * 0.18}px, ${dy * 0.18}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = '';
+    btn.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1), all 0.25s cubic-bezier(0.16,1,0.3,1)';
+    setTimeout(() => btn.style.transition = '', 500);
+  });
+});
+</script>
+</body>
+</html>

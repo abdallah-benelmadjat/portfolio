@@ -1,1 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abe — Design Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06060a;
+  --surface:#0e0e14;
+  --surface2:#14141e;
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.12);
+  --text:#e8e8f0;
+  --muted:#52526a;
+  --red:#cc1a1a;
+  --red2:#e63329;
+}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Space Grotesk',sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  overflow:hidden;
+}
 
+/* ── BACKGROUND GRID ─────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+  z-index:0;
+}
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(204,26,26,.06) 0%,transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── CARD ────────────────────────────────────────── */
+.gate{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:460px;
+  padding:0 24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0;
+}
+
+/* ── LOGO ────────────────────────────────────────── */
+.logo-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  margin-bottom:48px;
+}
+.logo-mark{
+  width:56px;height:56px;
+  background:var(--red);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',cursive;
+  font-size:26px;
+  color:#fff;
+  letter-spacing:1px;
+}
+.logo-name{
+  font-family:'Bebas Neue',cursive;
+  font-size:28px;
+  letter-spacing:6px;
+  color:var(--text);
+  line-height:1;
+}
+.logo-sub{
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  font-weight:500;
+}
+
+/* ── PANEL ───────────────────────────────────────── */
+.panel{
+  width:100%;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  padding:40px 36px;
+  position:relative;
+}
+.panel::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(to right,transparent,var(--red),transparent);
+}
+.panel-title{
+  font-family:'Bebas Neue',cursive;
+  font-size:22px;
+  letter-spacing:4px;
+  color:var(--text);
+  margin-bottom:6px;
+  text-align:center;
+}
+.panel-desc{
+  font-size:13px;
+  color:var(--muted);
+  text-align:center;
+  line-height:1.6;
+  margin-bottom:32px;
+  font-weight:400;
+}
+
+/* ── INPUT GROUP ─────────────────────────────────── */
+.input-group{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:16px;
+}
+.input-label{
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.code-input{
+  width:100%;
+  padding:14px 18px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  color:var(--text);
+  font-family:'Space Grotesk',sans-serif;
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+  text-align:center;
+}
+.code-input::placeholder{
+  color:var(--muted);
+  letter-spacing:3px;
+  font-weight:400;
+  font-size:13px;
+}
+.code-input:focus{
+  border-color:rgba(204,26,26,.5);
+  box-shadow:0 0 0 3px rgba(204,26,26,.08);
+}
+.code-input.error{
+  border-color:rgba(230,51,41,.6);
+  box-shadow:0 0 0 3px rgba(230,51,41,.1);
+  animation:shake .35s ease;
+}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+
+/* ── ERROR MSG ───────────────────────────────────── */
+.err-msg{
+  font-size:12px;
+  color:var(--red2);
+  font-weight:500;
+  min-height:16px;
+  letter-spacing:.3px;
+  display:none;
+}
+.err-msg.show{display:block}
+
+/* ── SUBMIT BUTTON ───────────────────────────────── */
+.btn-enter{
+  width:100%;
+  padding:14px;
+  background:var(--red);
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  font-family:'Bebas Neue',cursive;
+  font-size:18px;
+  letter-spacing:5px;
+  transition:background .2s,transform .1s;
+  margin-top:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.btn-enter:hover{background:var(--red2)}
+.btn-enter:active{transform:scale(.98)}
+.btn-enter svg{transition:transform .2s}
+.btn-enter:hover svg{transform:translateX(4px)}
+
+/* ── FOOTER ──────────────────────────────────────── */
+.gate-footer{
+  margin-top:28px;
+  font-size:11px;
+  color:var(--muted);
+  text-align:center;
+  letter-spacing:.5px;
+  line-height:1.8;
+}
+.gate-footer a{color:var(--muted);text-decoration:none}
+.gate-footer a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+
+<div class="gate">
+  <div class="logo-wrap">
+    <div class="logo-mark">A</div>
+    <div class="logo-name">ABE</div>
+    <div class="logo-sub">Design Preview</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">View Designs</div>
+    <p class="panel-desc">Enter the code you received to view your design proposals.</p>
+
+    <div class="input-group">
+      <div class="input-label">Access Code</div>
+      <input
+        class="code-input"
+        id="codeInput"
+        type="text"
+        placeholder="Enter code"
+        maxlength="16"
+        autocomplete="off"
+        spellcheck="false"
+        onkeydown="if(event.key==='Enter')checkCode()"
+        oninput="this.classList.remove('error');document.getElementById('errMsg').classList.remove('show')"
+      >
+    </div>
+
+    <div class="err-msg" id="errMsg">Incorrect code. Please check with your contact.</div>
+
+    <button class="btn-enter" onclick="checkCode()">
+      Enter
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+
+  <div class="gate-footer">
+    Need your code? <a href="mailto:abe.benelmad@gmail.com">abe.benelmad@gmail.com</a>
+  </div>
+</div>
+
+<script>
+function checkCode(){
+  const val=document.getElementById('codeInput').value.trim().toUpperCase();
+  if(val==='MM2016MAY'){
+    window.location.href='showcase.html';
+  }else{
+    const input=document.getElementById('codeInput');
+    input.classList.add('error');
+    document.getElementById('errMsg').classList.add('show');
+    input.select();
+  }
+}
+</script>
+</body>
+</html>
