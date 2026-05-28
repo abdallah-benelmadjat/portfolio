@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slingshot Daily — Shonen</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;700;900&family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F8F8F8;--bg2:#EFEFEF;--bg3:#E5E5E5;--red:#E30000;--red2:#FF1A1A;--dark:#111111;--panel:#1A1A1A;--gold:#F59E0B;--text:#111;--muted:#666;--border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.2)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;overflow-x:hidden}
+
+/* Halftone dot pattern on body */
+body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,rgba(0,0,0,.04) 1px,transparent 1px);background-size:10px 10px;pointer-events:none;z-index:0}
+
+/* HEADER - Bold Shonen Jump style */
+header{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 4px 0 #9A0000}
+.hd{max-width:1240px;margin:0 auto;padding:0 20px;display:flex;align-items:center;height:64px;gap:20px}
+.logo{display:flex;align-items:center;text-decoration:none;gap:10px}
+.logo img{height:48px;width:auto;filter:brightness(0) invert(1)}
+.logo-txt{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:2px;line-height:1;display:flex;flex-direction:column}
+.logo-txt span{font-size:9px;letter-spacing:4px;opacity:.7;font-weight:400;font-family:'Noto Sans JP',sans-serif}
+nav{display:flex;margin-left:auto;background:rgba(0,0,0,.15)}
+nav a{padding:0 20px;color:#fff;text-decoration:none;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:background .2s;height:64px;display:flex;align-items:center}
+nav a:hover,nav a.act{background:rgba(0,0,0,.25)}
+nav a.act{border-bottom:3px solid #fff}
+.hd-btns{display:flex;gap:6px;margin-left:10px}
+.btn-srch{background:rgba(0,0,0,.2);border:none;color:#fff;cursor:pointer;padding:8px 10px;transition:all .2s}
+.btn-srch:hover{background:rgba(0,0,0,.35)}
+.btn-login{background:#fff;color:var(--red);border:none;cursor:pointer;padding:9px 20px;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;transition:all .2s}
+.btn-login:hover{background:var(--dark);color:#fff}
+
+/* HERO with speed lines */
+.hero{position:relative;height:480px;overflow:hidden;border-bottom:4px solid var(--dark)}
+/* Speed lines background */
+.hero::before{content:'';position:absolute;inset:0;background:conic-gradient(from 0deg at 68% 50%,rgba(0,0,0,.06) 0deg,rgba(0,0,0,0) 1.5deg,rgba(0,0,0,0) 3.5deg,rgba(0,0,0,.06) 5deg,rgba(0,0,0,0) 6.5deg,rgba(0,0,0,0) 8.5deg,rgba(0,0,0,.04) 10deg,rgba(0,0,0,0) 11.5deg,rgba(0,0,0,0) 13.5deg,rgba(0,0,0,.06) 15deg,rgba(0,0,0,0) 16.5deg,rgba(0,0,0,0) 18.5deg,rgba(0,0,0,.05) 20deg,rgba(0,0,0,0) 22deg);pointer-events:none;z-index:1}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;transition:opacity .7s;pointer-events:none}
+.slide.on{opacity:1;pointer-events:auto}
+.hbg{position:absolute;inset:0}
+.s1 .hbg{background:linear-gradient(120deg,#FFF5F5 0%,#FFD5D5 40%,#FFEEEE 100%)}
+.s2 .hbg{background:linear-gradient(120deg,#F5F5FF 0%,#D5D5FF 40%,#EEEEFF 100%)}
+.s3 .hbg{background:linear-gradient(120deg,#F5FFF5 0%,#D5FFD5 40%,#EEFFEE 100%)}
+/* Screentone pattern on hero */
+.hbg::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(0,0,0,.08) 1px,transparent 1px);background-size:6px 6px}
+.hpanel{position:absolute;right:0;top:0;bottom:0;width:52%;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+.hpanel img{height:105%;width:auto;max-width:none;object-fit:contain;object-position:bottom center;filter:drop-shadow(-4px 0 20px rgba(0,0,0,.3))}
+/* Bold black left edge panel */
+.slide-bar{position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--dark)}
+.slide-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(248,248,248,.97) 0%,rgba(248,248,248,.85) 42%,rgba(248,248,248,.05) 100%);z-index:1}
+.slide-content{position:relative;z-index:3;max-width:1240px;margin:0 auto;padding:0 52px;width:100%}
+/* Chapter badge */
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-family:'Oswald',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px}
+.hero-tag::before{content:'▶';font-size:8px}
+.hero-title{font-family:'Oswald',sans-serif;font-size:90px;font-weight:700;line-height:.85;color:var(--dark);letter-spacing:-1px;margin-bottom:6px;text-transform:uppercase}
+/* Japanese subtitle */
+.hero-jp{font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:700;color:var(--red);letter-spacing:4px;margin-bottom:14px;opacity:.7}
+.hero-rule{width:48px;height:4px;background:var(--red);margin-bottom:14px}
+.hero-sub{font-size:14px;color:var(--muted);max-width:360px;line-height:1.75;margin-bottom:22px;font-family:'Noto Sans JP',sans-serif;font-weight:400}
+.hero-stats{display:inline-flex;border:2px solid var(--dark);margin-bottom:24px;background:#fff}
+.hs{padding:10px 18px;display:flex;flex-direction:column;gap:2px;border-right:2px solid var(--dark)}
+.hs:last-child{border-right:none}
+.hs-val{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:var(--red);line-height:1}
+.hs-lbl{font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;font-weight:700;font-family:'Noto Sans JP',sans-serif}
+.btn-read{display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#fff;padding:13px 32px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;letter-spacing:3px;text-decoration:none;text-transform:uppercase;transition:all .25s;border:2px solid var(--dark);box-shadow:4px 4px 0 var(--dark)}
+.btn-read:hover{background:var(--dark);transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red)}
+.hero-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5}
+.dot{width:8px;height:8px;background:var(--border2);cursor:pointer;transition:all .3s;border:none;padding:0;border-radius:50%}
+.dot.on{background:var(--red);transform:scale(1.4)}
+
+/* MAIN */
+.main-wrap{max-width:1240px;margin:0 auto;padding:32px 20px;display:grid;grid-template-columns:1fr 280px;gap:24px;position:relative;z-index:1}
+/* Section headers — magazine style */
+.sec-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;border-left:6px solid var(--red);padding-left:14px;padding-top:4px;padding-bottom:4px}
+.sec-hd h2{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--dark)}
+.sec-hd a{font-family:'Oswald',sans-serif;font-size:11px;color:var(--red);text-decoration:none;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:color .2s;border-bottom:1px solid var(--red)}
+.sec-hd a:hover{color:var(--dark);border-color:var(--dark)}
+
+/* CARDS - manga magazine thumbnail style */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:8px}
+.card{background:#fff;border:2px solid var(--dark);overflow:hidden;cursor:pointer;transition:all .25s;position:relative;box-shadow:3px 3px 0 var(--dark)}
+.card:hover{box-shadow:5px 5px 0 var(--red);border-color:var(--red);transform:translate(-2px,-2px)}
+.cover{aspect-ratio:3/4;position:relative;overflow:hidden}
+.cv1{background:linear-gradient(160deg,#5c2000,#c44000,#f7931e)}
+.cv2{background:linear-gradient(160deg,#0a1a3d,#1d5fa0,#0db4e8)}
+.cv3{background:linear-gradient(160deg,#1a1a1a,#444,#888)}
+.cv4{background:linear-gradient(160deg,#0f0722,#3b0764,#7c3aed)}
+.cv5{background:linear-gradient(160deg,#450a0a,#991b1b,#ef4444)}
+.cv6{background:linear-gradient(160deg,#042f2e,#065f46,#10b981)}
+.cv7{background:linear-gradient(160deg,#0c1445,#1d4ed8,#60a5fa)}
+.cv8{background:linear-gradient(160deg,#1c0030,#7c3aed,#c084fc)}
+.cv9{background:linear-gradient(160deg,#1c1917,#78350f,#f59e0b)}
+.cv10{background:linear-gradient(160deg,#0d1117,#be185d,#f9a8d4)}
+.cv-real{background:#1A0808}
+.cv-real img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.cover-glyph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:72px;font-weight:700;color:rgba(255,255,255,.15)}
+.cover-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.1) 50%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:8px}
+.cover-name{font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;color:#fff;text-transform:uppercase}
+/* Bold manga-style badges */
+.bdg{position:absolute;top:0;left:0;font-size:8px;font-weight:700;padding:4px 8px;letter-spacing:1px;text-transform:uppercase;font-family:'Oswald',sans-serif;line-height:1}
+.bdg-today{background:var(--red);color:#fff}
+.bdg-new{background:#059669;color:#fff}
+.bdg-hot{background:var(--gold);color:#000}
+.cinfo{padding:7px 10px;border-top:2px solid var(--dark);background:#fff}
+.ctitle{font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;text-transform:uppercase}
+.cmeta{display:flex;justify-content:space-between}
+.cch{font-size:10px;color:var(--red);font-weight:700;font-family:'Oswald',sans-serif}
+.cvw{font-size:10px;color:var(--muted);font-family:'Noto Sans JP',sans-serif}
+
+.ad-full{width:100%;height:72px;background:var(--bg2);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin:20px 0;font-family:'Oswald',sans-serif}
+
+/* SIDEBAR */
+.ad-box{background:var(--bg2);border:2px solid var(--border2);height:200px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;font-family:'Oswald',sans-serif}
+.rank-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:3px solid var(--dark);border-left:6px solid var(--red);padding-left:10px}
+.rank-ttl{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--dark)}
+.view-all{font-family:'Oswald',sans-serif;font-size:10px;color:var(--red);text-decoration:none;font-weight:600;letter-spacing:2px;text-transform:uppercase}
+.view-all:hover{color:var(--dark)}
+.rank-list{display:flex;flex-direction:column;gap:3px}
+.rank-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#fff;border:2px solid var(--border2);cursor:pointer;transition:all .2s;box-shadow:2px 2px 0 rgba(0,0,0,.08)}
+.rank-item:hover{border-color:var(--red);box-shadow:3px 3px 0 var(--red)}
+.rn{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;min-width:24px;text-align:center;line-height:1}
+.rn.g{color:var(--gold)}.rn.r{color:var(--red)}.rn.w{color:var(--muted)}
+.rthumb{width:36px;height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:rgba(0,0,0,.2);border:1px solid var(--border2)}
+.ri .rt{font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;letter-spacing:1px;text-transform:uppercase}
+.ri .rv{font-size:10px;color:var(--muted);margin-top:2px;font-family:'Noto Sans JP',sans-serif}
+
+/* FOOTER */
+footer{background:var(--dark);border-top:4px solid var(--red);margin-top:48px;position:relative;z-index:1}
+.ft-inner{max-width:1240px;margin:0 auto;padding:44px 20px 24px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.ft-logo{display:block;margin-bottom:12px}
+.ft-logo img{height:44px;width:auto;filter:brightness(0) invert(1)}
+.ft-logo-txt{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;letter-spacing:3px;color:#fff;display:block;margin-bottom:12px;text-decoration:none}
+.ft-brand p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7;max-width:240px;font-family:'Noto Sans JP',sans-serif}
+.socials{display:flex;gap:6px;margin-top:14px}
+.soc{width:32px;height:32px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);cursor:pointer;transition:all .2s;text-decoration:none;font-size:11px;font-weight:700;font-family:'Oswald',sans-serif}
+.soc:hover{background:var(--red);border-color:var(--red);color:#fff}
+.ft-col h4{font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;color:#fff;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--red);text-transform:uppercase}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ft-col ul a{color:rgba(255,255,255,.4);text-decoration:none;font-size:13px;transition:color .2s;font-family:'Noto Sans JP',sans-serif}
+.ft-col ul a:hover{color:#fff}
+.founder-strip{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.founder{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.founder img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--red)}
+.fn{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:1px;color:#fff;text-transform:uppercase}
+.fr{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px;font-family:'Noto Sans JP',sans-serif}
+.ft-bottom{border-top:1px solid rgba(255,255,255,.08);padding:14px 20px;display:flex;justify-content:space-between;max-width:1240px;margin:0 auto}
+.ft-bottom p{font-size:11px;color:rgba(255,255,255,.3);font-family:'Oswald',sans-serif;letter-spacing:2px;text-transform:uppercase}
+
+/* INTERACTIVE */
+.cart-cnt{position:absolute;top:-5px;right:-5px;background:#fff;color:var(--red);font-size:9px;font-weight:700;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;pointer-events:none;border:1px solid var(--red)}
+.cart-cnt.show{opacity:1}
+.bk{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center}
+.bk.on{display:flex}
+.mdl-box{background:#fff;border:3px solid var(--dark);padding:36px;position:relative;width:90%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:8px 8px 0 var(--dark)}
+.mdl-close{position:absolute;top:16px;right:16px;background:var(--bg2);border:2px solid var(--dark);color:var(--dark);cursor:pointer;width:30px;height:30px;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;font-weight:700}
+.mdl-close:hover{background:var(--red);border-color:var(--red);color:#fff}
+.mdl-title{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--dark);margin-bottom:24px;padding-bottom:14px;border-bottom:3px solid var(--red)}
+#searchOvl{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:600;display:none;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:100px}
+#searchOvl.on{display:flex}
+.search-bar{display:flex;width:90%;max-width:640px;border:3px solid #fff;overflow:hidden}
+.search-bar input{flex:1;padding:16px 20px;font-family:'Noto Sans JP',sans-serif;font-size:16px;border:none;background:rgba(255,255,255,.1);color:#fff;outline:none}
+.search-bar input::placeholder{color:rgba(255,255,255,.3)}
+.search-bar button{padding:0 24px;background:var(--red);color:#fff;border:none;cursor:pointer;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px}
+.s-results{width:90%;max-width:640px;margin-top:10px;display:flex;flex-direction:column;gap:4px}
+.s-hit{background:#fff;border:2px solid rgba(255,255,255,.2);padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s}
+.s-hit:hover{border-color:var(--red)}
+.sh-g{width:36px;height:48px;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:rgba(0,0,0,.2);flex-shrink:0;background:var(--bg2);border:1px solid var(--border)}
+.sh-info .sh-name{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dark)}
+.sh-meta{font-size:11px;color:var(--muted);margin-top:2px;font-family:'Noto Sans JP',sans-serif}
+.srch-close{position:fixed;top:22px;right:22px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);color:#fff;font-size:18px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;transition:all .2s;font-weight:700}
+.srch-close:hover{border-color:var(--red);background:var(--red)}
+.login-tabs{display:flex;margin-bottom:24px;border-bottom:3px solid var(--dark)}
+.ltab{flex:1;padding:10px;background:none;border:none;border-bottom:4px solid transparent;margin-bottom:-3px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);transition:all .2s}
+.ltab.on{color:var(--red);border-bottom-color:var(--red)}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.form-field label{font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+.form-field input{padding:11px 14px;border:2px solid var(--border2);background:#fff;color:var(--dark);font-family:'Noto Sans JP',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.form-field input:focus{border-color:var(--red)}
+.btn-submit{width:100%;padding:13px;background:var(--red);color:#fff;border:2px solid var(--dark);cursor:pointer;font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-top:10px;transition:all .2s;box-shadow:3px 3px 0 var(--dark)}
+.btn-submit:hover{background:var(--dark);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--red)}
+.manga-hd{display:flex;gap:18px;margin-bottom:20px}
+.manga-cv{width:96px;height:128px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:48px;font-weight:700;color:rgba(0,0,0,.15);border:2px solid var(--dark);overflow:hidden;box-shadow:3px 3px 0 var(--dark)}
+.manga-cv img{width:100%;height:100%;object-fit:cover}
+.manga-info-blk h3{font-family:'Oswald',sans-serif;font-size:24px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dark);margin-bottom:6px}
+.manga-meta{display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.manga-meta span{font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
+.manga-meta .mg{color:var(--muted)}.manga-meta .mr{color:var(--red)}
+.manga-desc{font-size:13px;line-height:1.8;color:var(--muted);font-family:'Noto Sans JP',sans-serif;margin-bottom:14px}
+.ch-list{display:flex;flex-direction:column;border:2px solid var(--border2);margin-top:12px}
+.ch-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .15s}
+.ch-row:last-child{border-bottom:none}
+.ch-row:hover{background:rgba(227,0,0,.05);border-left:3px solid var(--red)}
+.ch-num{font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--dark)}
+.ch-date{font-size:11px;color:var(--muted);font-family:'Noto Sans JP',sans-serif}
+.btn-read-start{display:block;width:100%;padding:13px;background:var(--red);color:#fff;border:2px solid var(--dark);cursor:pointer;font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-top:14px;transition:all .2s;text-align:center;box-shadow:3px 3px 0 var(--dark)}
+.btn-read-start:hover{background:var(--dark)}
+#readerMdl{position:fixed;inset:0;background:var(--bg);z-index:800;display:none;flex-direction:column}
+#readerMdl.on{display:flex}
+.r-bar{background:var(--dark);border-bottom:3px solid var(--red);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.r-title{font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;letter-spacing:3px;color:#fff;text-transform:uppercase}
+.r-close{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);color:#fff;cursor:pointer;width:34px;height:34px;font-size:16px;transition:all .2s;font-weight:700}
+.r-close:hover{border-color:var(--red);background:var(--red)}
+.r-pages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--bg2)}
+.manga-page{width:100%;max-width:680px;aspect-ratio:3/4;position:relative;overflow:hidden;border:3px solid var(--dark);background:#fff;box-shadow:5px 5px 0 var(--dark)}
+.manga-panel{position:absolute;display:flex;align-items:center;justify-content:center;border:2px solid var(--dark);font-family:'Oswald',sans-serif;font-size:48px;font-weight:700;color:rgba(0,0,0,.06);overflow:hidden}
+.r-nav{display:flex;align-items:center;justify-content:center;gap:14px;padding:12px;background:var(--dark);border-top:3px solid var(--red);flex-shrink:0}
+.r-btn{padding:8px 24px;background:transparent;border:2px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);cursor:pointer;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;transition:all .2s}
+.r-btn:hover:not(:disabled){border-color:var(--red);color:#fff;background:var(--red)}
+.r-btn:disabled{opacity:.25;cursor:default}
+.r-pg{font-family:'Oswald',sans-serif;font-size:14px;color:rgba(255,255,255,.5);letter-spacing:3px}
+#cartDr{position:fixed;top:0;right:0;bottom:0;width:380px;background:#fff;border-left:3px solid var(--dark);box-shadow:-10px 0 40px rgba(0,0,0,.2);z-index:700;transform:translateX(100%);transition:transform .35s;display:flex;flex-direction:column}
+#cartDr.open{transform:translateX(0)}
+.cd-hd{background:var(--dark);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:3px solid var(--red)}
+.cd-ttl{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#fff}
+.cd-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);cursor:pointer;width:30px;height:30px;font-size:14px;transition:all .2s;font-weight:700}
+.cd-close:hover{background:var(--red);border-color:var(--red);color:#fff}
+.cd-body{flex:1;overflow-y:auto;padding:18px}
+.cd-empty{text-align:center;padding:56px 20px;color:var(--muted);font-family:'Oswald',sans-serif;letter-spacing:3px;text-transform:uppercase;font-size:14px}
+.cart-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.ci-thumb{width:42px;height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:rgba(0,0,0,.15);border:2px solid var(--border2);overflow:hidden}
+.ci-thumb img{width:100%;height:100%;object-fit:cover}
+.ci-info{flex:1}
+.ci-name{font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dark)}
+.ci-price{font-size:14px;color:var(--red);font-family:'Oswald',sans-serif;font-weight:700;margin-top:3px}
+.ci-rm{background:none;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:10px;margin-top:6px;padding:3px 8px;font-family:'Oswald',sans-serif;transition:all .2s;letter-spacing:1px;text-transform:uppercase}
+.ci-rm:hover{border-color:var(--red);color:var(--red)}
+.cd-foot{padding:18px;border-top:3px solid var(--dark);flex-shrink:0}
+.cd-total{display:flex;justify-content:space-between;font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;color:var(--dark)}
+.btn-checkout{width:100%;padding:14px;background:var(--red);color:#fff;border:2px solid var(--dark);cursor:pointer;font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;letter-spacing:4px;text-transform:uppercase;transition:all .2s;box-shadow:3px 3px 0 var(--dark)}
+.btn-checkout:hover{background:var(--dark)}
+.co-steps{display:flex;border:2px solid var(--dark);margin-bottom:22px}
+.co-step{flex:1;padding:10px;text-align:center;font-family:'Oswald',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);border-right:2px solid var(--border2)}
+.co-step:last-child{border-right:none}
+.co-step.on{background:var(--red);color:#fff}
+.co-line{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--dark);font-family:'Noto Sans JP',sans-serif}
+.co-total-line{display:flex;justify-content:space-between;padding:12px 0;font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;border-top:3px solid var(--dark);margin-top:8px;color:var(--red)}
+.success-box{text-align:center;padding:20px 0}
+.success-icon{font-size:52px;color:var(--gold);margin-bottom:14px}
+.success-box h3{font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--dark);margin-bottom:8px}
+.success-box p{font-size:13px;color:var(--muted);font-family:'Noto Sans JP',sans-serif;margin-bottom:4px}
+.order-num{font-family:'Oswald',sans-serif;font-size:22px;color:var(--red);font-weight:700;letter-spacing:3px;margin:12px 0}
+.shop-section{background:var(--bg2);border-top:4px solid var(--dark);border-bottom:4px solid var(--dark);padding:40px 0;position:relative;z-index:1}
+.shop-inner{max-width:1240px;margin:0 auto;padding:0 20px}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:20px}
+.shop-card{background:#fff;border:2px solid var(--dark);overflow:hidden;transition:all .25s;box-shadow:3px 3px 0 var(--dark)}
+.shop-card:hover{box-shadow:5px 5px 0 var(--red);border-color:var(--red);transform:translate(-2px,-2px)}
+.shop-img{height:140px;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:56px;font-weight:700;color:rgba(0,0,0,.15);border-bottom:2px solid var(--dark)}
+.shop-info{padding:12px}
+.shop-name{font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dark);margin-bottom:6px}
+.shop-price{font-family:'Oswald',sans-serif;font-size:22px;color:var(--red);font-weight:700;margin-bottom:10px}
+.btn-add{width:100%;padding:9px;background:transparent;color:var(--dark);border:2px solid var(--dark);cursor:pointer;font-family:'Oswald',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;transition:all .2s}
+.btn-add:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-add.added{background:var(--gold);color:#000;border-color:var(--gold)}
+#toast{position:fixed;bottom:28px;right:28px;background:var(--dark);color:#fff;padding:14px 20px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:2px solid var(--red);z-index:1000;transform:translateY(80px);opacity:0;transition:all .35s;pointer-events:none;max-width:320px;box-shadow:4px 4px 0 var(--red)}
+#toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<header>
+<div class="hd">
+  <a href="#" class="logo">
+    <img src="logoslingshotdailynottransparent.png" alt="Slingshot Daily" onerror="this.style.display='none'">
+    <div class="logo-txt">SLINGSHOT DAILY<span>Original Manga &amp; Novels</span></div>
+  </a>
+  <nav>
+    <a href="#" class="act" onclick="return false">News</a>
+    <a href="#" onclick="scrollToGrid();return false">Manga</a>
+    <a href="#" onclick="scrollToGrid();return false">Novels</a>
+    <a href="#" onclick="scrollToRankings();return false">Rankings</a>
+    <a href="#shop" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'});return false">Shop</a>
+  </nav>
+  <div class="hd-btns">
+    <button class="btn-srch" onclick="openSearch()" title="Search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button class="btn-srch" onclick="openCart()" title="Cart" style="position:relative"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.96-1.62L23 6H6"/></svg><span class="cart-cnt" id="cartCnt">0</span></button>
+    <button class="btn-login" id="loginBtn" onclick="openMdl('loginMdl')">Sign In</button>
+  </div>
+</div>
+</header>
+
+<div class="hero">
+  <div class="slide s1 on">
+    <div class="hbg"></div>
+    <div class="hpanel"><img src="Zezemaru.png" alt="Zezemaru" onerror="this.style.display='none'"></div>
+    <div class="slide-bar"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <div class="hero-tag">Featured Series</div>
+      <h1 class="hero-title">Zezemaru!</h1>
+      <div class="hero-jp">ゼゼマル — 週刊連載中</div>
+      <div class="hero-rule"></div>
+      <p class="hero-sub">Strike gold with Zezemaru as he becomes the world's greatest stone-slinger!</p>
+      <div class="hero-stats"><div class="hs"><div class="hs-val">#44</div><div class="hs-lbl">Chapter</div></div><div class="hs"><div class="hs-val">618K</div><div class="hs-lbl">Views</div></div><div class="hs"><div class="hs-val">Action</div><div class="hs-lbl">Genre</div></div></div>
+      <br><a href="#" class="btn-read">Read Now →</a>
+    </div>
+  </div>
+  <div class="slide s2">
+    <div class="hbg"></div>
+    <div class="hpanel"><img src="xecutioner.png" alt="Xecutioner" onerror="this.style.display='none'"></div>
+    <div class="slide-bar"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <div class="hero-tag">Latest Update</div>
+      <h1 class="hero-title">Xecutioner</h1>
+      <div class="hero-jp">エグゼキューショナー — 最新話</div>
+      <div class="hero-rule"></div>
+      <p class="hero-sub">A contract killer caught between justice and vengeance as the city burns.</p>
+      <div class="hero-stats"><div class="hs"><div class="hs-val">#44</div><div class="hs-lbl">Chapter</div></div><div class="hs"><div class="hs-val">720K</div><div class="hs-lbl">Views</div></div><div class="hs"><div class="hs-val">Thriller</div><div class="hs-lbl">Genre</div></div></div>
+      <br><a href="#" class="btn-read">Read Now →</a>
+    </div>
+  </div>
+  <div class="slide s3">
+    <div class="hbg"></div>
+    <div class="hpanel"><div style="font-family:'Oswald',sans-serif;font-size:180px;font-weight:700;color:rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;height:100%;width:100%">I</div></div>
+    <div class="slide-bar"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <div class="hero-tag">New Chapter</div>
+      <h1 class="hero-title">Iron Fang</h1>
+      <div class="hero-jp">アイアンファング — 新連載</div>
+      <div class="hero-rule"></div>
+      <p class="hero-sub">In the ruins of the old world, one warrior carries the last iron blade.</p>
+      <div class="hero-stats"><div class="hs"><div class="hs-val">#18</div><div class="hs-lbl">Chapter</div></div><div class="hs"><div class="hs-val">341K</div><div class="hs-lbl">Views</div></div><div class="hs"><div class="hs-val">Fantasy</div><div class="hs-lbl">Genre</div></div></div>
+      <br><a href="#" class="btn-read">Read Now →</a>
+    </div>
+  </div>
+  <div class="hero-dots"><button class="dot on" data-i="0"></button><button class="dot" data-i="1"></button><button class="dot" data-i="2"></button></div>
+</div>
+
+<div class="main-wrap">
+  <div>
+    <div class="sec-hd"><h2>Latest Updates</h2><a href="#">View All →</a></div>
+    <div class="grid">
+      <div class="card"><div class="cover cv-real"><img src="Zezemaru.png" alt="Zezemaru" onerror="this.parentElement.className='cover cv1'"><span class="bdg bdg-today">Today</span><div class="cover-over"><div class="cover-name">Zezemaru!</div></div></div><div class="cinfo"><div class="ctitle">Zezemaru!</div><div class="cmeta"><span class="cch">#44</span><span class="cvw">618.2K</span></div></div></div>
+      <div class="card"><div class="cover cv-real"><img src="xecutioner.png" alt="Xecutioner" onerror="this.parentElement.className='cover cv2'"><span class="bdg bdg-today">Today</span><div class="cover-over"><div class="cover-name">Xecutioner</div></div></div><div class="cinfo"><div class="ctitle">Xecutioner</div><div class="cmeta"><span class="cch">#44</span><span class="cvw">720.7K</span></div></div></div>
+      <div class="card"><div class="cover cv3"><div class="cover-glyph">I</div><span class="bdg bdg-hot">Hot</span><div class="cover-over"><div class="cover-name">Iron Fang</div></div></div><div class="cinfo"><div class="ctitle">Iron Fang</div><div class="cmeta"><span class="cch">#18</span><span class="cvw">341.5K</span></div></div></div>
+      <div class="card"><div class="cover cv4"><div class="cover-glyph">S</div><div class="cover-over"><div class="cover-name">Shadow Walker</div></div></div><div class="cinfo"><div class="ctitle">Shadow Walker</div><div class="cmeta"><span class="cch">#29</span><span class="cvw">287.1K</span></div></div></div>
+      <div class="card"><div class="cover cv5"><div class="cover-glyph">C</div><div class="cover-over"><div class="cover-name">Crimson Tide</div></div></div><div class="cinfo"><div class="ctitle">Crimson Tide</div><div class="cmeta"><span class="cch">#11</span><span class="cvw">198.4K</span></div></div></div>
+      <div class="card"><div class="cover cv6"><div class="cover-glyph">N</div><span class="bdg bdg-new">New</span><div class="cover-over"><div class="cover-name">Nexus Breaker</div></div></div><div class="cinfo"><div class="ctitle">Nexus Breaker</div><div class="cmeta"><span class="cch">#07</span><span class="cvw">142.9K</span></div></div></div>
+      <div class="card"><div class="cover cv7"><div class="cover-glyph">P</div><div class="cover-over"><div class="cover-name">Phantom Code</div></div></div><div class="cinfo"><div class="ctitle">Phantom Code</div><div class="cmeta"><span class="cch">#33</span><span class="cvw">219.8K</span></div></div></div>
+      <div class="card"><div class="cover cv8"><div class="cover-glyph">V</div><span class="bdg bdg-today">Today</span><div class="cover-over"><div class="cover-name">Void Striker</div></div></div><div class="cinfo"><div class="ctitle">Void Striker</div><div class="cmeta"><span class="cch">#22</span><span class="cvw">304.6K</span></div></div></div>
+    </div>
+    <div class="ad-full">// Advertisement //</div>
+    <div class="sec-hd"><h2>Slingshot! Rookies</h2><a href="#">Discover All →</a></div>
+    <div class="grid">
+      <div class="card"><div class="cover cv9"><div class="cover-glyph">B</div><span class="bdg bdg-new">New</span><div class="cover-over"><div class="cover-name">Blade Echo</div></div></div><div class="cinfo"><div class="ctitle">Blade Echo</div><div class="cmeta"><span class="cch">#01</span><span class="cvw">41.2K</span></div></div></div>
+      <div class="card"><div class="cover cv10"><div class="cover-glyph">N</div><span class="bdg bdg-new">New</span><div class="cover-over"><div class="cover-name">Neon Hunter</div></div></div><div class="cinfo"><div class="ctitle">Neon Hunter</div><div class="cmeta"><span class="cch">#03</span><span class="cvw">58.7K</span></div></div></div>
+      <div class="card"><div class="cover" style="background:linear-gradient(160deg,#042f2e,#0f766e,#14b8a6)"><div class="cover-glyph">C</div><span class="bdg bdg-new">New</span><div class="cover-over"><div class="cover-name">Circuit Breaker</div></div></div><div class="cinfo"><div class="ctitle">Circuit Breaker</div><div class="cmeta"><span class="cch">#02</span><span class="cvw">33.4K</span></div></div></div>
+      <div class="card"><div class="cover" style="background:linear-gradient(160deg,#111827,#374151,#9ca3af)"><div class="cover-glyph">G</div><span class="bdg bdg-new">New</span><div class="cover-over"><div class="cover-name">Ghost Protocol</div></div></div><div class="cinfo"><div class="ctitle">Ghost Protocol</div><div class="cmeta"><span class="cch">#01</span><span class="cvw">27.1K</span></div></div></div>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="ad-box">Advertisement</div>
+    <div class="rank-hd"><span class="rank-ttl">Rankings</span><a href="#" class="view-all">View All →</a></div>
+    <div class="rank-list">
+      <div class="rank-item"><span class="rn g">01</span><div class="rthumb cv1">Z</div><div class="ri"><div class="rt">Zezemaru!</div><div class="rv">1.2M views</div></div></div>
+      <div class="rank-item"><span class="rn g">02</span><div class="rthumb cv2">X</div><div class="ri"><div class="rt">Xecutioner</div><div class="rv">987K views</div></div></div>
+      <div class="rank-item"><span class="rn r">03</span><div class="rthumb cv3">I</div><div class="ri"><div class="rt">Iron Fang</div><div class="rv">754K views</div></div></div>
+      <div class="rank-item"><span class="rn w">04</span><div class="rthumb cv8">V</div><div class="ri"><div class="rt">Void Striker</div><div class="rv">621K views</div></div></div>
+      <div class="rank-item"><span class="rn w">05</span><div class="rthumb cv7">P</div><div class="ri"><div class="rt">Phantom Code</div><div class="rv">498K views</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="shop" class="shop-section">
+  <div class="shop-inner">
+    <div class="sec-hd"><h2>Slingshot Store</h2><a href="#">View All →</a></div>
+    <div class="shop-grid">
+      <div class="shop-card"><div class="shop-img cv1">Z</div><div class="shop-info"><div class="shop-name">Zezemaru Vol. 1</div><div class="shop-price">$12.99</div><button class="btn-add" onclick="atc(this,'Zezemaru Vol. 1',12.99,'Z','cv1')">+ Add to Cart</button></div></div>
+      <div class="shop-card"><div class="shop-img cv1">Z</div><div class="shop-info"><div class="shop-name">Zezemaru Vol. 2</div><div class="shop-price">$13.99</div><button class="btn-add" onclick="atc(this,'Zezemaru Vol. 2',13.99,'Z','cv1')">+ Add to Cart</button></div></div>
+      <div class="shop-card"><div class="shop-img cv2">X</div><div class="shop-info"><div class="shop-name">Xecutioner Vol. 1</div><div class="shop-price">$12.99</div><button class="btn-add" onclick="atc(this,'Xecutioner Vol. 1',12.99,'X','cv2')">+ Add to Cart</button></div></div>
+      <div class="shop-card"><div class="shop-img" style="background:var(--bg3)">SD</div><div class="shop-info"><div class="shop-name">SD Hoodie</div><div class="shop-price">$39.99</div><button class="btn-add" onclick="atc(this,'SD Hoodie',39.99,'SD','cv7')">+ Add to Cart</button></div></div>
+      <div class="shop-card"><div class="shop-img cv1">★</div><div class="shop-info"><div class="shop-name">Zezemaru Panel Print</div><div class="shop-price">$19.99</div><button class="btn-add" onclick="atc(this,'Zezemaru Panel Print',19.99,'★','cv1')">+ Add to Cart</button></div></div>
+      <div class="shop-card"><div class="shop-img" style="background:var(--red)">SD</div><div class="shop-info"><div class="shop-name">Slingshot Daily Cap</div><div class="shop-price">$24.99</div><button class="btn-add" onclick="atc(this,'Slingshot Daily Cap',24.99,'SD','cv2')">+ Add to Cart</button></div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <a href="#" class="ft-logo"><img src="logoslingshotdailynottransparent.png" alt="Slingshot Daily" onerror="this.style.display='none'"></a>
+      <a href="#" class="ft-logo-txt" style="display:none">SLINGSHOT DAILY</a>
+      <p>Your destination for original manga and graphic novels from the world's best indie creators.</p>
+      <div class="socials"><a href="#" class="soc">𝕏</a><a href="#" class="soc">IG</a><a href="#" class="soc">FB</a><a href="#" class="soc">YT</a></div>
+    </div>
+    <div class="ft-col"><h4>Explore</h4><ul><li><a href="#">News</a></li><li><a href="#">Manga</a></li><li><a href="#">Novels</a></li><li><a href="#">Rankings</a></li></ul></div>
+    <div class="ft-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Creators</a></li><li><a href="#">Careers</a></li><li><a href="#">Advertise</a></li></ul></div>
+    <div class="ft-col"><h4>Support</h4><ul><li><a href="#">Help</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+  </div>
+  <div class="founder-strip"><div class="founder"><img src="info about the owner.png" alt="Michael Madlock" onerror="this.style.cssText='width:50px;height:50px;border-radius:50%;background:#333;border:2px solid #E30000';this.removeAttribute('src')"><div><div class="fn">Michael Madlock</div><div class="fr">Founder · Developmental Editor · Creator of ZEZEMARU · michael@slingshotdaily.com</div></div></div></div>
+  <div class="ft-bottom"><p>© 2025 Slingshot Daily</p><p>All Rights Reserved</p></div>
+</footer>
+
+<div id="searchOvl"><div class="search-bar"><input type="text" id="srchInp" placeholder="タイトル、著者を検索..." oninput="doSearch(this.value)" onkeydown="if(event.key==='Escape')closeSearch()"><button onclick="closeSearch()">CLOSE</button></div><div class="s-results" id="srchRes"></div><button class="srch-close" onclick="closeSearch()">✕</button></div>
+<div class="bk" id="loginMdl"><div class="mdl-box"><button class="mdl-close" onclick="closeMdl('loginMdl')">✕</button><div class="mdl-title">Sign In</div><div class="login-tabs"><button class="ltab on" onclick="switchTab(this,'tabLogin')">Sign In</button><button class="ltab" onclick="switchTab(this,'tabSignup')">Create Account</button></div><div id="tabLogin"><div class="form-field"><label>Email</label><input type="email" placeholder="your@email.com"></div><div class="form-field"><label>Password</label><input type="password" placeholder="••••••••"></div><button class="btn-submit" onclick="doLogin()">Sign In →</button></div><div id="tabSignup" style="display:none"><div class="form-field"><label>Display Name</label><input type="text" placeholder="MangaFan2025"></div><div class="form-field"><label>Email</label><input type="email" placeholder="your@email.com"></div><div class="form-field"><label>Password</label><input type="password" placeholder="Create password"></div><button class="btn-submit" onclick="doLogin()">Create Account →</button></div></div></div>
+<div class="bk" id="mangaMdl"><div class="mdl-box" style="max-width:600px"><button class="mdl-close" onclick="closeMdl('mangaMdl')">✕</button><div id="mangaMdlBody"></div></div></div>
+<div id="readerMdl"><div class="r-bar"><div class="r-title" id="rTitle">—</div><button class="r-close" onclick="closeReader()">✕</button></div><div class="r-pages" id="rPages"></div><div class="r-nav"><button class="r-btn" id="rPrev" onclick="rGo(-1)">← PREV</button><span class="r-pg" id="rPg"></span><button class="r-btn" id="rNext" onclick="rGo(1)">NEXT →</button></div></div>
+<div id="cartDr"><div class="cd-hd"><div class="cd-ttl">Cart</div><button class="cd-close" onclick="closeCart()">✕</button></div><div class="cd-body" id="cdBody"></div><div class="cd-foot" id="cdFoot" style="display:none"><div class="cd-total"><span>TOTAL</span><span id="cdTotal">$0.00</span></div><button class="btn-checkout" onclick="closeCart();openCheckout()">Checkout →</button></div></div>
+<div class="bk" id="checkoutMdl"><div class="mdl-box" style="max-width:520px"><button class="mdl-close" onclick="closeMdl('checkoutMdl')">✕</button><div class="mdl-title">Checkout</div><div class="co-steps" id="coSteps"></div><div id="coBody"></div></div></div>
+<div id="toast"></div>
+
+<script>
+const MANGA={'Zezemaru!':{g:'Z',cl:'cv-real',imgSrc:'Zezemaru.png',genre:'Action · Adventure',views:'1.2M',ch:44,desc:'Strike gold with Zezemaru as he becomes the world\'s greatest stone-slinger.'},'Xecutioner':{g:'X',cl:'cv-real',imgSrc:'xecutioner.png',genre:'Thriller · Crime',views:'987K',ch:44,desc:'A contract killer caught between justice and vengeance as the city burns.'},'Iron Fang':{g:'I',cl:'cv3',genre:'Fantasy · Action',views:'754K',ch:18,desc:'In the ruins of the old world, one warrior carries the last iron blade.'},'Shadow Walker':{g:'S',cl:'cv4',genre:'Stealth · Mystery',views:'621K',ch:29,desc:'Unseen, unheard, unstoppable.'},'Crimson Tide':{g:'C',cl:'cv5',genre:'Horror · Thriller',views:'498K',ch:11,desc:'When the tide turns crimson, no one is safe.'},'Nexus Breaker':{g:'N',cl:'cv6',genre:'Sci-Fi · Action',views:'312K',ch:7,desc:'The Nexus is the source of all power.'},'Phantom Code':{g:'P',cl:'cv7',genre:'Cyberpunk · Drama',views:'287K',ch:33,desc:'Every line of code has a ghost.'},'Void Striker':{g:'V',cl:'cv8',genre:'Action · Supernatural',views:'219K',ch:22,desc:'Between the living and the void stands one warrior.'},'Blade Echo':{g:'B',cl:'cv9',genre:'Action',views:'41.2K',ch:1,desc:'A new blade is forged.'},'Neon Hunter':{g:'N',cl:'cv10',genre:'Cyberpunk',views:'58.7K',ch:3,desc:'One hunter through digital shadows.'},'Circuit Breaker':{g:'C',cl:'cv6',genre:'Sci-Fi',views:'33.4K',ch:2,desc:'The circuit breaks.'},'Ghost Protocol':{g:'G',cl:'cv3',genre:'Spy · Action',views:'27.1K',ch:1,desc:'Protocol activated.'}};
+const CH_NAMES=['The Beginning','Dark Waters','Storm Rising','Edge of Night','Iron Will','Blood & Sand','Shadow Falls','The Long Road','Reckoning','Broken Chains','Last Stand','New Dawn','The Fallen','Rising Tide','Ember Days','Cold Steel','The Hunt','Crossroads','Veil of Smoke','Final Hour'];
+const LAYOUTS=[[{t:'0%',l:'0%',w:'50%',h:'46%'},{t:'0%',l:'51%',w:'49%',h:'46%'},{t:'47%',l:'0%',w:'100%',h:'53%'}],[{t:'0%',l:'0%',w:'100%',h:'54%'},{t:'55%',l:'0%',w:'49%',h:'45%'},{t:'55%',l:'51%',w:'49%',h:'45%'}],[{t:'0%',l:'0%',w:'32%',h:'100%'},{t:'0%',l:'34%',w:'32%',h:'100%'},{t:'0%',l:'68%',w:'32%',h:'100%'}],[{t:'0%',l:'0%',w:'55%',h:'100%'},{t:'0%',l:'56%',w:'44%',h:'48%'},{t:'52%',l:'56%',w:'44%',h:'48%'}]];
+let cart=[];
+function atc(btn,name,price,g,cl){cart.push({name,price,g,cl,id:Date.now()+Math.random()});renderCart();showToast('"'+name+'" ADDED');btn.textContent='✓ Added';btn.classList.add('added');setTimeout(()=>{btn.textContent='+ Add to Cart';btn.classList.remove('added')},1800)}
+function renderCart(){const body=document.getElementById('cdBody'),foot=document.getElementById('cdFoot'),cnt=document.getElementById('cartCnt');cnt.textContent=cart.length;cnt.classList.toggle('show',cart.length>0);if(!cart.length){body.innerHTML='<div class="cd-empty">// Cart Empty //</div>';foot.style.display='none';return}body.innerHTML=cart.map(i=>`<div class="cart-item"><div class="ci-thumb ${i.cl}">${i.g}</div><div class="ci-info"><div class="ci-name">${i.name}</div><div class="ci-price">$${i.price.toFixed(2)}</div><button class="ci-rm" onclick="removeItem(${i.id})">Remove</button></div></div>`).join('');document.getElementById('cdTotal').textContent='$'+cart.reduce((s,i)=>s+i.price,0).toFixed(2);foot.style.display='block'}
+function removeItem(id){cart=cart.filter(i=>i.id!==id);renderCart()}
+function openCart(){document.getElementById('cartDr').classList.add('open')}
+function closeCart(){document.getElementById('cartDr').classList.remove('open')}
+function openMdl(id){document.getElementById(id).classList.add('on')}
+function closeMdl(id){document.getElementById(id).classList.remove('on')}
+document.querySelectorAll('.bk').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)b.classList.remove('on')}));
+function openSearch(){document.getElementById('searchOvl').classList.add('on');document.getElementById('srchInp').focus()}
+function closeSearch(){document.getElementById('searchOvl').classList.remove('on');document.getElementById('srchInp').value='';document.getElementById('srchRes').innerHTML=''}
+function doSearch(q){const res=document.getElementById('srchRes');if(!q.trim()){res.innerHTML='';return}const hits=Object.entries(MANGA).filter(([k])=>k.toLowerCase().includes(q.toLowerCase()));if(!hits.length){res.innerHTML='<div class="s-hit" style="opacity:.4;cursor:default">No results</div>';return}res.innerHTML=hits.map(([k,v])=>`<div class="s-hit" onclick="closeSearch();openManga('${k}')"><div class="sh-g ${v.cl}">${v.g}</div><div class="sh-info"><div class="sh-name">${k}</div><div class="sh-meta">${v.genre} · ${v.ch} Chapters</div></div></div>`).join('')}
+function switchTab(btn,id){document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');['tabLogin','tabSignup'].forEach(t=>document.getElementById(t).style.display='none');document.getElementById(id).style.display='block'}
+function doLogin(){closeMdl('loginMdl');document.getElementById('loginBtn').textContent='My Account';showToast('SIGNED IN')}
+function openManga(title){const m=MANGA[title];if(!m)return;const chs=Array.from({length:Math.min(m.ch,10)},(_,i)=>`<div class="ch-row" onclick="openReader('${title}',${m.ch-i})"><span class="ch-num">CH.${String(m.ch-i).padStart(3,'0')} — ${CH_NAMES[(m.ch-i-1)%CH_NAMES.length]}</span><span class="ch-date">${i===0?'Today':i===1?'Yesterday':i+' days ago'}</span></div>`).join('');const cvHtml=m.imgSrc?`<img src="${m.imgSrc}" alt="${title}" style="width:100%;height:100%;object-fit:cover">`:'';document.getElementById('mangaMdlBody').innerHTML=`<div class="manga-hd"><div class="manga-cv ${m.cl}">${cvHtml||m.g}</div><div class="manga-info-blk"><h3>${title}</h3><div class="manga-meta"><span class="mg">${m.genre}</span><span class="mr">${m.views} views</span><span class="mg">${m.ch} Chapters</span></div><div class="manga-desc">${m.desc}</div><button class="btn-read-start" onclick="closeMdl('mangaMdl');openReader('${title}',1)">▶ Read from Ch.001</button></div></div><div style="font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid var(--border2)">Chapter List</div><div class="ch-list">${chs}</div>`;openMdl('mangaMdl')}
+let rState={title:'',total:18,cur:1};
+function buildMangaPage(n,g){const layout=LAYOUTS[n%LAYOUTS.length];const colors=['#F5F5F5','#F0F0F0','#ECECEC','#F8F8F8','#EEEEEE'];return layout.map((p,i)=>`<div class="manga-panel" style="top:${p.t};left:${p.l};width:${p.w};height:${p.h};background:${colors[(n+i)%colors.length]}">${i===0?g:''}</div>`).join('')}
+function openReader(title,startCh){rState={title,total:18,cur:1};document.getElementById('rTitle').textContent=title+' · CH.'+String(startCh).padStart(3,'0');renderReaderPage();document.getElementById('readerMdl').classList.add('on')}
+function closeReader(){document.getElementById('readerMdl').classList.remove('on')}
+function renderReaderPage(){const m=MANGA[rState.title]||{g:'?'};document.getElementById('rPages').innerHTML=`<div class="manga-page">${buildMangaPage(rState.cur,m.g)}</div>`;document.getElementById('rPages').scrollTop=0;document.getElementById('rPg').textContent=String(rState.cur).padStart(2,'0')+' / '+String(rState.total).padStart(2,'0');document.getElementById('rPrev').disabled=rState.cur<=1;document.getElementById('rNext').disabled=rState.cur>=rState.total}
+function rGo(d){rState.cur=Math.max(1,Math.min(rState.total,rState.cur+d));renderReaderPage()}
+function openCheckout(){renderCo(0);openMdl('checkoutMdl')}
+function renderCo(step){const steps=['Details','Review','Done'];document.getElementById('coSteps').innerHTML=steps.map((s,i)=>`<div class="co-step ${i===step?'on':''}">${s}</div>`).join('');const body=document.getElementById('coBody');if(step===0){body.innerHTML=`<div class="form-field"><label>Full Name</label><input type="text" placeholder="Michael Madlock"></div><div class="form-field"><label>Email</label><input type="email" placeholder="your@email.com"></div><div class="form-field"><label>Address</label><input type="text" placeholder="123 Main St"></div><div class="form-field"><label>City &amp; ZIP</label><input type="text" placeholder="New York, NY 10001"></div><button class="btn-submit" onclick="renderCo(1)">Continue →</button>`}else if(step===1){const total=cart.reduce((s,i)=>s+i.price,0);body.innerHTML=cart.map(i=>`<div class="co-line"><span>${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`).join('')+`<div class="co-line"><span>Shipping</span><span>Free</span></div><div class="co-total-line"><span>TOTAL</span><span>$${total.toFixed(2)}</span></div><button class="btn-submit" style="margin-top:16px" onclick="renderCo(2)">Place Order →</button>`}else{const ord='SD-'+Math.floor(10000+Math.random()*90000);cart=[];renderCart();body.innerHTML=`<div class="success-box"><div class="success-icon">🔥</div><h3>Order Confirmed!</h3><p>Your order has been placed.</p><div class="order-num">${ord}</div><p style="font-size:11px;color:var(--muted)">Confirmation sent to your email.</p><button class="btn-submit" style="margin-top:16px" onclick="closeMdl('checkoutMdl')">Continue Reading</button></div>`}}
+let cur=0;const slides=document.querySelectorAll('.slide'),dots=document.querySelectorAll('.dot');
+function go(n){slides[cur].classList.remove('on');dots[cur].classList.remove('on');cur=(n+slides.length)%slides.length;slides[cur].classList.add('on');dots[cur].classList.add('on')}
+dots.forEach(d=>d.addEventListener('click',()=>go(+d.dataset.i)));
+setInterval(()=>go(cur+1),5000);
+const heroTitles=['Zezemaru!','Xecutioner','Iron Fang'];
+document.querySelectorAll('.btn-read').forEach((btn,i)=>{btn.addEventListener('click',e=>{e.preventDefault();openManga(heroTitles[i]||heroTitles[0])})});
+document.querySelectorAll('.card').forEach(card=>{card.addEventListener('click',e=>{if(e.target.closest('.btn-add'))return;const title=card.querySelector('.ctitle')?.textContent?.trim();if(title&&MANGA[title])openManga(title)})});
+document.querySelectorAll('.rank-item').forEach(item=>{item.addEventListener('click',()=>{const title=item.querySelector('.rt')?.textContent?.trim();if(title&&MANGA[title])openManga(title)})});
+function scrollToGrid(){document.querySelector('.grid')?.scrollIntoView({behavior:'smooth'})}
+function scrollToRankings(){document.querySelector('.rank-list')?.scrollIntoView({behavior:'smooth'})}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),2800)}
+renderCart();
+</script>
+</body>
+</html>

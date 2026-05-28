@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slingshot Daily</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Bungee&family=Barlow+Semi+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#c1201d;
+  --red-deep:#9c1715;
+  --paint-red:#7d1c1a;
+  --bg:#2c1c1c;
+  --bg-2:#241616;
+  --frame:#3a2120;
+  --frame-line:#5a2a28;
+  --card:#9c918f;
+  --card-dark:#8a807e;
+  --ad:#4f3b3a;
+  --panel:#412727;
+  --ink:#0d0707;
+  --txt:#f3eceb;
+  --txt-dim:#b9a9a8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:'Barlow Semi Condensed',sans-serif;
+  overflow-x:hidden;
+  background-image:radial-gradient(ellipse at 50% 0%,rgba(80,40,38,.35),transparent 60%);
+}
+.blocky{font-family:'Bungee',cursive;letter-spacing:.5px}
+.comic{font-family:'Bangers',cursive;letter-spacing:1px}
+.rough{filter:url(#rough)}
+.rough-soft{filter:url(#roughSoft)}
+
+/* ======================= HEADER ======================= */
+header{
+  position:sticky;top:0;z-index:200;
+  background:var(--red);
+  padding:14px 34px 22px;
+  display:flex;align-items:center;gap:26px;
+  position:relative;
+}
+header::after{
+  content:"";position:absolute;left:0;right:0;bottom:-14px;height:26px;
+  background:var(--red);
+  filter:url(#rough);
+}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none}
+.logo svg{width:40px;height:46px}
+.logo .name{line-height:.82;color:#fff}
+.logo .name b{font-family:'Bungee',cursive;font-size:22px;display:block;letter-spacing:0}
+.logo .name .sub{font-family:'Bungee',cursive;font-size:9px;letter-spacing:6px;opacity:.9;padding-left:2px}
+.logo-img-wrap{display:flex;align-items:center}
+.logo-img-wrap img{height:44px;width:auto;display:block;filter:brightness(0) invert(1)}
+
+.search{
+  flex:1;max-width:640px;display:flex;align-items:center;gap:10px;
+  background:#a81a18;border:1px solid #d65b59;border-radius:3px;
+  padding:11px 16px;color:#f4c9c8;
+}
+.search input{
+  background:none;border:none;outline:none;color:#fff;width:100%;
+  font-family:'Barlow Semi Condensed';font-size:14px;letter-spacing:1px;
+}
+.search input::placeholder{color:#f0b3b1;letter-spacing:1.5px;font-size:13px}
+.search input:focus{outline:none}
+
+nav{display:flex;gap:30px;align-items:flex-end}
+nav a{
+  color:#fff;text-decoration:none;text-align:center;
+  font-weight:800;font-size:15px;letter-spacing:1px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:transform .15s,opacity .15s;
+}
+nav a .ico{font-size:14px;line-height:1;opacity:.95}
+nav a:hover{transform:translateY(-2px)}
+.hd-right{display:flex;align-items:center;gap:12px;margin-left:auto}
+.btn-cart{
+  position:relative;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.25);
+  color:#fff;cursor:pointer;padding:8px 10px;transition:all .2s;border-radius:3px;
+}
+.btn-cart:hover{background:rgba(0,0,0,.35)}
+.cart-cnt{
+  position:absolute;top:-5px;right:-5px;background:#fff;color:var(--red);
+  font-family:'Bungee',cursive;font-size:9px;font-weight:700;
+  min-width:18px;height:18px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.cart-cnt.show{opacity:1}
+.btn-login-hd{
+  background:#fff;color:var(--red);border:none;cursor:pointer;
+  padding:9px 18px;font-family:'Bungee',cursive;font-size:12px;letter-spacing:1px;
+  transition:all .2s;border-radius:3px;
+}
+.btn-login-hd:hover{background:var(--ink);color:#fff}
+.avatar{
+  width:46px;height:46px;border-radius:50%;background:#fff;flex-shrink:0;
+  box-shadow:0 0 0 3px rgba(0,0,0,.08) inset;overflow:hidden;
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+
+/* ======================= HERO ======================= */
+.hero{position:relative;height:480px;overflow:hidden;background:#2a1a1a}
+.hero-img{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center top;
+  background-color:#2a1a1a;
+}
+.hero-img::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(20,8,8,.75) 0%,rgba(20,8,8,.3) 55%,rgba(20,8,8,.05) 100%);
+  z-index:1;
+}
+.hero .torn{
+  position:absolute;left:-20px;right:-20px;bottom:-6px;height:120px;
+  background:var(--ink);
+  clip-path:polygon(0 55%,4% 48%,9% 60%,14% 44%,19% 58%,25% 40%,31% 56%,37% 42%,
+    44% 60%,50% 38%,56% 58%,62% 41%,69% 60%,75% 40%,81% 57%,87% 43%,93% 60%,98% 47%,100% 56%,
+    100% 100%,0 100%);
+  filter:url(#rough);
+  z-index:4;
+}
+.hero-caption{
+  position:absolute;left:60px;bottom:120px;width:430px;z-index:3;
+  background:rgba(20,8,8,.72);
+  padding:24px 26px 26px;
+  backdrop-filter:blur(3px);
+}
+.hero-caption h1{font-family:'Bangers';font-size:40px;color:#fff;letter-spacing:2px;line-height:1}
+.hero-caption .author{font-family:'Bungee';font-size:11px;color:#e9d7d6;letter-spacing:2px;margin:7px 0 12px}
+.hero-caption p{font-size:15.5px;line-height:1.35;color:#f1e7e6;max-width:300px}
+.read-now{
+  display:inline-block;margin-top:16px;background:var(--red);color:#fff;
+  font-family:'Bungee';font-size:13px;letter-spacing:1px;
+  padding:11px 20px;text-decoration:none;border:2px solid #e86a68;
+  box-shadow:3px 3px 0 rgba(0,0,0,.35);transition:transform .12s;
+}
+.read-now:hover{transform:translate(-1px,-1px)}
+.dots{position:absolute;left:50%;bottom:118px;transform:translateX(-50%);display:flex;gap:14px;z-index:4}
+.dots span{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer}
+.dots span.on{background:#fff}
+
+/* ======================= LAYOUT ======================= */
+.wrap{
+  max-width:1340px;margin:0 auto;padding:40px 30px 70px;
+  display:grid;grid-template-columns:1fr 380px;gap:34px;
+  position:relative;
+}
+.wrap::before{
+  content:"";position:absolute;left:14px;top:24px;bottom:40px;width:14px;
+  border:3px solid var(--frame-line);border-right:none;background:var(--frame);
+  filter:url(#roughSoft);opacity:.9;
+}
+
+/* ----- brush-stroke section titles ----- */
+.brush{position:relative;display:inline-block;margin:0 0 26px 6px;padding:6px 46px 10px 28px}
+.brush::before{
+  content:"";position:absolute;inset:0;background:#f3efe9;
+  filter:url(#rough);transform:skewX(-7deg);border-radius:40% 60% 55% 45%;
+}
+.brush h2{position:relative;font-family:'Bungee';color:var(--paint-red);font-size:34px;letter-spacing:1px}
+.brush.script h2{font-family:'Bangers';font-size:46px;letter-spacing:2px;line-height:.9}
+
+/* ----- story card grids ----- */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.card{display:flex;flex-direction:column;cursor:pointer;transition:transform .2s}
+.card:hover{transform:translateY(-4px)}
+.thumb{
+  width:100%;aspect-ratio:3/4;background:var(--card);
+  border-radius:2px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.thumb.tall{aspect-ratio:3/4.4}
+.thumb .ph{
+  font-family:'Bungee';font-size:30px;color:#3b2e2d;letter-spacing:1px;
+  text-shadow:1px 1px 0 rgba(255,255,255,.12);
+}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+.thumb .cover-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(10,4,4,.92) 0%,rgba(10,4,4,.1) 55%,transparent 100%);
+}
+.thumb.cover{align-items:flex-end;justify-content:center}
+.cover-z{background:linear-gradient(160deg,#7d1b2b,#3a2230 70%)}
+.cover-x{background:linear-gradient(160deg,#0a0a14,#141022 70%)}
+.cover-tag{
+  position:relative;z-index:2;
+  font-family:'Bangers';font-size:24px;color:#ffd24a;letter-spacing:1px;
+  text-shadow:2px 2px 0 #000;margin-bottom:14px;transform:rotate(-3deg);
+}
+.cover-x .cover-tag{color:#ff5a3c}
+.card .meta{margin-top:9px}
+.card .meta .t{font-weight:800;font-size:17px;color:#fff;line-height:1}
+.card .meta .s{font-family:'Bungee';font-size:11px;color:var(--txt-dim);margin-top:5px;letter-spacing:.5px}
+.card .meta .s b{color:#e8dad9}
+.story-meta .t{font-family:'Bungee';font-size:14px;color:#fff}
+.story-meta .s{font-family:'Bungee';font-size:11px;color:var(--txt-dim);margin-top:4px}
+/* badge */
+.bdg{
+  position:absolute;top:7px;left:7px;z-index:3;
+  font-family:'Bungee';font-size:9px;letter-spacing:1px;padding:3px 7px;border-radius:2px;
+}
+.bdg-today{background:var(--red);color:#fff}
+.bdg-new{background:#1a6b2e;color:#fff}
+.bdg-hot{background:#c87c10;color:#fff}
+
+/* ----- horizontal advertisement ----- */
+.ad-banner{
+  margin:36px 6px;height:130px;background:var(--ad);border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+}
+.ad-banner span,.ad-box span{font-family:'Bungee';font-size:34px;color:#1f1413;letter-spacing:2px;opacity:.85}
+
+/* ======================= SIDEBAR ======================= */
+.side{display:flex;flex-direction:column;gap:26px}
+.ad-box{
+  height:330px;background:var(--ad);border-radius:2px;
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;
+}
+.ad-box span{font-size:30px}
+.rank-panel{background:var(--panel);border-radius:4px;padding:24px 22px 30px;filter:url(#roughSoft)}
+.rank-inner{filter:none}
+.rank-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+.rank-head h3{font-family:'Bungee';font-size:30px;color:#fff;letter-spacing:1px}
+.rank-head a{color:var(--txt-dim);text-decoration:none;font-size:14px;font-weight:600}
+.rank-head a:hover{color:#fff}
+.rank-row{
+  display:flex;align-items:center;gap:16px;padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);position:relative;
+  cursor:pointer;transition:background .15s;border-radius:3px;padding-left:6px;
+}
+.rank-row:hover{background:rgba(255,255,255,.04)}
+.rank-row:last-child{border-bottom:none}
+.rank-thumb{width:78px;height:108px;background:var(--card);border-radius:2px;flex-shrink:0;overflow:hidden}
+.rank-thumb img{width:100%;height:100%;object-fit:cover}
+.rank-info{flex:1}
+.rank-info .t{font-family:'Bungee';font-size:18px;color:#fff;letter-spacing:.5px}
+.rank-info .a{font-family:'Bungee';font-size:10px;color:#cdbcbb;letter-spacing:1px;margin-top:3px}
+.rank-info .v{font-family:'Bungee';font-size:11px;color:var(--txt-dim);margin-top:9px}
+.rank-num{font-family:'Bungee';font-size:30px;color:#6a4a48;position:absolute;right:6px;bottom:8px}
+
+/* ======================= SHOP ======================= */
+.shop-section{
+  background:var(--bg-2);border-top:4px solid var(--red-deep);
+  border-bottom:4px solid var(--red-deep);padding:50px 0;
+}
+.shop-inner{max-width:1340px;margin:0 auto;padding:0 30px}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;margin-top:26px}
+.shop-card{
+  background:var(--panel);border-radius:3px;overflow:hidden;
+  transition:transform .2s,box-shadow .2s;
+}
+.shop-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.shop-img{
+  height:150px;display:flex;align-items:center;justify-content:center;
+  font-family:'Bungee';font-size:52px;color:rgba(255,255,255,.15);
+  border-bottom:2px solid rgba(255,255,255,.07);
+}
+.shop-info{padding:14px}
+.shop-name{font-family:'Bungee';font-size:13px;letter-spacing:.5px;color:var(--txt);margin-bottom:8px}
+.shop-price{font-family:'Bungee';font-size:22px;color:#ffd24a;margin-bottom:10px}
+.btn-add{
+  width:100%;padding:9px;background:transparent;color:var(--red);
+  border:2px solid var(--red);cursor:pointer;font-family:'Bungee';font-size:12px;
+  letter-spacing:1px;transition:all .2s;border-radius:2px;
+}
+.btn-add:hover{background:var(--red);color:#fff}
+.btn-add.added{background:#c87c10;color:#fff;border-color:#c87c10}
+
+/* ======================= FOOTER ======================= */
+footer{background:var(--bg-2);border-top:4px solid var(--red-deep)}
+.ft-inner{max-width:1340px;margin:0 auto;padding:40px 30px 20px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.ft-logo-blk{display:flex;flex-direction:column;gap:10px}
+.ft-logo-blk .name b{font-family:'Bungee';font-size:20px;color:#fff;display:block}
+.ft-logo-blk p{font-size:14px;color:var(--txt-dim);line-height:1.7;max-width:240px;margin-top:4px}
+.socials{display:flex;gap:8px;margin-top:12px}
+.soc{
+  width:32px;height:32px;background:var(--panel);border:1px solid rgba(255,255,255,.1);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:var(--txt-dim);cursor:pointer;transition:all .2s;text-decoration:none;
+  font-size:11px;font-weight:700;font-family:'Bungee';
+}
+.soc:hover{border-color:var(--red);color:#fff;background:var(--red)}
+.ft-col h4{font-family:'Bungee';font-size:14px;letter-spacing:2px;color:var(--txt);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--frame-line)}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ft-col ul a{color:var(--txt-dim);text-decoration:none;font-size:14px;transition:color .2s}
+.ft-col ul a:hover{color:var(--txt)}
+.founder-strip{padding:16px 30px;border-top:1px solid rgba(255,255,255,.06);max-width:1340px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.founder-strip img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--red)}
+.fn{font-family:'Bungee';font-size:15px;letter-spacing:.5px;color:var(--txt)}
+.fr{font-size:12px;color:var(--txt-dim);margin-top:2px}
+.ft-bottom{border-top:1px solid rgba(255,255,255,.05);padding:14px 30px;display:flex;justify-content:space-between;max-width:1340px;margin:0 auto}
+.ft-bottom p{font-family:'Bungee';font-size:11px;color:#6a4a48;letter-spacing:1px}
+
+.foot{max-width:1340px;margin:0 auto;padding:0 30px 50px}
+.foot hr{border:none;border-top:2px solid #4a2c2b;opacity:.7}
+
+/* ======================= INTERACTIVE CSS ======================= */
+/* Search overlay */
+#searchOvl{
+  position:fixed;inset:0;background:rgba(13,7,7,.96);z-index:600;
+  display:none;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:100px;
+}
+#searchOvl.on{display:flex}
+.search-bar{display:flex;width:90%;max-width:640px;border:2px solid rgba(255,255,255,.2);overflow:hidden;border-radius:3px}
+.search-bar input{
+  flex:1;padding:15px 18px;font-family:'Barlow Semi Condensed';font-size:16px;
+  border:none;background:rgba(255,255,255,.07);color:var(--txt);outline:none;
+}
+.search-bar input::placeholder{color:rgba(255,255,255,.3)}
+.search-bar button{
+  padding:0 22px;background:var(--red);color:#fff;border:none;cursor:pointer;
+  font-family:'Bungee';font-size:13px;letter-spacing:1px;
+}
+.s-results{width:90%;max-width:640px;margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.s-hit{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;
+  transition:background .15s;border-radius:2px;
+}
+.s-hit:hover{background:rgba(255,255,255,.12)}
+.sh-g{width:34px;height:46px;display:flex;align-items:center;justify-content:center;font-family:'Bangers';font-size:22px;color:rgba(255,255,255,.25);flex-shrink:0;overflow:hidden;border-radius:2px}
+.sh-g img{width:100%;height:100%;object-fit:cover}
+.sh-info .sh-name{font-family:'Bungee';font-size:14px;letter-spacing:.5px;color:var(--txt)}
+.sh-meta{font-size:12px;color:var(--txt-dim);margin-top:2px}
+.srch-close{
+  position:fixed;top:22px;right:22px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);
+  font-size:18px;cursor:pointer;width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:3px;transition:all .2s;
+}
+.srch-close:hover{border-color:var(--red);color:#fff}
+
+/* Backdrop */
+.bk{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.bk.on{display:flex}
+
+/* Modal box */
+.mdl-box{
+  background:var(--bg-2);border:2px solid var(--frame-line);border-top:4px solid var(--red);
+  padding:32px;position:relative;width:90%;max-width:560px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 24px 60px rgba(0,0,0,.95),4px 4px 0 rgba(0,0,0,.3);
+  filter:url(#roughSoft);
+}
+.mdl-inner{filter:none}
+.mdl-close{
+  position:absolute;top:14px;right:14px;background:var(--panel);
+  border:1px solid var(--frame-line);color:var(--txt-dim);cursor:pointer;
+  width:28px;height:28px;font-size:13px;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;border-radius:2px;
+}
+.mdl-close:hover{border-color:var(--red);color:#fff}
+.mdl-title{font-family:'Bungee';font-size:20px;letter-spacing:1px;color:var(--txt);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--frame-line)}
+
+/* Login */
+.login-tabs{display:flex;margin-bottom:20px;border-bottom:2px solid var(--frame-line)}
+.ltab{
+  flex:1;padding:9px;background:none;border:none;border-bottom:3px solid transparent;
+  margin-bottom:-2px;cursor:pointer;font-family:'Bungee';font-size:13px;letter-spacing:1px;
+  color:var(--txt-dim);transition:all .2s;
+}
+.ltab.on{color:var(--txt);border-bottom-color:var(--red)}
+.form-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.form-field label{font-family:'Bungee';font-size:10px;letter-spacing:2px;color:var(--txt-dim)}
+.form-field input{
+  padding:10px 12px;border:2px solid var(--frame-line);background:var(--panel);
+  color:var(--txt);font-family:'Barlow Semi Condensed';font-size:14px;outline:none;
+  transition:border-color .2s;border-radius:2px;
+}
+.form-field input:focus{border-color:var(--red)}
+.btn-submit{
+  width:100%;padding:12px;background:var(--red);color:#fff;border:2px solid #e86a68;
+  cursor:pointer;font-family:'Bungee';font-size:14px;letter-spacing:2px;
+  margin-top:8px;transition:all .2s;border-radius:2px;box-shadow:3px 3px 0 rgba(0,0,0,.3);
+}
+.btn-submit:hover{background:var(--red-deep)}
+
+/* Manga modal */
+.manga-hd{display:flex;gap:16px;margin-bottom:18px}
+.manga-cv{
+  width:88px;height:118px;flex-shrink:0;
+  background:var(--card);border-radius:2px;overflow:hidden;
+  border:2px solid var(--frame-line);
+}
+.manga-cv img{width:100%;height:100%;object-fit:cover}
+.manga-info-blk h3{font-family:'Bungee';font-size:22px;letter-spacing:.5px;color:var(--txt);margin-bottom:5px}
+.manga-meta{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.manga-meta span{font-family:'Bungee';font-size:10px;letter-spacing:1px}
+.manga-meta .mg{color:var(--txt-dim)}.manga-meta .mr{color:#ffd24a}
+.manga-desc{font-size:14px;line-height:1.7;color:var(--txt-dim);margin-bottom:12px}
+.ch-list{display:flex;flex-direction:column;border:2px solid var(--frame-line);margin-top:10px;border-radius:2px}
+.ch-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.05);
+  cursor:pointer;transition:background .15s;
+}
+.ch-row:last-child{border-bottom:none}
+.ch-row:hover{background:rgba(255,255,255,.05)}
+.ch-num{font-family:'Bungee';font-size:12px;letter-spacing:.5px;color:var(--txt)}
+.ch-date{font-size:11px;color:var(--txt-dim);font-family:'Bungee'}
+.btn-read-start{
+  display:block;width:100%;padding:12px;background:var(--red);color:#fff;
+  border:2px solid #e86a68;cursor:pointer;font-family:'Bungee';font-size:13px;letter-spacing:2px;
+  margin-top:12px;transition:all .2s;text-align:center;border-radius:2px;box-shadow:3px 3px 0 rgba(0,0,0,.3);
+}
+.btn-read-start:hover{background:var(--red-deep)}
+.ch-list-label{font-family:'Bungee';font-size:10px;letter-spacing:2px;color:var(--txt-dim);margin-bottom:8px;margin-top:4px;padding-bottom:6px;border-bottom:1px solid var(--frame-line)}
+
+/* Reader */
+#readerMdl{position:fixed;inset:0;background:var(--ink);z-index:800;display:none;flex-direction:column}
+#readerMdl.on{display:flex}
+.r-bar{
+  background:var(--bg-2);border-bottom:3px solid var(--red);
+  padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.r-title{font-family:'Bungee';font-size:14px;letter-spacing:1px;color:var(--txt)}
+.r-close{
+  background:var(--panel);border:1px solid var(--frame-line);color:var(--txt-dim);
+  cursor:pointer;width:32px;height:32px;font-size:15px;transition:all .2s;border-radius:2px;
+}
+.r-close:hover{border-color:var(--red);color:#fff}
+.r-pages{
+  flex:1;overflow-y:auto;padding:20px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:var(--bg-2);
+}
+.manga-page{
+  width:100%;max-width:660px;aspect-ratio:3/4;position:relative;overflow:hidden;
+  border:3px solid var(--frame-line);background:var(--ink);
+}
+.manga-panel{
+  position:absolute;display:flex;align-items:center;justify-content:center;
+  border:2px solid rgba(255,255,255,.04);font-family:'Bungee';font-size:44px;
+  color:rgba(193,32,29,.06);overflow:hidden;
+}
+.r-nav{
+  display:flex;align-items:center;justify-content:center;gap:12px;padding:10px;
+  background:var(--bg-2);border-top:3px solid var(--red);flex-shrink:0;
+}
+.r-btn{
+  padding:7px 20px;background:transparent;border:2px solid var(--frame-line);
+  color:var(--txt-dim);cursor:pointer;font-family:'Bungee';font-size:12px;letter-spacing:1px;
+  transition:all .2s;border-radius:2px;
+}
+.r-btn:hover:not(:disabled){border-color:var(--red);color:#fff}
+.r-btn:disabled{opacity:.25;cursor:default}
+.r-pg{font-family:'Bungee';font-size:14px;color:var(--txt-dim);letter-spacing:1px}
+
+/* Cart drawer */
+#cartDr{
+  position:fixed;top:0;right:0;bottom:0;width:380px;
+  background:var(--bg-2);border-left:3px solid var(--red-deep);
+  box-shadow:-16px 0 50px rgba(0,0,0,.9);z-index:700;
+  transform:translateX(100%);transition:transform .35s;display:flex;flex-direction:column;
+}
+#cartDr.open{transform:translateX(0)}
+.cd-hd{
+  background:var(--panel);padding:16px 20px;display:flex;align-items:center;
+  justify-content:space-between;flex-shrink:0;border-bottom:3px solid var(--red);
+}
+.cd-ttl{font-family:'Bungee';font-size:17px;letter-spacing:1px;color:var(--txt)}
+.cd-close{
+  background:rgba(255,255,255,.06);border:1px solid var(--frame-line);
+  color:var(--txt-dim);cursor:pointer;width:28px;height:28px;font-size:13px;transition:all .2s;border-radius:2px;
+}
+.cd-close:hover{border-color:var(--red);color:#fff}
+.cd-body{flex:1;overflow-y:auto;padding:16px}
+.cd-empty{text-align:center;padding:50px 20px;color:var(--txt-dim);font-family:'Bungee';font-size:14px;letter-spacing:1px}
+.cart-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:flex-start}
+.ci-thumb{width:40px;height:54px;flex-shrink:0;background:var(--card);border-radius:2px;overflow:hidden;border:1px solid var(--frame-line)}
+.ci-thumb img{width:100%;height:100%;object-fit:cover}
+.ci-info{flex:1}
+.ci-name{font-family:'Bungee';font-size:12px;letter-spacing:.5px;color:var(--txt)}
+.ci-price{font-size:13px;color:#ffd24a;font-family:'Bungee';margin-top:2px}
+.ci-rm{
+  background:none;border:1px solid var(--frame-line);color:var(--txt-dim);
+  cursor:pointer;font-size:10px;margin-top:5px;padding:2px 7px;font-family:'Bungee';
+  letter-spacing:.5px;transition:all .2s;border-radius:2px;
+}
+.ci-rm:hover{border-color:var(--red);color:var(--red)}
+.cd-foot{padding:16px;border-top:2px solid var(--frame-line);flex-shrink:0}
+.cd-total{display:flex;justify-content:space-between;font-family:'Bungee';font-size:18px;letter-spacing:1px;margin-bottom:10px;color:#ffd24a}
+.btn-checkout{
+  width:100%;padding:12px;background:var(--red);color:#fff;border:2px solid #e86a68;
+  cursor:pointer;font-family:'Bungee';font-size:14px;letter-spacing:2px;
+  transition:all .2s;border-radius:2px;box-shadow:3px 3px 0 rgba(0,0,0,.3);
+}
+.btn-checkout:hover{background:var(--red-deep)}
+
+/* Checkout */
+.co-steps{display:flex;border:2px solid var(--frame-line);margin-bottom:18px;border-radius:2px;overflow:hidden}
+.co-step{
+  flex:1;padding:9px;text-align:center;font-family:'Bungee';font-size:11px;letter-spacing:1px;
+  color:var(--txt-dim);border-right:1px solid var(--frame-line);
+}
+.co-step:last-child{border-right:none}
+.co-step.on{background:rgba(193,32,29,.18);color:var(--txt)}
+.co-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;color:var(--txt);font-family:'Barlow Semi Condensed'}
+.co-total-line{display:flex;justify-content:space-between;padding:10px 0;font-family:'Bungee';font-size:18px;letter-spacing:1px;border-top:2px solid var(--frame-line);margin-top:6px;color:#ffd24a}
+.success-box{text-align:center;padding:20px 0}
+.success-icon{font-size:48px;color:#ffd24a;margin-bottom:12px}
+.success-box h3{font-family:'Bungee';font-size:24px;letter-spacing:1px;color:var(--txt);margin-bottom:8px}
+.success-box p{font-size:14px;color:var(--txt-dim);margin-bottom:4px;font-family:'Barlow Semi Condensed'}
+.order-num{font-family:'Bungee';font-size:18px;color:#ffd24a;letter-spacing:2px;margin:10px 0}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:24px;right:24px;background:var(--panel);color:var(--txt);
+  padding:12px 18px;font-family:'Bungee';font-size:13px;letter-spacing:1px;
+  border:2px solid var(--frame-line);border-left:3px solid var(--red);
+  z-index:1000;transform:translateY(70px);opacity:0;transition:all .3s;pointer-events:none;
+  max-width:300px;box-shadow:4px 4px 0 rgba(0,0,0,.4);border-radius:2px;
+}
+#toast.show{transform:translateY(0);opacity:1}
+
+/* ======================= RESPONSIVE ======================= */
+@media(max-width:1100px){.wrap{grid-template-columns:1fr}nav{display:none}}
+@media(max-width:680px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  header{flex-wrap:wrap;padding:12px 16px 22px}
+  .hero-caption{left:20px;width:auto;right:20px;bottom:140px}
+  .hero{height:420px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <a href="#" class="logo">
+    <svg viewBox="0 0 40 46" fill="none">
+      <path d="M5 4 L20 22 L35 4" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+      <path d="M20 22 L20 38" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="20" cy="42" r="3.5" fill="#fff"/>
+      <path d="M11 30 L20 22 L29 30" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div class="name">
+      <b>SLING</b><b>SHOT</b><span class="sub">DAILY</span>
+    </div>
+  </a>
+
+  <div class="search" onclick="openSearch()">
+    <span>&#128269;</span>
+    <input placeholder="SEARCH BY TITLE, AUTHOR, OR ITEM" id="hdrSearch" onclick="event.stopPropagation();openSearch()">
+  </div>
+
+  <nav>
+    <a href="#" onclick="return false"><span class="ico">&#9888;</span>NEWS</a>
+    <a href="#" onclick="scrollToGrid();return false"><span class="ico">&#128218;</span>MANGA</a>
+    <a href="#" onclick="scrollToGrid();return false"><span class="ico">&#128214;</span>NOVELS</a>
+    <a href="#" onclick="scrollToRankings();return false"><span class="ico">&#9733;</span>RANKINGS</a>
+    <a href="#shop" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'});return false"><span class="ico">&#128722;</span>SHOP</a>
+  </nav>
+
+  <div class="hd-right">
+    <button class="btn-cart" onclick="openCart()" title="Cart">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.96-1.62L23 6H6"/></svg>
+      <span class="cart-cnt" id="cartCnt">0</span>
+    </button>
+    <button class="btn-login-hd" id="loginBtn" onclick="openMdl('loginMdl')">SIGN IN</button>
+    <div class="avatar">
+      <img src="info about the owner.png" alt="" onerror="this.parentElement.style.background='#c1201d';this.style.display='none'">
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-img" style="background-image:url('zezemaruposter.jpg');background-size:cover;background-position:center top"></div>
+  <div class="hero-caption">
+    <h1>ZEZEMARU!</h1>
+    <div class="author">MICHAEL MADLOCK</div>
+    <p>Strike gold with Zezemaru as he becomes the world's greatest stone-slinger — where must a Slinkster truly belong?</p>
+    <a href="#" class="read-now" onclick="openManga('Zezemaru!');return false">READ NOW</a>
+  </div>
+  <div class="dots">
+    <span class="on"></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="torn"></div>
+</section>
+
+<!-- ============ MAIN ============ -->
+<div class="wrap">
+
+  <!-- LEFT COLUMN -->
+  <main>
+    <!-- UPDATES -->
+    <div class="brush"><h2>UPDATES</h2></div>
+
+    <div class="grid">
+      <div class="card" onclick="openManga('Zezemaru!')">
+        <div class="thumb cover cover-z">
+          <img src="Zezemaru.png" alt="Zezemaru" onerror="this.style.display='none'">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-today">TODAY</span>
+          <div class="cover-tag">ZEZEMARU!</div>
+        </div>
+        <div class="meta">
+          <div class="t">Zezemaru!</div>
+          <div class="s"><b>#54</b>&nbsp;&nbsp;518.2k</div>
+        </div>
+      </div>
+      <div class="card" onclick="openManga('Xecutioner')">
+        <div class="thumb cover cover-x">
+          <img src="xecutioner.png" alt="Xecutioner" onerror="this.style.display='none'">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-today">TODAY</span>
+          <div class="cover-tag">XECUTIONER</div>
+        </div>
+        <div class="meta">
+          <div class="t">Xecutioner</div>
+          <div class="s"><b>#61</b>&nbsp;&nbsp;700.7k</div>
+        </div>
+      </div>
+      <div class="card" onclick="openManga('Iron Fang')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#1a1a1a,#444,#888)">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-hot">HOT</span>
+          <div class="ph">I</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Iron Fang</div><div class="s"><b>#18</b>&nbsp;&nbsp;341.5k</div></div>
+      </div>
+      <div class="card" onclick="openManga('Shadow Walker')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#0f0722,#3b0764,#7c3aed)">
+          <div class="cover-overlay"></div>
+          <div class="ph">S</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Shadow Walker</div><div class="s"><b>#29</b>&nbsp;&nbsp;287.1k</div></div>
+      </div>
+      <div class="card" onclick="openManga('Crimson Tide')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#450a0a,#991b1b,#ef4444)">
+          <div class="cover-overlay"></div>
+          <div class="ph">C</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Crimson Tide</div><div class="s"><b>#11</b>&nbsp;&nbsp;198.4k</div></div>
+      </div>
+      <div class="card" onclick="openManga('Nexus Breaker')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#042f2e,#065f46,#10b981)">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-new">NEW</span>
+          <div class="ph">N</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Nexus Breaker</div><div class="s"><b>#07</b>&nbsp;&nbsp;142.9k</div></div>
+      </div>
+      <div class="card" onclick="openManga('Phantom Code')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#0c1445,#1d4ed8,#60a5fa)">
+          <div class="cover-overlay"></div>
+          <div class="ph">P</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Phantom Code</div><div class="s"><b>#33</b>&nbsp;&nbsp;219.8k</div></div>
+      </div>
+      <div class="card" onclick="openManga('Void Striker')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#1c0030,#7c3aed,#c084fc)">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-today">TODAY</span>
+          <div class="ph">V</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Void Striker</div><div class="s"><b>#22</b>&nbsp;&nbsp;304.6k</div></div>
+      </div>
+    </div>
+
+    <!-- horizontal ad -->
+    <div class="ad-banner"><span>ADVERTISEMENT</span></div>
+
+    <!-- ROOKIES -->
+    <div class="brush script"><h2>Slingshot! Rookies</h2></div>
+
+    <div class="grid">
+      <div class="card" onclick="openManga('Blade Echo')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#1c1917,#78350f,#f59e0b)">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-new">NEW</span>
+          <div class="ph">B</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Blade Echo</div><div class="s"><b>#01</b>&nbsp;&nbsp;41.2k</div></div>
+      </div>
+      <div class="card" onclick="openManga('Neon Hunter')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#0d1117,#be185d,#f9a8d4)">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-new">NEW</span>
+          <div class="ph">N</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Neon Hunter</div><div class="s"><b>#03</b>&nbsp;&nbsp;58.7k</div></div>
+      </div>
+      <div class="card" onclick="openManga('Circuit Breaker')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#042f2e,#0f766e,#14b8a6)">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-new">NEW</span>
+          <div class="ph">C</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Circuit Breaker</div><div class="s"><b>#02</b>&nbsp;&nbsp;33.4k</div></div>
+      </div>
+      <div class="card" onclick="openManga('Ghost Protocol')">
+        <div class="thumb tall" style="background:linear-gradient(160deg,#111827,#374151,#9ca3af)">
+          <div class="cover-overlay"></div>
+          <span class="bdg bdg-new">NEW</span>
+          <div class="ph">G</div>
+        </div>
+        <div class="meta story-meta"><div class="t">Ghost Protocol</div><div class="s"><b>#01</b>&nbsp;&nbsp;27.1k</div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT COLUMN -->
+  <aside class="side">
+    <div class="ad-box"><span>ADVERTISEMENT</span></div>
+
+    <div class="rank-panel">
+     <div class="rank-inner">
+      <div class="rank-head"><h3>RANKINGS</h3><a href="#">View All &gt;</a></div>
+      <div class="rank-row" onclick="openManga('Zezemaru!')">
+        <div class="rank-thumb"><img src="Zezemaru.png" alt="" onerror="this.style.display='none'"></div>
+        <div class="rank-info"><div class="t">Zezemaru!</div><div class="a">MICHAEL MADLOCK</div><div class="v">1.2M VIEWS</div></div>
+        <div class="rank-num">1</div>
+      </div>
+      <div class="rank-row" onclick="openManga('Xecutioner')">
+        <div class="rank-thumb"><img src="xecutioner.png" alt="" onerror="this.style.display='none'"></div>
+        <div class="rank-info"><div class="t">Xecutioner</div><div class="a">AUTHOR NAME</div><div class="v">987K VIEWS</div></div>
+        <div class="rank-num">2</div>
+      </div>
+      <div class="rank-row" onclick="openManga('Iron Fang')">
+        <div class="rank-thumb" style="background:linear-gradient(160deg,#1a1a1a,#555)"></div>
+        <div class="rank-info"><div class="t">Iron Fang</div><div class="a">AUTHOR NAME</div><div class="v">754K VIEWS</div></div>
+        <div class="rank-num">3</div>
+      </div>
+      <div class="rank-row" onclick="openManga('Void Striker')">
+        <div class="rank-thumb" style="background:linear-gradient(160deg,#1c0030,#7c3aed)"></div>
+        <div class="rank-info"><div class="t">Void Striker</div><div class="a">AUTHOR NAME</div><div class="v">621K VIEWS</div></div>
+        <div class="rank-num">4</div>
+      </div>
+      <div class="rank-row" onclick="openManga('Phantom Code')">
+        <div class="rank-thumb" style="background:linear-gradient(160deg,#0c1445,#1d4ed8)"></div>
+        <div class="rank-info"><div class="t">Phantom Code</div><div class="a">AUTHOR NAME</div><div class="v">498K VIEWS</div></div>
+        <div class="rank-num">5</div>
+      </div>
+     </div>
+    </div>
+  </aside>
+</div>
+
+<!-- ============ SHOP ============ -->
+<div id="shop" class="shop-section">
+  <div class="shop-inner">
+    <div class="brush"><h2>SLINGSHOT STORE</h2></div>
+    <div class="shop-grid">
+      <div class="shop-card"><div class="shop-img" style="background:linear-gradient(160deg,#7d1b2b,#3a2230)"><img src="Zezemaru.png" alt="" style="height:100%;width:auto;object-fit:contain" onerror="this.style.display='none'"></div><div class="shop-info"><div class="shop-name">ZEZEMARU VOL. 1</div><div class="shop-price">$12.99</div><button class="btn-add" onclick="atc(this,'Zezemaru Vol. 1',12.99,'Z','cv-z')">+ ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-img" style="background:linear-gradient(160deg,#7d1b2b,#3a2230)"><img src="Zezemaru.png" alt="" style="height:100%;width:auto;object-fit:contain" onerror="this.style.display='none'"></div><div class="shop-info"><div class="shop-name">ZEZEMARU VOL. 2</div><div class="shop-price">$13.99</div><button class="btn-add" onclick="atc(this,'Zezemaru Vol. 2',13.99,'Z','cv-z')">+ ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-img" style="background:linear-gradient(160deg,#0a0a14,#141022)"><img src="xecutioner.png" alt="" style="height:100%;width:auto;object-fit:contain" onerror="this.style.display='none'"></div><div class="shop-info"><div class="shop-name">XECUTIONER VOL. 1</div><div class="shop-price">$12.99</div><button class="btn-add" onclick="atc(this,'Xecutioner Vol. 1',12.99,'X','cv-x')">+ ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-img" style="background:var(--panel)">SD</div><div class="shop-info"><div class="shop-name">SD HOODIE</div><div class="shop-price">$39.99</div><button class="btn-add" onclick="atc(this,'SD Hoodie',39.99,'SD','')">+ ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-img" style="background:var(--red)">★</div><div class="shop-info"><div class="shop-name">ZEZEMARU PANEL PRINT</div><div class="shop-price">$19.99</div><button class="btn-add" onclick="atc(this,'Zezemaru Panel Print',19.99,'★','')">+ ADD TO CART</button></div></div>
+      <div class="shop-card"><div class="shop-img" style="background:var(--red-deep)">SD</div><div class="shop-info"><div class="shop-name">SLINGSHOT DAILY CAP</div><div class="shop-price">$24.99</div><button class="btn-add" onclick="atc(this,'Slingshot Daily Cap',24.99,'SD','')">+ ADD TO CART</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="ft-inner">
+    <div class="ft-logo-blk">
+      <div class="name"><b>SLING</b><b>SHOT</b></div>
+      <p>Your destination for original manga and graphic novels from the world's best indie creators.</p>
+      <div class="socials"><a href="#" class="soc">𝕏</a><a href="#" class="soc">IG</a><a href="#" class="soc">FB</a><a href="#" class="soc">YT</a></div>
+    </div>
+    <div class="ft-col"><h4>EXPLORE</h4><ul><li><a href="#">News</a></li><li><a href="#">Manga</a></li><li><a href="#">Novels</a></li><li><a href="#">Rankings</a></li></ul></div>
+    <div class="ft-col"><h4>COMPANY</h4><ul><li><a href="#">About</a></li><li><a href="#">Creators</a></li><li><a href="#">Careers</a></li><li><a href="#">Advertise</a></li></ul></div>
+    <div class="ft-col"><h4>SUPPORT</h4><ul><li><a href="#">Help</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+  </div>
+  <div class="founder-strip">
+    <img src="info about the owner.png" alt="Michael Madlock" onerror="this.style.cssText='width:50px;height:50px;border-radius:50%;background:#412727;border:2px solid #c1201d';this.removeAttribute('src')">
+    <div><div class="fn">Michael Madlock</div><div class="fr">Founder · Developmental Editor · Creator of ZEZEMARU · michael@slingshotdaily.com</div></div>
+  </div>
+  <div class="ft-bottom"><p>© 2025 SLINGSHOT DAILY</p><p>ALL RIGHTS RESERVED</p></div>
+</footer>
+
+<div class="foot"><hr></div>
+
+<!-- ============ INTERACTIVE OVERLAYS ============ -->
+<!-- Search -->
+<div id="searchOvl">
+  <div class="search-bar">
+    <input type="text" id="srchInp" placeholder="SEARCH MANGA, NOVELS..." oninput="doSearch(this.value)" onkeydown="if(event.key==='Escape')closeSearch()">
+    <button onclick="closeSearch()">CLOSE</button>
+  </div>
+  <div class="s-results" id="srchRes"></div>
+  <button class="srch-close" onclick="closeSearch()">✕</button>
+</div>
+
+<!-- Login -->
+<div class="bk" id="loginMdl">
+  <div class="mdl-box"><div class="mdl-inner">
+    <button class="mdl-close" onclick="closeMdl('loginMdl')">✕</button>
+    <div class="mdl-title">ACCESS ACCOUNT</div>
+    <div class="login-tabs"><button class="ltab on" onclick="switchTab(this,'tabLogin')">SIGN IN</button><button class="ltab" onclick="switchTab(this,'tabSignup')">JOIN</button></div>
+    <div id="tabLogin"><div class="form-field"><label>EMAIL</label><input type="email" placeholder="your@email.com"></div><div class="form-field"><label>PASSWORD</label><input type="password" placeholder="••••••••"></div><button class="btn-submit" onclick="doLogin()">SIGN IN</button></div>
+    <div id="tabSignup" style="display:none"><div class="form-field"><label>DISPLAY NAME</label><input type="text" placeholder="MangaFan2025"></div><div class="form-field"><label>EMAIL</label><input type="email" placeholder="your@email.com"></div><div class="form-field"><label>PASSWORD</label><input type="password" placeholder="Create password"></div><button class="btn-submit" onclick="doLogin()">CREATE ACCOUNT</button></div>
+  </div></div>
+</div>
+
+<!-- Manga detail -->
+<div class="bk" id="mangaMdl">
+  <div class="mdl-box" style="max-width:600px"><div class="mdl-inner">
+    <button class="mdl-close" onclick="closeMdl('mangaMdl')">✕</button>
+    <div id="mangaMdlBody"></div>
+  </div></div>
+</div>
+
+<!-- Reader -->
+<div id="readerMdl">
+  <div class="r-bar"><div class="r-title" id="rTitle">—</div><button class="r-close" onclick="closeReader()">✕</button></div>
+  <div class="r-pages" id="rPages"></div>
+  <div class="r-nav"><button class="r-btn" id="rPrev" onclick="rGo(-1)">← PREV</button><span class="r-pg" id="rPg"></span><button class="r-btn" id="rNext" onclick="rGo(1)">NEXT →</button></div>
+</div>
+
+<!-- Cart drawer -->
+<div id="cartDr">
+  <div class="cd-hd"><div class="cd-ttl">CART</div><button class="cd-close" onclick="closeCart()">✕</button></div>
+  <div class="cd-body" id="cdBody"></div>
+  <div class="cd-foot" id="cdFoot" style="display:none">
+    <div class="cd-total"><span>TOTAL</span><span id="cdTotal">$0.00</span></div>
+    <button class="btn-checkout" onclick="closeCart();openCheckout()">CHECKOUT →</button>
+  </div>
+</div>
+
+<!-- Checkout -->
+<div class="bk" id="checkoutMdl">
+  <div class="mdl-box" style="max-width:520px"><div class="mdl-inner">
+    <button class="mdl-close" onclick="closeMdl('checkoutMdl')">✕</button>
+    <div class="mdl-title">CHECKOUT</div>
+    <div class="co-steps" id="coSteps"></div>
+    <div id="coBody"></div>
+  </div></div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ============ PAINTED-EDGE SVG FILTERS ============ -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="rough" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.04" numOctaves="3" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="roughSoft" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.03" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="6"/>
+    </filter>
+  </defs>
+</svg>
+
+<script>
+const MANGA={
+  'Zezemaru!':{g:'Z',imgSrc:'Zezemaru.png',genre:'Action · Adventure',views:'1.2M',ch:44,desc:'Strike gold with Zezemaru as he becomes the world\'s greatest stone-slinger — where must a Slinkster truly belong?'},
+  'Xecutioner':{g:'X',imgSrc:'xecutioner.png',genre:'Thriller · Crime',views:'987K',ch:44,desc:'A contract killer caught between justice and vengeance as the city burns around him.'},
+  'Iron Fang':{g:'I',genre:'Fantasy · Action',views:'754K',ch:18,desc:'In the ruins of the old world, one warrior carries the last iron blade.'},
+  'Shadow Walker':{g:'S',genre:'Stealth · Mystery',views:'621K',ch:29,desc:'Unseen, unheard, unstoppable. Shadow Walker moves between worlds.'},
+  'Crimson Tide':{g:'C',genre:'Horror · Thriller',views:'498K',ch:11,desc:'When the tide turns crimson, no one on the island is safe.'},
+  'Nexus Breaker':{g:'N',genre:'Sci-Fi · Action',views:'312K',ch:7,desc:'The Nexus is the source of all power — and one person is about to break it.'},
+  'Phantom Code':{g:'P',genre:'Cyberpunk · Drama',views:'287K',ch:33,desc:'Every line of code has a ghost. Every ghost has a story.'},
+  'Void Striker':{g:'V',genre:'Action · Supernatural',views:'219K',ch:22,desc:'Between the world of the living and the void stands one warrior.'},
+  'Blade Echo':{g:'B',genre:'Action',views:'41.2K',ch:1,desc:'A new blade is forged. A new legend begins.'},
+  'Neon Hunter':{g:'N',genre:'Cyberpunk',views:'58.7K',ch:3,desc:'In neon-soaked streets, one hunter tracks prey through digital shadows.'},
+  'Circuit Breaker':{g:'C',genre:'Sci-Fi',views:'33.4K',ch:2,desc:'The circuit breaks. The world rewires.'},
+  'Ghost Protocol':{g:'G',genre:'Spy · Action',views:'27.1K',ch:1,desc:'Protocol activated. Identity erased. Mission begins.'}
+};
+const CH_NAMES=['The Beginning','Dark Waters','Storm Rising','Edge of Night','Iron Will','Blood & Sand','Shadow Falls','The Long Road','Reckoning','Broken Chains','Last Stand','New Dawn','The Fallen','Rising Tide','Ember Days','Cold Steel','The Hunt','Crossroads','Veil of Smoke','Final Hour'];
+const LAYOUTS=[
+  [{t:'0%',l:'0%',w:'50%',h:'46%'},{t:'0%',l:'51%',w:'49%',h:'46%'},{t:'47%',l:'0%',w:'100%',h:'53%'}],
+  [{t:'0%',l:'0%',w:'100%',h:'54%'},{t:'55%',l:'0%',w:'49%',h:'45%'},{t:'55%',l:'51%',w:'49%',h:'45%'}],
+  [{t:'0%',l:'0%',w:'32%',h:'100%'},{t:'0%',l:'34%',w:'32%',h:'100%'},{t:'0%',l:'68%',w:'32%',h:'100%'}],
+  [{t:'0%',l:'0%',w:'55%',h:'100%'},{t:'0%',l:'56%',w:'44%',h:'48%'},{t:'52%',l:'56%',w:'44%',h:'48%'}]
+];
+let cart=[];
+
+function atc(btn,name,price,g,cl){
+  cart.push({name,price,g,cl,id:Date.now()+Math.random()});
+  renderCart();showToast('"'+name+'" ADDED TO CART');
+  btn.textContent='✓ ADDED';btn.classList.add('added');
+  setTimeout(()=>{btn.textContent='+ ADD TO CART';btn.classList.remove('added')},1800);
+}
+function renderCart(){
+  const body=document.getElementById('cdBody'),foot=document.getElementById('cdFoot'),cnt=document.getElementById('cartCnt');
+  cnt.textContent=cart.length;cnt.classList.toggle('show',cart.length>0);
+  if(!cart.length){body.innerHTML='<div class="cd-empty">CART EMPTY</div>';foot.style.display='none';return}
+  body.innerHTML=cart.map(i=>`<div class="cart-item"><div class="ci-thumb">${i.imgSrc?`<img src="${i.imgSrc}" alt="">`:i.g}</div><div class="ci-info"><div class="ci-name">${i.name}</div><div class="ci-price">$${i.price.toFixed(2)}</div><button class="ci-rm" onclick="removeItem(${i.id})">REMOVE</button></div></div>`).join('');
+  document.getElementById('cdTotal').textContent='$'+cart.reduce((s,i)=>s+i.price,0).toFixed(2);
+  foot.style.display='block';
+}
+function removeItem(id){cart=cart.filter(i=>i.id!==id);renderCart()}
+function openCart(){document.getElementById('cartDr').classList.add('open')}
+function closeCart(){document.getElementById('cartDr').classList.remove('open')}
+function openMdl(id){document.getElementById(id).classList.add('on')}
+function closeMdl(id){document.getElementById(id).classList.remove('on')}
+document.querySelectorAll('.bk').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)b.classList.remove('on')}));
+function openSearch(){document.getElementById('searchOvl').classList.add('on');setTimeout(()=>document.getElementById('srchInp').focus(),50)}
+function closeSearch(){document.getElementById('searchOvl').classList.remove('on');document.getElementById('srchInp').value='';document.getElementById('srchRes').innerHTML=''}
+function doSearch(q){
+  const res=document.getElementById('srchRes');
+  if(!q.trim()){res.innerHTML='';return}
+  const hits=Object.entries(MANGA).filter(([k])=>k.toLowerCase().includes(q.toLowerCase()));
+  if(!hits.length){res.innerHTML='<div class="s-hit" style="opacity:.4;cursor:default">No results</div>';return}
+  res.innerHTML=hits.map(([k,v])=>`<div class="s-hit" onclick="closeSearch();openManga('${k}')"><div class="sh-g">${v.imgSrc?`<img src="${v.imgSrc}" alt="">`:v.g}</div><div class="sh-info"><div class="sh-name">${k}</div><div class="sh-meta">${v.genre} · ${v.ch} Chapters</div></div></div>`).join('');
+}
+function switchTab(btn,id){
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');
+  ['tabLogin','tabSignup'].forEach(t=>document.getElementById(t).style.display='none');
+  document.getElementById(id).style.display='block';
+}
+function doLogin(){closeMdl('loginMdl');document.getElementById('loginBtn').textContent='MY ACCOUNT';showToast('WELCOME BACK!')}
+function openManga(title){
+  const m=MANGA[title];if(!m)return;
+  const chs=Array.from({length:Math.min(m.ch,10)},(_,i)=>`<div class="ch-row" onclick="openReader('${title}',${m.ch-i})"><span class="ch-num">CH.${String(m.ch-i).padStart(3,'0')} — ${CH_NAMES[(m.ch-i-1)%CH_NAMES.length]}</span><span class="ch-date">${i===0?'TODAY':i===1?'YESTERDAY':i+' DAYS AGO'}</span></div>`).join('');
+  const cvHtml=m.imgSrc?`<img src="${m.imgSrc}" alt="${title}" style="width:100%;height:100%;object-fit:cover">`:'';
+  document.getElementById('mangaMdlBody').innerHTML=`<div class="manga-hd"><div class="manga-cv">${cvHtml}</div><div class="manga-info-blk"><h3>${title}</h3><div class="manga-meta"><span class="mg">${m.genre}</span><span class="mr">${m.views} VIEWS</span><span class="mg">${m.ch} CHS</span></div><div class="manga-desc">${m.desc}</div><button class="btn-read-start" onclick="closeMdl('mangaMdl');openReader('${title}',1)">▶ READ FROM CH.001</button></div></div><div class="ch-list-label">CHAPTER LIST</div><div class="ch-list">${chs}</div>`;
+  openMdl('mangaMdl');
+}
+let rState={title:'',total:18,cur:1};
+function buildMangaPage(n,g){
+  const layout=LAYOUTS[n%LAYOUTS.length];
+  const colors=['#180a0a','#200c0c','#160808','#1c0a0a','#140606'];
+  return layout.map((p,i)=>`<div class="manga-panel" style="top:${p.t};left:${p.l};width:${p.w};height:${p.h};background:${colors[(n+i)%colors.length]}">${i===0?g:''}</div>`).join('');
+}
+function openReader(title,startCh){
+  rState={title,total:18,cur:1};
+  document.getElementById('rTitle').textContent=title+' · CH.'+String(startCh).padStart(3,'0');
+  renderReaderPage();document.getElementById('readerMdl').classList.add('on');
+}
+function closeReader(){document.getElementById('readerMdl').classList.remove('on')}
+function renderReaderPage(){
+  const m=MANGA[rState.title]||{g:'?'};
+  document.getElementById('rPages').innerHTML=`<div class="manga-page">${buildMangaPage(rState.cur,m.g)}</div>`;
+  document.getElementById('rPages').scrollTop=0;
+  document.getElementById('rPg').textContent=String(rState.cur).padStart(2,'0')+' / '+String(rState.total).padStart(2,'0');
+  document.getElementById('rPrev').disabled=rState.cur<=1;
+  document.getElementById('rNext').disabled=rState.cur>=rState.total;
+}
+function rGo(d){rState.cur=Math.max(1,Math.min(rState.total,rState.cur+d));renderReaderPage()}
+function openCheckout(){renderCo(0);openMdl('checkoutMdl')}
+function renderCo(step){
+  const steps=['DETAILS','REVIEW','CONFIRMED'];
+  document.getElementById('coSteps').innerHTML=steps.map((s,i)=>`<div class="co-step ${i===step?'on':''}">${s}</div>`).join('');
+  const body=document.getElementById('coBody');
+  if(step===0){
+    body.innerHTML=`<div class="form-field"><label>FULL NAME</label><input type="text" placeholder="Michael Madlock"></div><div class="form-field"><label>EMAIL</label><input type="email" placeholder="your@email.com"></div><div class="form-field"><label>ADDRESS</label><input type="text" placeholder="123 Main St"></div><div class="form-field"><label>CITY &amp; ZIP</label><input type="text" placeholder="New York, NY 10001"></div><button class="btn-submit" onclick="renderCo(1)">CONTINUE →</button>`;
+  }else if(step===1){
+    const total=cart.reduce((s,i)=>s+i.price,0);
+    body.innerHTML=cart.map(i=>`<div class="co-line"><span>${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`).join('')+`<div class="co-line"><span>SHIPPING</span><span>FREE</span></div><div class="co-total-line"><span>TOTAL</span><span>$${total.toFixed(2)}</span></div><button class="btn-submit" style="margin-top:14px" onclick="renderCo(2)">PLACE ORDER →</button>`;
+  }else{
+    const ord='SD-'+Math.floor(10000+Math.random()*90000);
+    cart=[];renderCart();
+    body.innerHTML=`<div class="success-box"><div class="success-icon">★</div><h3>ORDER CONFIRMED!</h3><p>Your order has been placed.</p><div class="order-num">${ord}</div><p style="font-size:12px">Confirmation sent to your email.</p><button class="btn-submit" style="margin-top:14px" onclick="closeMdl('checkoutMdl')">CONTINUE</button></div>`;
+  }
+}
+function scrollToGrid(){document.querySelector('.grid')?.scrollIntoView({behavior:'smooth'})}
+function scrollToRankings(){document.querySelector('.rank-panel')?.scrollIntoView({behavior:'smooth'})}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),2800);
+}
+renderCart();
+</script>
+</body>
+</html>

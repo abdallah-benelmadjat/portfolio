@@ -483,15 +483,24 @@ body:hover .cur-dot { opacity: 1; }
   .cards { grid-template-columns: 1fr; }
 }
 
+/* ── CARD 11 — Hand-designed (same style as other cards) ── */
+.card-11 .c-preview-bg{background:linear-gradient(160deg,#1A0A0A,#2c1c1c,#3a2120)}
+.card-11 .mini-nav{background:#c1201d;border-bottom:none;box-shadow:0 2px 0 #9c1715}
+.card-11 .mini-nav-dot{background:#fff}
+.card-11 .mini-nav-link{background:#fff;opacity:.55}
+.card-11 .mini-hero{background:linear-gradient(135deg,#2a1010,#3a2020,#241414);overflow:hidden;position:relative}
+.card-11 .mini-hero::before{content:'';position:absolute;inset:0;background-image:url('zezemaruposter.jpg');background-size:cover;background-position:center;opacity:.35}
+.card-11 .mini-card{background:#9c918f;border-radius:1px!important}
+.card-11 .mini-card:first-child{background:linear-gradient(160deg,#7d1b2b,#3a2230)}
+.card-11 .mini-card:nth-child(2){background:linear-gradient(160deg,#0a0a14,#141022)}
+.card-11 .mini-ad{background:#4f3b3a;border-radius:1px}
+.card-11 .mini-side-box{background:#412727;border:1px solid rgba(255,255,255,.06);border-radius:1px!important}
+.card-11:hover{box-shadow:0 24px 60px rgba(0,0,0,.9),0 0 0 1px rgba(193,32,29,.55),0 0 60px rgba(193,32,29,.18);border-color:rgba(193,32,29,.45)}
+.card-11 .c-num{color:#e86a68}.card-11 .c-btn{color:#e86a68;border-color:rgba(193,32,29,.35)}
+.card-11 .c-btn:hover{border-color:#c1201d;background:rgba(193,32,29,.1)}
+
 /* ── EXTENDED SECTION ──────────────────────────────── */
 :root{--c6:#60A5FA;--c7:#C084FC;--c8:#FF2200;--c9:#C89614;--c10:#00CFFF}
-.show-more-wrap{width:100%;padding:32px 32px 28px;display:flex;align-items:center;gap:18px}
-.smw-line{flex:1;height:1px;background:rgba(255,255,255,.08)}
-.show-more-btn{display:flex;align-items:center;gap:10px;padding:12px 28px;border-radius:100px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:.5px;transition:all .3s ease;white-space:nowrap;flex-shrink:0}
-.show-more-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.7)}
-.show-more-btn svg{transition:transform .4s ease}
-.show-more-btn.open svg{transform:rotate(180deg)}
-.cards-extended{display:none;grid-template-columns:repeat(5,1fr);gap:16px;width:100%;padding:0 32px 60px}
 
 .card-6 .c-preview-bg{background:linear-gradient(160deg,#070A10,#10182A,#1C2840)}
 .card-6 .mini-nav{background:rgba(12,18,28,.95);border-bottom:1px solid rgba(96,165,250,.12)}
@@ -505,59 +514,55 @@ body:hover .cur-dot { opacity: 1; }
 .card-6 .c-num{color:var(--c6)}.card-6 .c-btn{color:var(--c6);border-color:rgba(96,165,250,.3)}
 .card-6 .c-btn:hover{border-color:var(--c6);background:rgba(96,165,250,.08)}
 
-.card-7 .c-preview-bg{background:linear-gradient(160deg,#050812,#0D082A,#100A30)}
-.card-7 .mini-nav{background:rgba(5,8,20,.9);border-bottom:1px solid rgba(192,132,252,.12)}
-.card-7 .mini-nav-dot{background:linear-gradient(90deg,#6B35C4,#00D4A8)}
-.card-7 .mini-nav-link{background:#C084FC;opacity:.2}
-.card-7 .mini-hero{background:linear-gradient(135deg,#1A0038,#3D0070,#003A30)}
-.card-7 .mini-card{background:rgba(255,255,255,.04);border:1px solid rgba(192,132,252,.12)}
-.card-7 .mini-ad{background:rgba(192,132,252,.07)}
-.card-7 .mini-side-box{background:rgba(255,255,255,.03);border:1px solid rgba(0,212,168,.08)}
-.card-7:hover{box-shadow:0 24px 60px rgba(0,0,0,.9),0 0 0 1px rgba(192,132,252,.3),0 0 80px rgba(107,53,196,.15);border-color:rgba(192,132,252,.25)}
-.card-7 .c-num{color:var(--c7)}.card-7 .c-btn{color:var(--c7);border-color:rgba(192,132,252,.3)}
-.card-7 .c-btn:hover{border-color:var(--c7);background:rgba(192,132,252,.08)}
+.card-7 .c-preview-bg{background:linear-gradient(160deg,#1E0808,#2C1010,#3A1515)}
+.card-7 .mini-nav{background:#160606;border-bottom:3px solid #CC0000}
+.card-7 .mini-nav-dot{background:#CC0000}
+.card-7 .mini-nav-link{background:#F5F0E8;opacity:.35}
+.card-7 .mini-hero{background:linear-gradient(135deg,#1A0505,#3A1010,#200808)}
+.card-7 .mini-card{background:rgba(44,16,16,.8);border:2px solid rgba(255,255,255,.08)}
+.card-7 .mini-ad{background:rgba(204,0,0,.08)}
+.card-7 .mini-side-box{background:rgba(58,21,21,.6);border:1px solid rgba(255,255,255,.06)}
+.card-7:hover{box-shadow:0 24px 60px rgba(0,0,0,.9),0 0 0 1px rgba(204,0,0,.5),0 0 60px rgba(204,0,0,.2);border-color:rgba(204,0,0,.4)}
+.card-7 .c-num{color:#D4981A}.card-7 .c-btn{color:#D4981A;border-color:rgba(212,152,26,.3)}
+.card-7 .c-btn:hover{border-color:#D4981A;background:rgba(212,152,26,.08)}
 
-.card-8 .c-preview-bg{background:#EDEBE5}
-.card-8 .mini-nav{background:#fff;border-bottom:3px solid #000}
-.card-8 .mini-nav-dot{background:#FF2200}
-.card-8 .mini-nav-link{background:#000;opacity:.5}
-.card-8 .mini-hero{background:linear-gradient(133deg,#FF2200 42%,#111 42%)}
-.card-8 .mini-card{background:#fff;border:2px solid #000;box-shadow:2px 2px 0 #000;border-radius:0!important}
-.card-8 .mini-ad{background:#000;opacity:.06}
-.card-8 .mini-side-box{background:#fff;border:2px solid #000;border-radius:0!important}
-.card-8 .c-title{color:#fff}
-.card-8:hover{box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 2px #FF2200,5px 5px 0 #FF2200;border-color:#FF2200}
-.card-8 .c-num{color:var(--c8)}.card-8 .c-btn{color:var(--c8);border-color:rgba(255,34,0,.3)}
-.card-8 .c-btn:hover{border-color:var(--c8);background:rgba(255,34,0,.08)}
+.card-8 .c-preview-bg{background:linear-gradient(160deg,#F6F1E7,#EDE6D6,#E4DAC8)}
+.card-8 .mini-nav{background:#1C1208;border-bottom:3px solid #BE1E2D}
+.card-8 .mini-nav-dot{background:#BE1E2D}
+.card-8 .mini-nav-link{background:#fff;opacity:.55}
+.card-8 .mini-hero{background:linear-gradient(135deg,#2A1A0A,#3A2A14,#1C1008)}
+.card-8 .mini-card{background:#fff;border:2px solid rgba(28,18,8,.25);box-shadow:2px 2px 0 rgba(28,18,8,.15);border-radius:2px!important}
+.card-8 .mini-ad{background:rgba(28,18,8,.04);border:1px dashed rgba(28,18,8,.2)}
+.card-8 .mini-side-box{background:#fff;border:2px solid rgba(28,18,8,.2);border-radius:2px!important}
+.card-8:hover{box-shadow:0 20px 50px rgba(28,18,8,.25),0 0 0 2px #BE1E2D,4px 4px 0 rgba(28,18,8,.2);border-color:#BE1E2D}
+.card-8 .c-num{color:#BE1E2D}.card-8 .c-btn{color:#BE1E2D;border-color:rgba(190,30,45,.3)}
+.card-8 .c-btn:hover{border-color:#BE1E2D;background:rgba(190,30,45,.08)}
 
-.card-9 .c-preview-bg{background:linear-gradient(160deg,#080006,#160010,#220016)}
-.card-9 .mini-nav{background:#080006;border-bottom:1px solid rgba(200,150,20,.2)}
-.card-9 .mini-nav-dot{background:linear-gradient(90deg,#6B0020,#C89614)}
-.card-9 .mini-nav-link{background:#C89614;opacity:.25}
-.card-9 .mini-hero{background:linear-gradient(90deg,#080006,#3A0010,#1A0800)}
-.card-9 .mini-card{background:rgba(200,150,20,.05);border:1px solid rgba(200,150,20,.15)}
-.card-9 .mini-ad{background:rgba(200,150,20,.07)}
-.card-9 .mini-side-box{background:rgba(200,150,20,.04);border:1px solid rgba(200,150,20,.1)}
-.card-9:hover{box-shadow:0 24px 60px rgba(0,0,0,.9),0 0 0 1px rgba(200,150,20,.35),0 0 60px rgba(200,150,20,.12);border-color:rgba(200,150,20,.3)}
-.card-9 .c-num{color:var(--c9)}.card-9 .c-btn{color:var(--c9);border-color:rgba(200,150,20,.3)}
-.card-9 .c-btn:hover{border-color:var(--c9);background:rgba(200,150,20,.08)}
+.card-9 .c-preview-bg{background:#F8F8F8}
+.card-9 .mini-nav{background:#E30000;border-bottom:none;box-shadow:0 3px 0 #9A0000}
+.card-9 .mini-nav-dot{background:#fff}
+.card-9 .mini-nav-link{background:#fff;opacity:.65}
+.card-9 .mini-hero{background:linear-gradient(120deg,#FFE8E8,#FFF5F5);overflow:hidden;position:relative}
+.card-9 .mini-hero::before{content:'';position:absolute;inset:0;background:conic-gradient(from 0deg at 72% 50%,rgba(0,0,0,.06) 0deg,transparent 4deg,transparent 7deg,rgba(0,0,0,.05) 9deg,transparent 13deg)}
+.card-9 .mini-card{background:#fff;border:2px solid #111;box-shadow:2px 2px 0 #111;border-radius:0!important}
+.card-9 .mini-ad{background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.2)}
+.card-9 .mini-side-box{background:#fff;border-left:5px solid #E30000;border-top:2px solid #111;border-right:2px solid #111;border-bottom:2px solid #111;border-radius:0!important}
+.card-9:hover{box-shadow:0 20px 50px rgba(0,0,0,.3),0 0 0 2px #E30000,5px 5px 0 #111;border-color:#E30000}
+.card-9 .c-num{color:#E30000}.card-9 .c-btn{color:#E30000;border-color:rgba(227,0,0,.3)}
+.card-9 .c-btn:hover{border-color:#E30000;background:rgba(227,0,0,.06)}
 
-.card-10 .c-preview-bg{background:linear-gradient(160deg,#011828,#01243A,#013060)}
-.card-10 .mini-nav{background:#011828;border-bottom:1px solid rgba(255,255,255,.15)}
-.card-10 .mini-nav-dot{background:#00CFFF}
-.card-10 .mini-nav-link{background:#fff;opacity:.3}
-.card-10 .mini-hero{background:#012244;overflow:hidden;position:relative}
-.card-10 .mini-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 5px,rgba(255,255,255,.05) 5px,rgba(255,255,255,.05) 6px),repeating-linear-gradient(90deg,transparent,transparent 5px,rgba(255,255,255,.05) 5px,rgba(255,255,255,.05) 6px)}
-.card-10 .mini-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.2)}
-.card-10 .mini-ad{background:rgba(0,207,255,.08)}
-.card-10 .mini-side-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12)}
-.card-10:hover{box-shadow:0 24px 60px rgba(0,0,0,.8),0 0 0 1px rgba(0,207,255,.3),0 0 60px rgba(0,207,255,.1);border-color:rgba(0,207,255,.3)}
-.card-10 .c-num{color:var(--c10)}.card-10 .c-btn{color:var(--c10);border-color:rgba(0,207,255,.3)}
-.card-10 .c-btn:hover{border-color:var(--c10);background:rgba(0,207,255,.08)}
+.card-10 .c-preview-bg{background:linear-gradient(160deg,#09090B,#111113,#18181B)}
+.card-10 .mini-nav{background:rgba(9,9,11,.95);border-bottom:1px solid #27272A}
+.card-10 .mini-nav-dot{background:#3B82F6}
+.card-10 .mini-nav-link{background:#3F3F46;opacity:.9}
+.card-10 .mini-hero{background:radial-gradient(ellipse 60% 70% at 72% 50%,rgba(29,78,216,.2) 0%,#09090B 65%)}
+.card-10 .mini-card{background:#111113;border:1px solid #27272A;border-radius:3px!important}
+.card-10 .mini-ad{background:#18181B;border:1px solid #27272A}
+.card-10 .mini-side-box{background:#111113;border:1px solid #27272A;border-radius:3px!important}
+.card-10:hover{box-shadow:0 24px 60px rgba(0,0,0,.9),0 0 0 1px rgba(59,130,246,.45),0 0 60px rgba(59,130,246,.14);border-color:rgba(59,130,246,.35)}
+.card-10 .c-num{color:#60A5FA}.card-10 .c-btn{color:#60A5FA;border-color:rgba(59,130,246,.3)}
+.card-10 .c-btn:hover{border-color:#60A5FA;background:rgba(59,130,246,.08)}
 
-@media(max-width:1200px){.cards-extended{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:800px){.cards-extended{grid-template-columns:repeat(2,1fr);padding-left:16px;padding-right:16px}}
-@media(max-width:500px){.cards-extended{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -585,7 +590,7 @@ body:hover .cur-dot { opacity: 1; }
       ABE<span class="logo-dot"></span>
     </a>
     <div class="hd-meta">
-      <p>10 Design Samples</p>
+      <p>11 Design Samples</p>
       <p>Click any card to explore</p>
     </div>
   </header>
@@ -594,12 +599,78 @@ body:hover .cur-dot { opacity: 1; }
   <div class="hero-text">
     <h1>Choose Your <span>Direction</span></h1>
     <div class="divider"></div>
-    <p>Five distinct website designs — hover to explore, click to open. Each is fully interactive.</p>
+    <p>Eleven distinct website designs — hover to explore, click to open. Each is fully interactive.</p>
   </div>
 
   <!-- Cards -->
   <div class="cards-wrap">
     <div class="cards">
+
+      <!-- CARD 11 — Your Design (first) -->
+      <div class="card card-11" data-href="sample11.html">
+        <div class="c-preview">
+          <div class="c-preview-bg"></div>
+          <div class="mini-site">
+            <div class="mini-nav">
+              <div class="mini-nav-dot"></div>
+              <div class="mini-nav-links">
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+                <div class="mini-nav-link"></div>
+              </div>
+            </div>
+            <div class="mini-hero">
+              <div class="mini-hero-text">
+                <div style="width:55px;height:5px;background:rgba(255,255,255,.85);border-radius:1px"></div>
+                <div style="width:80px;height:3px;background:rgba(255,255,255,.3);border-radius:1px;margin-top:4px"></div>
+              </div>
+            </div>
+            <div class="mini-content">
+              <div class="mini-main">
+                <div class="mini-grid">
+                  <div class="mini-card" style="background:linear-gradient(160deg,#7d1b2b,#3a2230)"></div>
+                  <div class="mini-card" style="background:linear-gradient(160deg,#0a0a14,#141022)"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+                <div class="mini-ad"></div>
+                <div class="mini-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+              </div>
+              <div class="mini-side">
+                <div class="mini-side-box" style="height:44px"></div>
+                <div class="mini-side-box" style="flex:1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-num">11</div>
+        </div>
+        <div class="c-info">
+          <div class="c-num">Sample 11</div>
+          <div class="c-title">Painted Ink</div>
+          <div class="c-desc">Hand-designed concept. Dark maroon with SVG torn ink borders, brush-stroke section headers, painted frame brackets, and a hand-drawn slingshot logo.</div>
+          <div class="swatches">
+            <div class="sw" style="background:#2c1c1c"></div>
+            <div class="sw" style="background:#c1201d"></div>
+            <div class="sw" style="background:#f3eceb;border-color:rgba(255,255,255,.15)"></div>
+            <div class="sw" style="background:#4f3b3a"></div>
+          </div>
+          <div class="tags">
+            <span class="tag">Hand-Designed</span>
+            <span class="tag">Painted</span>
+            <span class="tag">Raw</span>
+          </div>
+          <a class="c-btn" href="sample11.html" onclick="event.stopPropagation()">
+            Open Sample
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
 
       <!-- CARD 1 -->
       <div class="card card-1" data-href="sample1.html">
@@ -933,19 +1004,6 @@ body:hover .cur-dot { opacity: 1; }
 
     </div><!-- /cards -->
 
-    <!-- Show More Toggle -->
-    <div class="show-more-wrap">
-      <div class="smw-line"></div>
-      <button class="show-more-btn" id="showMoreBtn" onclick="toggleMore()">
-        <span id="showMoreLabel">Show More · Less Ideal Options</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="smw-line"></div>
-    </div>
-
-    <!-- Extended Cards -->
-    <div class="cards-extended" id="cardsExtended">
-
       <!-- CARD 6 — Mercury -->
       <div class="card card-6" data-href="sample6.html">
         <div class="c-preview"><div class="c-preview-bg"></div>
@@ -966,8 +1024,8 @@ body:hover .cur-dot { opacity: 1; }
         </div>
       </div>
 
-      <!-- CARD 7 — Aurora Codex -->
-      <div class="card card-7 wip" data-href="#">
+      <!-- CARD 7 — Canvas -->
+      <div class="card card-7" data-href="sample7.html">
         <div class="c-preview"><div class="c-preview-bg"></div>
           <div class="mini-site">
             <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
@@ -978,22 +1036,16 @@ body:hover .cur-dot { opacity: 1; }
         </div>
         <div class="c-info">
           <div class="c-num">Sample 07</div>
-          <div class="c-title">Aurora Codex</div>
-          <div class="c-desc">Animated aurora borealis fills the background. Real glassmorphism, Cormorant Garamond, holographic gradients. Like a mystical living library.</div>
-          <div class="swatches"><div class="sw" style="background:#050812"></div><div class="sw" style="background:#6B35C4"></div><div class="sw" style="background:#00D4A8"></div><div class="sw" style="background:#FF4FA0"></div></div>
-          <div class="tags">
-            <span class="tag wip-tag">Work in Progress</span>
-            <span class="tag">Holographic</span>
-            <span class="tag">Glass</span>
-          </div>
-          <a class="c-btn" href="#" onclick="event.stopPropagation()">
-            Coming Soon
-          </a>
+          <div class="c-title">Canvas</div>
+          <div class="c-desc">The real character artwork — Zezemaru, Xecutioner — front and center. Deep maroon warmth, ink-drip hero border, speech-bubble section headers, Bangers font. Like a living manga anthology cover.</div>
+          <div class="swatches"><div class="sw" style="background:#1E0808"></div><div class="sw" style="background:#CC0000"></div><div class="sw" style="background:#D4981A"></div><div class="sw" style="background:#F5F0E8"></div></div>
+          <div class="tags"><span class="tag">Illustrated</span><span class="tag">Painted</span><span class="tag">Raw Energy</span></div>
+          <a class="c-btn" href="sample7.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
         </div>
       </div>
 
-      <!-- CARD 8 — Manifesto -->
-      <div class="card card-8 wip" data-href="#">
+      <!-- CARD 8 — Sketchbook -->
+      <div class="card card-8" data-href="sample8.html">
         <div class="c-preview"><div class="c-preview-bg"></div>
           <div class="mini-site">
             <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
@@ -1004,22 +1056,16 @@ body:hover .cur-dot { opacity: 1; }
         </div>
         <div class="c-info">
           <div class="c-num">Sample 08</div>
-          <div class="c-title">Manifesto</div>
-          <div class="c-desc">Pure white background, jet black, pure red. Neo-brutalist constructivism — like a Bauhaus protest poster became a manga platform. The most visually shocking of all ten.</div>
-          <div class="swatches"><div class="sw" style="background:#fff;border-color:rgba(255,255,255,.25)"></div><div class="sw" style="background:#000"></div><div class="sw" style="background:#FF2200"></div><div class="sw" style="background:#FFE500"></div></div>
-          <div class="tags">
-            <span class="tag wip-tag">Work in Progress</span>
-            <span class="tag">Brutalist</span>
-            <span class="tag">Striking</span>
-          </div>
-          <a class="c-btn" href="#" onclick="event.stopPropagation()">
-            Coming Soon
-          </a>
+          <div class="c-title">Sketchbook</div>
+          <div class="c-desc">Warm cream paper, Caveat handwriting font, wavy SVG underlines, hand-drawn section headers. Completely professional yet deeply personal — like the designer's own manga journal brought to life.</div>
+          <div class="swatches"><div class="sw" style="background:#F6F1E7;border-color:rgba(28,18,8,.2)"></div><div class="sw" style="background:#1C1208"></div><div class="sw" style="background:#BE1E2D"></div><div class="sw" style="background:#B07810"></div></div>
+          <div class="tags"><span class="tag">Hand-drawn</span><span class="tag">Warm</span><span class="tag">Artisanal</span></div>
+          <a class="c-btn" href="sample8.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
         </div>
       </div>
 
-      <!-- CARD 9 — Velvet Curtain -->
-      <div class="card card-9 wip" data-href="#">
+      <!-- CARD 9 — Shōnen -->
+      <div class="card card-9" data-href="sample9.html">
         <div class="c-preview"><div class="c-preview-bg"></div>
           <div class="mini-site">
             <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
@@ -1030,22 +1076,16 @@ body:hover .cur-dot { opacity: 1; }
         </div>
         <div class="c-info">
           <div class="c-num">Sample 09</div>
-          <div class="c-title">Velvet Curtain</div>
-          <div class="c-desc">Grand opera meets manga. Deep velvet crimson, aged gold ornaments, Playfair Display, theatrical spotlight effects. The most prestige-coded design of all.</div>
-          <div class="swatches"><div class="sw" style="background:#080006"></div><div class="sw" style="background:#6B0020"></div><div class="sw" style="background:#C89614"></div><div class="sw" style="background:#F0DFC0;border-color:rgba(255,255,255,.2)"></div></div>
-          <div class="tags">
-            <span class="tag wip-tag">Work in Progress</span>
-            <span class="tag">Theatrical</span>
-            <span class="tag">Prestige</span>
-          </div>
-          <a class="c-btn" href="#" onclick="event.stopPropagation()">
-            Coming Soon
-          </a>
+          <div class="c-title">Shōnen</div>
+          <div class="c-desc">Authentic manga magazine energy. Bold red header, speed-line hero, halftone screentone patterns, Japanese typography, hard-shadow cards. Like Weekly Shōnen Jump built specifically for Slingshot Daily.</div>
+          <div class="swatches"><div class="sw" style="background:#E30000"></div><div class="sw" style="background:#111111"></div><div class="sw" style="background:#F8F8F8;border-color:rgba(0,0,0,.15)"></div><div class="sw" style="background:#F59E0B"></div></div>
+          <div class="tags"><span class="tag">Manga</span><span class="tag">Japanese</span><span class="tag">Otaku</span></div>
+          <a class="c-btn" href="sample9.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
         </div>
       </div>
 
-      <!-- CARD 10 — Blueprint -->
-      <div class="card card-10 wip" data-href="#">
+      <!-- CARD 10 — Apex -->
+      <div class="card card-10" data-href="sample10.html">
         <div class="c-preview"><div class="c-preview-bg"></div>
           <div class="mini-site">
             <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
@@ -1056,21 +1096,15 @@ body:hover .cur-dot { opacity: 1; }
         </div>
         <div class="c-info">
           <div class="c-num">Sample 10</div>
-          <div class="c-title">Blueprint</div>
-          <div class="c-desc">Architectural blueprint on deep navy. Monospace type, white line grids, cyan callouts. Like reading the technical drawings of a secret manga empire.</div>
-          <div class="swatches"><div class="sw" style="background:#011828"></div><div class="sw" style="background:#00CFFF"></div><div class="sw" style="background:#fff;border-color:rgba(255,255,255,.3)"></div><div class="sw" style="background:#FF9500"></div></div>
-          <div class="tags">
-            <span class="tag wip-tag">Work in Progress</span>
-            <span class="tag">Technical</span>
-            <span class="tag">Architectural</span>
-          </div>
-          <a class="c-btn" href="#" onclick="event.stopPropagation()">
-            Coming Soon
-          </a>
+          <div class="c-title">Apex</div>
+          <div class="c-desc">Near-black, Inter only, one precise blue accent. Live status indicator, data sparklines in rankings, pixel-perfect grid, zero decoration. Corporate excellence — think Bloomberg Terminal meets Netflix.</div>
+          <div class="swatches"><div class="sw" style="background:#09090B"></div><div class="sw" style="background:#3B82F6"></div><div class="sw" style="background:#10B981"></div><div class="sw" style="background:#F4F4F5;border-color:rgba(0,0,0,.15)"></div></div>
+          <div class="tags"><span class="tag">Corporate</span><span class="tag">Minimal</span><span class="tag">Premium</span></div>
+          <a class="c-btn" href="sample10.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
         </div>
       </div>
 
-    </div><!-- /cards-extended -->
+    </div><!-- /cards -->
   </div><!-- /cards-wrap -->
 
   <!-- Footer -->
@@ -1088,17 +1122,6 @@ body:hover .cur-dot { opacity: 1; }
 </div><!-- /page -->
 
 <script>
-/* ── TOGGLE ────────────────────────────────────── */
-function toggleMore(){
-  const el=document.getElementById('cardsExtended');
-  const btn=document.getElementById('showMoreBtn');
-  const label=document.getElementById('showMoreLabel');
-  const open=el.style.display==='grid';
-  el.style.display=open?'none':'grid';
-  btn.classList.toggle('open',!open);
-  label.textContent=open?'Show More · Less Ideal Options':'Show Less';
-  if(!open)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),60);
-}
 
 /* ── CUSTOM CURSOR ─────────────────────────────── */
 const cur = document.getElementById('cur');
