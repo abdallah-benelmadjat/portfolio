@@ -169,7 +169,27 @@ body:hover .cur-dot { opacity: 1; }
 .cards-wrap {
   padding: 0 32px 60px;
   flex: 1;
-  display: flex; align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* WIP Card Styling */
+.card.wip {
+  opacity: 0.8;
+}
+.card.wip .c-num {
+  color: var(--muted) !important;
+}
+.card.wip .c-btn {
+  background: rgba(255,255,255,0.03) !important;
+  color: var(--muted) !important;
+  border-color: var(--border) !important;
+  pointer-events: none;
+}
+.tag.wip-tag {
+  background: rgba(204,26,26,0.1) !important;
+  color: var(--c1) !important;
+  border-color: rgba(204,26,26,0.2) !important;
 }
 .cards {
   display: grid;
@@ -947,7 +967,7 @@ body:hover .cur-dot { opacity: 1; }
       </div>
 
       <!-- CARD 7 — Aurora Codex -->
-      <div class="card card-7" data-href="sample7.html">
+      <div class="card card-7 wip" data-href="#">
         <div class="c-preview"><div class="c-preview-bg"></div>
           <div class="mini-site">
             <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
@@ -961,13 +981,19 @@ body:hover .cur-dot { opacity: 1; }
           <div class="c-title">Aurora Codex</div>
           <div class="c-desc">Animated aurora borealis fills the background. Real glassmorphism, Cormorant Garamond, holographic gradients. Like a mystical living library.</div>
           <div class="swatches"><div class="sw" style="background:#050812"></div><div class="sw" style="background:#6B35C4"></div><div class="sw" style="background:#00D4A8"></div><div class="sw" style="background:#FF4FA0"></div></div>
-          <div class="tags"><span class="tag">Holographic</span><span class="tag">Glass</span><span class="tag">Mystical</span></div>
-          <a class="c-btn" href="sample7.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          <div class="tags">
+            <span class="tag wip-tag">Work in Progress</span>
+            <span class="tag">Holographic</span>
+            <span class="tag">Glass</span>
+          </div>
+          <a class="c-btn" href="#" onclick="event.stopPropagation()">
+            Coming Soon
+          </a>
         </div>
       </div>
 
       <!-- CARD 8 — Manifesto -->
-      <div class="card card-8" data-href="sample8.html">
+      <div class="card card-8 wip" data-href="#">
         <div class="c-preview"><div class="c-preview-bg"></div>
           <div class="mini-site">
             <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
@@ -981,13 +1007,19 @@ body:hover .cur-dot { opacity: 1; }
           <div class="c-title">Manifesto</div>
           <div class="c-desc">Pure white background, jet black, pure red. Neo-brutalist constructivism — like a Bauhaus protest poster became a manga platform. The most visually shocking of all ten.</div>
           <div class="swatches"><div class="sw" style="background:#fff;border-color:rgba(255,255,255,.25)"></div><div class="sw" style="background:#000"></div><div class="sw" style="background:#FF2200"></div><div class="sw" style="background:#FFE500"></div></div>
-          <div class="tags"><span class="tag">Brutalist</span><span class="tag">Striking</span><span class="tag">Avant-Garde</span></div>
-          <a class="c-btn" href="sample8.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          <div class="tags">
+            <span class="tag wip-tag">Work in Progress</span>
+            <span class="tag">Brutalist</span>
+            <span class="tag">Striking</span>
+          </div>
+          <a class="c-btn" href="#" onclick="event.stopPropagation()">
+            Coming Soon
+          </a>
         </div>
       </div>
 
       <!-- CARD 9 — Velvet Curtain -->
-      <div class="card card-9" data-href="sample9.html">
+      <div class="card card-9 wip" data-href="#">
         <div class="c-preview"><div class="c-preview-bg"></div>
           <div class="mini-site">
             <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
@@ -1001,13 +1033,19 @@ body:hover .cur-dot { opacity: 1; }
           <div class="c-title">Velvet Curtain</div>
           <div class="c-desc">Grand opera meets manga. Deep velvet crimson, aged gold ornaments, Playfair Display, theatrical spotlight effects. The most prestige-coded design of all.</div>
           <div class="swatches"><div class="sw" style="background:#080006"></div><div class="sw" style="background:#6B0020"></div><div class="sw" style="background:#C89614"></div><div class="sw" style="background:#F0DFC0;border-color:rgba(255,255,255,.2)"></div></div>
-          <div class="tags"><span class="tag">Theatrical</span><span class="tag">Baroque</span><span class="tag">Prestige</span></div>
-          <a class="c-btn" href="sample9.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          <div class="tags">
+            <span class="tag wip-tag">Work in Progress</span>
+            <span class="tag">Theatrical</span>
+            <span class="tag">Prestige</span>
+          </div>
+          <a class="c-btn" href="#" onclick="event.stopPropagation()">
+            Coming Soon
+          </a>
         </div>
       </div>
 
       <!-- CARD 10 — Blueprint -->
-      <div class="card card-10" data-href="sample10.html">
+      <div class="card card-10 wip" data-href="#">
         <div class="c-preview"><div class="c-preview-bg"></div>
           <div class="mini-site">
             <div class="mini-nav"><div class="mini-nav-dot"></div><div class="mini-nav-links"><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div><div class="mini-nav-link"></div></div></div>
@@ -1021,8 +1059,14 @@ body:hover .cur-dot { opacity: 1; }
           <div class="c-title">Blueprint</div>
           <div class="c-desc">Architectural blueprint on deep navy. Monospace type, white line grids, cyan callouts. Like reading the technical drawings of a secret manga empire.</div>
           <div class="swatches"><div class="sw" style="background:#011828"></div><div class="sw" style="background:#00CFFF"></div><div class="sw" style="background:#fff;border-color:rgba(255,255,255,.3)"></div><div class="sw" style="background:#FF9500"></div></div>
-          <div class="tags"><span class="tag">Technical</span><span class="tag">Architectural</span><span class="tag">Singular</span></div>
-          <a class="c-btn" href="sample10.html" onclick="event.stopPropagation()">Open Sample<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          <div class="tags">
+            <span class="tag wip-tag">Work in Progress</span>
+            <span class="tag">Technical</span>
+            <span class="tag">Architectural</span>
+          </div>
+          <a class="c-btn" href="#" onclick="event.stopPropagation()">
+            Coming Soon
+          </a>
         </div>
       </div>
 
