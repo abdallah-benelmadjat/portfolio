@@ -1,229 +1,32 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects | Abe Benelmadjat</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="antialiased bg-slate-50">
-
-    <!-- Header & Navigation -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm shadow-sm">
-        <div class="container mx-auto px-6 py-4">
-            <nav class="flex justify-between items-center">
-                <div class="text-xl font-bold tracking-tight">
-                    <a href="index.html" class="hover:text-blue-600 transition-colors">Abe Benelmadjat</a>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html#experience" class="nav-link text-gray-600 hover:text-blue-600 transition-colors">Experience</a>
-                    <a href="index.html#projects" class="nav-link text-gray-600 hover:text-blue-600 transition-colors">Projects</a>
-                    <a href="index.html#skills" class="nav-link text-gray-600 hover:text-blue-600 transition-colors">Skills</a>
-                    <a href="index.html#education" class="nav-link text-gray-600 hover:text-blue-600 transition-colors">Education</a>
-                </div>
-                <a href="mailto:abe.benelmad@gmail.com" class="hidden md:block bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105">
-                    Contact Me
-                </a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="pt-24">
-        <!-- Detailed Projects Section -->
-        <section id="detailed-projects" class="py-20">
-            <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold text-center mb-16">Projects Portfolio</h2>
-                <div class="space-y-16">
-
-                    <!-- Project Detail -->
-                    <div class="custom-card p-8 reveal">
-                        <h3 class="text-2xl font-semibold mb-2 text-blue-700">Industry 4.0 Readiness Platform</h3>
-                        <p class="text-sm text-gray-500 mb-4">Made by Abe, Saii, and Sammie for the Internship-CSI program.</p>
-                        <p class="text-gray-700 leading-relaxed mb-6">Data-readiness software and strategic roadmaps to guide manufacturers in their transition towards digital transformation and Industry 4.0 solutions.</p>
-                        
-                        <div class="grid md:grid-cols-2 gap-8 mb-6">
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">What I do:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Conduct industrial on-site audits to collect manufacturing data for Microsoft's Co-Innovation Lab at UWM.</li>
-                                    <li>Perform AI readiness assessments and develop digitalization roadmaps to help manufacturers adopt Industry 4.0 solutions.</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Project Features:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Questionnaire</li>
-                                    <li>Dashboard</li>
-                                    <li>Learn about Digitilization</li>
-                                    <li>Case Studies</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 mt-6 mb-6">
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Questionnaire</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Dashboard</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Digitalization</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Case Studies</span>
-                        </div>
-                    </div>
-
-                    <!-- Project Detail -->
-                    <div class="custom-card p-8 reveal">
-                        <h3 class="text-2xl font-semibold mb-2 text-blue-700">AI-Driven Gear Fault Diagnosis</h3>
-                        <p class="text-sm text-gray-500 mb-4">Academic Research Project | Jul 2021</p>
-                        <p class="text-gray-700 leading-relaxed mb-6">Developed an advanced gear fault classification system using neural networks and deep learning. The system leverages signal processing and wavelet-based feature extraction from vibration data to accurately identify and diagnose faults in industrial machinery, enabling predictive maintenance.</p>
-                        
-                        <div class="grid md:grid-cols-2 gap-8 mb-6">
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Methodology:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Analyzed vibration data from a gearbox test rig with 6 distinct gear health states.</li>
-                                    <li>Engineered features using Maximal Overlap Discrete Wavelet Packet Transform (MODWPT) and entropy.</li>
-                                    <li>Trained a Multi-Layer Perceptron (MLP) neural network for classification.</li>
-                                    <li>Implemented a 1D Convolutional Neural Network (CNN) for end-to-end deep learning.</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Key Achievements:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Achieved classification accuracy of <strong>99.3%</strong> with the CNN model.</li>
-                                    <li>Successfully identified faults under 15 different operating conditions (speed and load).</li>
-                                    <li>Demonstrated the superiority of MODWPT over traditional LMD for feature extraction.</li>
-                                    <li>Developed a user-friendly visual tool to highlight the detected fault type on a diagram.</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 mt-6 mb-6">
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">TensorFlow</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Keras</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Scikit-learn</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Signal Processing</span>
-                            <!-- <span class="bg-yellow-100 text-yellow-700 rounded-md px-3 py-1 text-sm font-medium">MATLAB</span> -->
-                        </div>
-                    </div>
-
-                    <!-- Project Detail -->
-                    <div class="custom-card p-8 reveal">
-                        <h3 class="text-2xl font-semibold mb-2 text-blue-700">Game-Theoretic Energy Management for the Energy Internet</h3>
-                        <p class="text-sm text-gray-500 mb-4">M.S. Graduate Project | Spring 2024</p>
-                        <p class="text-gray-700 leading-relaxed mb-6">This project integrates game theory and big data analytics to optimize energy management in microgrids. It formulates the coordination between renewable and conventional energy sources as a three-stage Stackelberg game, using a deep learning-based algorithm for wind power forecasting to enhance system efficiency and stability.</p>
-                        
-                        <div class="grid md:grid-cols-2 gap-8 mb-6">
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">My Contribution:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Developed the wind power prediction algorithm using a genetic stacked autoencoder (SAE) model.</li>
-                                    <li>Handled the programming and implementation in MATLAB to ensure the algorithm performed effectively.</li>
-                                    <li>Focused on optimizing the deep learning model to outperform similar forecasting techniques.</li>
-                                    <li>Analyzed the impact of forecasting accuracy on the game theory-based energy management model.</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Key Project Features:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li><strong>Stackelberg Game Model:</strong> Hierarchical modeling of the utility, storage company, and users.</li>
-                                    <li><strong>Predictive Forecasting:</strong> A novel genetic SAE algorithm for accurate wind power prediction.</li>
-                                    <li><strong>Dynamic Pricing:</strong> Optimal pricing strategies derived using backward induction.</li>
-                                    <li><strong>Big Data Analytics:</strong> Leveraged data-driven techniques to inform energy management decisions.</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 mt-6 mb-6">
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Game Theory</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Deep Learning</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">MATLAB</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Predictive Analytics</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Energy Management</span>
-                        </div>
-                    </div>
-
-                    <!-- Project Detail -->
-                    <div class="custom-card p-8 reveal">
-                        <h3 class="text-2xl font-semibold mb-2 text-blue-700">Solar Panel Optimization and Modular PV Design</h3>
-                        <p class="text-sm text-gray-500 mb-4">Square Solar Inc. | Fall 2023</p>
-                        <p class="text-gray-700 leading-relaxed mb-6">The project focused on improving and prototyping a modular, ergonomic solar panel that addresses the growing need for compact, portable, and user-friendly solar technology. It specifically targeted small-space living applications such as RVs, boats, off-grid cabins, urban apartments, and emergency scenarios.</p>
-                        
-                        <div class="grid md:grid-cols-2 gap-8 mb-6">
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">My Contribution:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Enhanced repairability, ease of installation, and durability through mechanical and structural redesign using SolidWorks.</li>
-                                    <li>Evaluated market potential, energy and environmental impact, and payback period.</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Key Project Features:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Conventional solar panels are bulky, costly to repair, and vulnerable to localized damage.</li>
-                                    <li>The modular solution breaks the panel into smaller, replaceable units, allows DIY installation, and enhances durability while maintaining high energy output.</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="grid md:grid-cols-2 gap-8 mb-6">
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Methodology:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Created optimized 3D models of modular panels in SolidWorks.</li>
-                                    <li>Evaluated mechanical robustness, potential failure points, and improved mechanical connections for easy assembly.</li>
-                                    <li>Prototype features include lightweight, compact, interconnectable modules compatible with various mounting surfaces.</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Key Achievements:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Cost: $1.2/W, significantly lower than conventional panels due to zero labor cost.</li>
-                                    <li>Energy savings: 12,556 kWh/year per household, with $1,574.5/year cost savings in Arizona.</li>
-                                    <li>Simple payback: 3.3 years for modular system vs. 6.4 years for traditional panels.</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="grid md:grid-cols-2 gap-8 mb-6">
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Environmental Impact:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>12,556 kWh/year energy production translates to 3,940 kg CO₂/year avoided emissions.</li>
-                                    <li>Modular panels outperform LG NeON 2 panels by ~10% in energy and CO₂ savings.</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-2 text-blue-700">Use Cases & Applications:</h4>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Portable power for camping, boating, and RVs.</li>
-                                    <li>Apartment balconies and small rooftops.</li>
-                                    <li>Post-disaster recovery and emergency relief.</li>
-                                    <li>Scalable systems for off-grid communities.</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 mt-6 mb-6">
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">SolidWorks</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">CAD</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Excel</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">Market Analysis</span>
-                            <span class="bg-blue-100 text-blue-700 rounded-md px-3 py-1 text-sm font-medium">CO₂ Analysis</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-white py-8">
-        <div class="container mx-auto px-6 text-center"><p>&copy; 2024 Abe Benelmadjat. All Rights Reserved.</p></div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#172a42">
+<link rel="icon" href="images/ico2.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="portfolio.css">
+<script src="portfolio.js" defer></script>
+<title>Engineering & AI Projects | Abe Benelmadjat</title>
+<meta name="description" content="Project contributions, methods, and results in predictive maintenance, manufacturing AI, microgrid optimization, and solar design.">
+</head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="container header-inner">
+<a class="brand" href="index.html">Abe Benelmadjat<span>AI research & energy engineering</span></a>
+<nav aria-label="Main navigation"><a href="index.html">Overview</a><a href="projects.html">Projects</a><a href="resume.html">Resume</a><a class="nav-contact" href="mailto:abe.benelmad@gmail.com">Contact</a></nav>
+</div></header><main id="main" class="container">
+<section class="page-heading"><p class="eyebrow">RESEARCH & ENGINEERING</p><h1>Projects</h1><p>What I worked on, how I approached it, and what the results show.</p></section>
+<div class="filter-bar" role="group" aria-label="Filter projects"><button data-filter="all" aria-pressed="true">All projects</button><button data-filter="ai" aria-pressed="false">AI & machine learning</button><button data-filter="energy" aria-pressed="false">Energy systems</button><button data-filter="design" aria-pressed="false">Mechanical design</button></div><p class="filter-status" data-filter-status role="status" aria-live="polite">7 projects shown</p>
+<article id="fault-diagnosis" class="case-study" data-category="ai"><div class="case-title"><div><p class="eyebrow">Machine learning · Academic research</p><h2>AI-driven gear fault diagnosis</h2></div><span>July 2021</span></div><p class="case-summary">Classifying gearbox faults from vibration data to support predictive maintenance.</p><div class="case-layout"><div><h3>My contribution</h3><p>Developed and evaluated neural-network classifiers using a gearbox test-rig dataset covering six gear health states and 15 operating conditions.</p><ul><li>Engineered signal features using MODWPT and entropy.</li><li>Trained a multilayer perceptron and an end-to-end 1D convolutional neural network.</li><li>Built a visual tool to communicate the detected fault type.</li></ul><div class="tags"><span>TensorFlow</span><span>Keras</span><span>Scikit-learn</span><span>Signal processing</span></div></div><aside class="result-panel"><span class="eyebrow">PROJECT RESULT / SCOPE</span><strong>99.3%</strong><h3>CNN classification accuracy</h3><p>Reported experimental accuracy on the project’s test-rig dataset.</p></aside></div></article>
+<article id="industry" class="case-study" data-category="ai"><div class="case-title"><div><p class="eyebrow">Industrial AI · Team project</p><h2>Industry 4.0 readiness platform</h2></div><span>Connected Systems Institute</span></div><p class="case-summary">Helping manufacturers assess their data readiness and plan practical AI adoption.</p><div class="case-layout"><div><h3>My contribution</h3><p>Worked with Saii and Sammie in the CSI internship program on a platform for manufacturing digital transformation.</p><ul><li>Conducted on-site audits to gather manufacturing data for Microsoft’s Co-Innovation Lab at UWM.</li><li>Assessed AI readiness and developed digitalization roadmaps.</li><li>Contributed to a platform with a questionnaire, dashboard, educational resources, and case studies.</li></ul><div class="tags"><span>AI readiness</span><span>Manufacturing</span><span>Data assessment</span><span>Industry 4.0</span></div></div><aside class="result-panel"><span class="eyebrow">PROJECT RESULT / SCOPE</span><strong>Assessment → roadmap</strong><h3>A structured path to AI adoption</h3><p>My focus: on-site data collection, readiness assessment, and digitalization planning.</p></aside></div></article>
+<article id="energy-internet" class="case-study" data-category="energy ai"><div class="case-title"><div><p class="eyebrow">Energy systems · M.S. graduate project</p><h2>Game-theoretic energy management</h2></div><span>Spring 2024</span></div><p class="case-summary">Combining wind power forecasting with coordinated microgrid energy management.</p><div class="case-layout"><div><h3>My contribution</h3><p>Developed the wind forecasting component for an energy management framework modeled as a three-stage Stackelberg game.</p><ul><li>Implemented a genetic stacked autoencoder forecasting model in MATLAB.</li><li>Optimized the deep learning model and analyzed the effect of forecast accuracy on energy management.</li><li>Worked within a framework coordinating the utility, storage company, and users through dynamic pricing.</li></ul><div class="tags"><span>MATLAB</span><span>Deep learning</span><span>Game theory</span><span>Wind forecasting</span></div></div><aside class="result-panel"><span class="eyebrow">PROJECT RESULT / SCOPE</span><strong>3 stakeholders</strong><h3>Utility · Storage provider · Users</h3><p>Project framework: hierarchical energy coordination and pricing using backward induction.</p></aside></div></article>
+<article id="solar" class="case-study" data-category="energy design"><div class="case-title"><div><p class="eyebrow">Mechanical design · Square Solar Inc. project</p><h2>Modular solar panel optimization</h2></div><span>Fall 2023</span></div><p class="case-summary">Improving photovoltaic panel repairability, installation, and structural durability.</p><div class="case-layout"><div><h3>My contribution</h3><p>Redesigned modular solar panel components and evaluated their technical, economic, and environmental performance.</p><ul><li>Created SolidWorks models and improved mechanical connections for modular assembly.</li><li>Evaluated structural robustness, repairability, market potential, and payback.</li><li>Studied applications including RVs, boats, balconies, and off-grid cabins.</li></ul><div class="tags"><span>SolidWorks</span><span>CAD</span><span>PV systems</span><span>Economic analysis</span></div></div><aside class="result-panel"><span class="eyebrow">PROJECT RESULT / SCOPE</span><strong>3.3 years</strong><h3>Estimated simple payback</h3><p>Modeled Arizona household scenario, assuming zero installation labor cost; 6.4 years for the comparison system.</p></aside></div></article>
+<article id="wind-forecasting" class="case-study compact-case" data-category="ai energy"><p class="eyebrow">MACHINE LEARNING · APRIL 2023</p><h2>Wind power forecasting</h2><p>Applied reinforcement learning and game theory to wind power forecasting, training LSTM models in TensorFlow.</p><div class="tags"><span>TensorFlow</span><span>LSTM</span><span>Reinforcement learning</span></div></article>
+<article id="medical-assistant" class="case-study compact-case" data-category="ai"><p class="eyebrow">SOFTWARE & MACHINE LEARNING · MARCH 2021</p><h2>Virtual medical assistant</h2><p>Built a disease prediction model with Scikit-learn and XGBoost, connected to a Django backend and React frontend.</p><div class="tags"><span>Scikit-learn</span><span>XGBoost</span><span>Django</span><span>React</span></div></article>
+<article id="hvac" class="case-study compact-case" data-category="design energy"><p class="eyebrow">BUILDING SYSTEMS · DECEMBER 2023</p><h2>HVAC duct system design</h2><p>Designed a complete HVAC duct system in Autodesk Revit, focusing on airflow and thermal performance.</p><div class="tags"><span>Autodesk Revit</span><span>HVAC design</span><span>Fluid dynamics</span></div></article>
+<section class="contact-panel"><div><h2>Discuss my work</h2><p>For engineering opportunities, research, or project questions.</p></div><a class="button primary" href="mailto:abe.benelmad@gmail.com">Contact me →</a></section>
+</main><footer class="site-footer"><div class="container footer-inner"><span>Abe Benelmadjat · Milwaukee, WI</span><div><a href="mailto:abe.benelmad@gmail.com">Email</a><a href="https://linkedin.com/in/Benelmadjat">LinkedIn ↗</a><a href="https://github.com/abdallah-benelmadjat">GitHub ↗</a></div></div></footer>
+</body></html>
